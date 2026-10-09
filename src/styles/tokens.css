@@ -1,0 +1,176 @@
+/*
+ * Design tokens · Look A "Drafting table" (kickoff decision 2026-10-10).
+ * Owner: Director. Components use these variables or the Tailwind utilities mapped in @theme below,
+ * never raw hex values. Light = day renders; dark = dusk renders where a dusk version exists.
+ *
+ * Theme selection: `data-theme="light|dark"` on <html> (set before paint by the script in layout.tsx);
+ * without JavaScript the system preference applies.
+ */
+
+:root {
+  color-scheme: light;
+
+  /* Paper and ink */
+  --paper: #f3efe7;
+  --paper-raised: #faf7f1;
+  --paper-sunk: #e9e3d7;
+  --ink: #1a1c1b;
+  --ink-muted: #5b5e5a;
+  --ink-faint: #8a8b85;
+  --line: rgb(26 28 27 / 0.18);
+  --line-strong: rgb(26 28 27 / 0.42);
+  --grid: rgb(26 28 27 / 0.06);
+
+  /* Brand */
+  --clay: #fbf9f4;
+  --brick: #b5412f;
+  --brick-ink: #9c3424;
+  --on-brick: #fbf9f4;
+  --forest: #24402f;
+  --sand: #d8c6a3;
+
+  /* Typology (tuned from the portfolio: rows orange, flats blue, shops green, mixed = hatch of both) */
+  --type-rowhouses: #c9601f;
+  --type-flats: #2f6db0;
+  --type-shops: #1d8460;
+  --type-mixed: #6a5fa8;
+  --type-office: #1a1c1b;
+  --type-amenity: #24402f;
+
+  /* Availability (S5): every status is TBD for now */
+  --status-available: #1d8460;
+  --status-booked: #b5412f;
+  --status-sold: #5b5e5a;
+  --status-tbd: #8a8b85;
+
+  /* Surfaces for overlays */
+  --scrim: rgb(26 28 27 / 0.55);
+  --focus: #b5412f;
+
+  /* Motion (CSS side; GSAP eases live in src/motion) */
+  --ease-draft: cubic-bezier(0.65, 0, 0.15, 1);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-quick: 180ms;
+  --duration-base: 360ms;
+  --duration-slow: 700ms;
+
+  /* Layout */
+  --gutter: clamp(1rem, 0.6rem + 2vw, 2.5rem);
+  --section-space: clamp(5rem, 3rem + 8vw, 11rem);
+  --content-max: 88rem;
+  --measure: 38rem;
+  --header-h: 4.25rem;
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --hairline: 1px;
+
+  /* Layers */
+  --z-content: 1;
+  --z-header: 40;
+  --z-whatsapp: 45;
+  --z-drawer: 60;
+  --z-curtain: 80;
+  --z-loader: 90;
+  --z-cursor: 100;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --paper: #121413;
+    --paper-raised: #1a1d1b;
+    --paper-sunk: #0c0e0d;
+    --ink: #ece6da;
+    --ink-muted: #aaa498;
+    --ink-faint: #7b776f;
+    --line: rgb(236 230 218 / 0.16);
+    --line-strong: rgb(236 230 218 / 0.38);
+    --grid: rgb(236 230 218 / 0.05);
+    --clay: #e8e2d6;
+    --brick: #da5e47;
+    --brick-ink: #e8775f;
+    --on-brick: #121413;
+    --forest: #6fa784;
+    --sand: #cdb88f;
+    --type-rowhouses: #f0843f;
+    --type-flats: #5d9be0;
+    --type-shops: #3fbf8c;
+    --type-mixed: #a497e6;
+    --type-office: #ece6da;
+    --type-amenity: #6fa784;
+    --status-available: #3fbf8c;
+    --status-booked: #da5e47;
+    --status-sold: #aaa498;
+    --status-tbd: #7b776f;
+    --scrim: rgb(0 0 0 / 0.6);
+    --focus: #e8775f;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #121413;
+  --paper-raised: #1a1d1b;
+  --paper-sunk: #0c0e0d;
+  --ink: #ece6da;
+  --ink-muted: #aaa498;
+  --ink-faint: #7b776f;
+  --line: rgb(236 230 218 / 0.16);
+  --line-strong: rgb(236 230 218 / 0.38);
+  --grid: rgb(236 230 218 / 0.05);
+  --clay: #e8e2d6;
+  --brick: #da5e47;
+  --brick-ink: #e8775f;
+  --on-brick: #121413;
+  --forest: #6fa784;
+  --sand: #cdb88f;
+  --type-rowhouses: #f0843f;
+  --type-flats: #5d9be0;
+  --type-shops: #3fbf8c;
+  --type-mixed: #a497e6;
+  --type-office: #ece6da;
+  --type-amenity: #6fa784;
+  --status-available: #3fbf8c;
+  --status-booked: #da5e47;
+  --status-sold: #aaa498;
+  --status-tbd: #7b776f;
+  --scrim: rgb(0 0 0 / 0.6);
+  --focus: #e8775f;
+}
+
+/* Tailwind v4 utilities: bg-paper, text-ink, border-line, text-brick, font-display, ease-draft ... */
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-raised: var(--paper-raised);
+  --color-paper-sunk: var(--paper-sunk);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-faint: var(--ink-faint);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-clay: var(--clay);
+  --color-brick: var(--brick);
+  --color-brick-ink: var(--brick-ink);
+  --color-on-brick: var(--on-brick);
+  --color-forest: var(--forest);
+  --color-sand: var(--sand);
+  --color-rowhouses: var(--type-rowhouses);
+  --color-flats: var(--type-flats);
+  --color-shops: var(--type-shops);
+  --color-mixed: var(--type-mixed);
+  --color-office: var(--type-office);
+  --color-amenity: var(--type-amenity);
+  --color-focus: var(--focus);
+
+  --font-display: var(--font-instrument-serif), "Times New Roman", serif;
+  --font-sans: var(--font-inter-tight), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+
+  --ease-draft: var(--ease-draft);
+  --ease-out: var(--ease-out);
+
+  --radius-xs: var(--radius-xs);
+  --radius-sm: var(--radius-sm);
+}
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
