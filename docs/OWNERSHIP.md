@@ -6,11 +6,11 @@ decides and routes it. Unit tests live next to the code and belong to the code's
 | Owner | Paths |
 |---|---|
 | Director | `tools/dev/**`, `package.json`, `package-lock.json`, `next.config.ts`, `tsconfig.json`, `eslint.config.mjs`, `vitest.config.mts`, `vitest.setup.ts`, `src/app/layout.tsx`, `src/content/schema.ts` (+ test), `src/lib/device-tier.ts`, `src/lib/device-tier-provider.tsx` (+ test), `src/styles/tokens.css`, `tests/unit/**`, `.env.example`, `.gitignore`, git, Vercel, `docs/*` except the files named below |
-| data-lead | `src/content/**` (except `schema.ts` and `i18n/`), `public/media/**`, `public/plan/**`, `tools/pdf/**`, `tools/images/**`, `docs/DATA_NOTES.md` |
-| motion-lead | `src/motion/**`, `src/components/transition/**`, `src/components/loader/**`, `src/components/cursor/**` |
+| data-lead | `src/content/**` (except `schema.ts`, `i18n/` and `copy/`), `public/media/**`, `public/plan/**`, `tools/pdf/**`, `tools/images/**`, `docs/DATA_NOTES.md` |
+| motion-lead | `src/motion/**`, `src/components/transition/**`, `src/components/loader/**`, `src/components/cursor/**`, `src/app/motion-lab/**` (dev-only review route) |
 | plan-lead | `src/features/plan/**`, `src/features/explorer/**` |
 | scene-lead | `tools/blender/**`, `tools/imagegen/**`, `src/features/diorama/**`, `public/3d/**`, `public/sequences/**`, `docs/IMAGEGEN_LOG.md` |
-| pages-lead | `src/app/**` (except `layout.tsx`, including `globals.css` and `src/app/api/**`), `src/components/**` (except the motion-lead folders), `src/content/i18n/**` (UI strings) |
+| pages-lead | `src/app/**` (except `layout.tsx` and `motion-lab/`, including `globals.css` and `src/app/api/**`), `src/components/**` (except the motion-lead folders), `src/content/i18n/**` (UI strings), `src/content/copy/**` (page copy that is not a fact), `src/features/enquiry/**` |
 | qa-lead | `tests/e2e/**`, `playwright.config.*`, `lighthouserc.*`, `docs/QA_REPORT.md` |
 
 ## Contracts (Director, Phase 0)
