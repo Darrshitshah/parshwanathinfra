@@ -49,8 +49,9 @@ export const viewport: Viewport = {
   colorScheme: "light dark",
 };
 
-// Sets data-theme before first paint so there is no flash. Reads a stored choice, else the system preference.
-const THEME_SCRIPT = `(function(){try{var t=localStorage.getItem("pi-theme");if(t!=="light"&&t!=="dark"){t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}document.documentElement.dataset.theme=t}catch(e){}})();`;
+// Runs before first paint: sets data-theme (stored choice, else system preference) and marks html with
+// data-js="1" and, after the S1 loader has played once this session, data-loader="seen" so CSS hides it.
+const THEME_SCRIPT = `(function(){var d=document.documentElement;d.dataset.js="1";try{var t=localStorage.getItem("pi-theme");if(t!=="light"&&t!=="dark"){t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}d.dataset.theme=t}catch(e){}try{if(sessionStorage.getItem("pi-loader-seen")==="1")d.dataset.loader="seen"}catch(e){}})();`;
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
