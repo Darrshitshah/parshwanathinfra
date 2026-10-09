@@ -1,18 +1,18 @@
 # Build progress
 
-Status: NOT STARTED (prepared 2026-10-10). When everything below is ticked and Darshit has the final preview, write
+Status: IN PROGRESS · Phase 1 (started 2026-10-10). When everything below is ticked and Darshit has the final preview, write
 "BUILD COMPLETE" on the status line.
 
 Each line: `- [x] item · commit <hash> · preview <url> · <date>`.
 
 ## Phase 0 · Director
-- [ ] Kickoff popup answered, decisions logged
-- [ ] Auto-resume task created (if chosen)
-- [ ] Tools verified (node, npm, git, uv, PyMuPDF extract in _source/cad)
-- [ ] git init on develop, remote added, first push
-- [ ] Next.js scaffolded, all packages installed
-- [ ] Contracts: schema.ts, device-tier.ts, motion/index.ts stubs, tokens.css, OWNERSHIP.md
-- [ ] Vercel connected, first preview link
+- [x] Kickoff popup answered, decisions logged · 2026-10-10
+- [x] Auto-resume task created (if chosen) · `parshwanath-build-resume`, hourly · 2026-10-10
+- [x] Tools verified (node, npm, git, uv, PyMuPDF extract in _source/cad) · 2026-10-10
+- [x] git init on develop, remote added, first push · local only (Q1: GitHub later) · commit b6894e7 · 2026-10-10
+- [x] Next.js scaffolded, all packages installed · commit b6894e7 · 2026-10-10
+- [x] Contracts: schema.ts, device-tier.ts, motion/index.ts stubs, tokens.css, OWNERSHIP.md · commit b6894e7 · 2026-10-10
+- [ ] Vercel connected, first preview link · deferred until Darshit connects GitHub (Q1); preview = local `npm run dev`
 
 ## Phase 1 · data-lead, motion-lead, pages-lead (shell)
 - [ ] CAD layer map and transform.json (residuals logged)

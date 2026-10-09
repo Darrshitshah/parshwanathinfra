@@ -9,7 +9,7 @@ export default defineConfig({
   test: {
     environment: "node",
     include: ["src/**/*.test.{ts,tsx}", "tests/unit/**/*.test.{ts,tsx}", "tools/**/*.test.{ts,mts}"],
-    exclude: ["node_modules/**", "tests/e2e/**", "_source/**", ".next/**"],
+    exclude: ["node_modules/**", "tests/e2e/**", "_source/**", ".next/**", ".next-*/**"],
     setupFiles: ["./vitest.setup.ts"],
     coverage: {
       provider: "v8",

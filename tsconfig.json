@@ -34,13 +34,28 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "**/*.mts"
+    "**/*.mts",
+    ".next-director/types/**/*.ts",
+    ".next-director/dev/types/**/*.ts",
+    ".next-data/types/**/*.ts",
+    ".next-data/dev/types/**/*.ts",
+    ".next-motion/types/**/*.ts",
+    ".next-motion/dev/types/**/*.ts",
+    ".next-pages/types/**/*.ts",
+    ".next-pages/dev/types/**/*.ts",
+    ".next-plan/types/**/*.ts",
+    ".next-plan/dev/types/**/*.ts",
+    ".next-scene/types/**/*.ts",
+    ".next-scene/dev/types/**/*.ts",
+    ".next-qa/types/**/*.ts",
+    ".next-qa/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",
     "_source",
     "tools/.venv*",
     ".next",
+    ".next-*",
     "public"
   ]
 }

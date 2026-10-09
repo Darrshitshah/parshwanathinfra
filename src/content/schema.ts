@@ -176,6 +176,8 @@ export const buildingSchema = z.object({
 
 export const plotSchema = z.object({
   number: z.number().int().min(1).max(165),
+  /** "low" when the number was read from the low-resolution photo of the printed sheet. */
+  numberConfidence: z.enum(["high", "low"]).default("high"),
   strip: z.string().min(1),
   polygon: polygonSchema,
   type: z.enum(["2BHK", "3BHK", "TBD"]),
@@ -365,7 +367,18 @@ export const projectSchema = z.object({
   rera: z.object({ number: orTbd(copy), authority: orTbd(copy) }),
   approvals: orTbd(z.array(copy)),
   landArea: orTbd(copy),
-  amenityIds: z.array(slug),
+  /** Amenities shown in renders or drawn on the plan, labelled "as per plan" on the page. Never add one neither shows. */
+  amenities: z.array(
+    z.object({
+      id: slug,
+      name: copy,
+      description: copy.optional(),
+      mediaId: slug.optional(),
+      evidence: z.enum(["plan", "render", "plan-and-render"]),
+      /** Matching amenity id in plan.json once it exists. */
+      planId: slug.optional(),
+    }),
+  ),
   galleryIds: z.array(slug),
   heroMediaId: slug,
   brochure: orTbd(publicPath),
