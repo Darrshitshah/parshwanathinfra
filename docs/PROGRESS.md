@@ -47,3 +47,8 @@ Each line: `- [x] item · commit <hash> · preview <url> · <date>`.
 - [ ] README, QUESTIONS.md, DECISIONS.md complete
 - [ ] Final preview link sent to Darshit
 - [ ] Auto-resume task deleted
+
+## Log
+- 2026-10-10 00:58 IST · Phase 1 leads started (data, motion, pages), each in its own build dir and port.
+- 2026-10-10 01:0x IST · Usage limit hit; all three leads stopped mid-step (work on disk kept). Headless Blender (`bpy` 5.2.2 LTS) installed in `tools/.venv-blender` for Phase 2.
+- 2026-10-10 04:52 IST · Limit reset; the three leads resumed with their context.
