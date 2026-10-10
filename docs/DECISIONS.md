@@ -19,3 +19,4 @@ Every choice made without Darshit, and every answer he gives. Format: `date · d
 - 2026-10-10 · Device tiers · phones reach Tier A only at 8 GB class memory and 8+ cores on 4G; phones that do not report memory (iOS Safari) get Tier B · keeps the WebGL diorama off the mid-range Android audience the spec names as Tier B.
 - 2026-10-10 · Images · `next/image` derives widths and AVIF/WebP from one compressed master per image (max 2560 w) · one pipeline, no duplicate variants in git.
 - 2026-10-10 · Dependencies · `@types/node` 24 (matches Node 24 here and Vitest 5's peer range) · the scaffold's `@types/node` 20 conflicted with Vitest 5.
+- 2026-10-10 · Usage pacing (Darshit) · Director checks the plan usage (5-hour window) about every 10 minutes, estimates the burn rate, sends leads "WRAP UP" near 85% and stops them by 95% so 5% always stays in reserve; work is checkpoint-committed before resuming · three max-effort leads exhausted the 5-hour window three times mid-step.
