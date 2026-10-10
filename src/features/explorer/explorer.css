@@ -1,0 +1,415 @@
+/*
+ * The building explorer (S5). Owner: plan-lead. Tokens only. Availability colours are the --status-* tokens;
+ * while every status is TBD the legend reads "Availability on request" and the bands carry a hatch.
+ */
+
+.ex {
+  display: grid;
+  gap: 1.25rem;
+  color: var(--ink);
+}
+.ex-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  padding-right: 3rem;
+}
+.ex-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.75rem, 1.3rem + 1.6vw, 2.75rem);
+  line-height: 1;
+}
+.ex-floors {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.ex-muted {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--ink-muted);
+}
+.ex-grid {
+  display: grid;
+  gap: 1.25rem;
+}
+@media (min-width: 48rem) {
+  .ex-grid {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: 2rem;
+  }
+}
+.ex-figure {
+  display: grid;
+  gap: 0.75rem;
+  align-content: start;
+}
+
+/* elevation */
+.ex-elevation {
+  width: 100%;
+  max-height: 24rem;
+  overflow: visible;
+}
+.ex-parapet,
+.ex-plinth {
+  fill: var(--paper-sunk);
+  stroke: var(--ink);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.ex-band {
+  cursor: pointer;
+  outline: none;
+}
+.ex-band__bg {
+  fill: var(--paper-raised);
+  stroke: var(--line-strong);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.ex-band__fill {
+  fill: transparent;
+  opacity: 0;
+  transition: opacity var(--duration-quick) linear;
+}
+.ex-band:hover .ex-band__fill,
+.ex-band:focus-visible .ex-band__fill,
+.ex-band.is-selected .ex-band__fill {
+  opacity: 1;
+}
+.ex-band.is-available .ex-band__fill {
+  fill: color-mix(in srgb, var(--status-available) 38%, transparent);
+}
+.ex-band.is-booked .ex-band__fill {
+  fill: color-mix(in srgb, var(--status-booked) 38%, transparent);
+}
+.ex-band.is-sold .ex-band__fill {
+  fill: color-mix(in srgb, var(--status-sold) 38%, transparent);
+}
+.ex-hatch {
+  stroke: var(--status-tbd);
+  stroke-width: 2;
+  opacity: 0.55;
+}
+.ex-win {
+  fill: none;
+  stroke: var(--ink-faint);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.ex-slab {
+  stroke: var(--ink);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.ex-band:focus-visible .ex-band__bg,
+.ex-band.is-selected .ex-band__bg {
+  stroke: var(--focus);
+  stroke-width: 2;
+}
+.ex-band__label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  fill: var(--ink-muted);
+}
+.ex-outline {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.4;
+  vector-effect: non-scaling-stroke;
+  pointer-events: none;
+}
+
+/* legend */
+.ex-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.ex-legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+.ex-legend__swatch {
+  width: 0.9rem;
+  height: 0.9rem;
+  border: 1px solid var(--line-strong);
+}
+.ex-legend__swatch.is-tbd {
+  background: repeating-linear-gradient(45deg, var(--status-tbd) 0 2px, transparent 2px 6px);
+}
+
+/* floor card and units */
+.ex-side {
+  align-self: start;
+}
+.ex-floor__title {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.75rem;
+}
+.ex-floor__sub {
+  margin: 1rem 0 0.2rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  font-weight: 400;
+}
+.ex-units {
+  display: grid;
+  gap: 0.4rem;
+  margin: 0.6rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.ex-unit {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  min-height: 2.75rem;
+  align-items: center;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid var(--line-strong);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+.ex-unit:hover {
+  border-color: var(--ink);
+}
+.ex-unit[aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+.ex-unit__meta {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+/* unit plan */
+.ex-planbox {
+  min-height: 0;
+}
+.ex-plan {
+  display: grid;
+  gap: 0.75rem;
+}
+@media (min-width: 48rem) {
+  .ex-plan {
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    grid-template-areas:
+      "title title"
+      "drawing facts"
+      "drawing rooms-title"
+      "drawing rooms"
+      "drawing note";
+    grid-template-rows: auto auto auto auto 1fr;
+    column-gap: 2rem;
+    align-items: start;
+  }
+  .ex-plan__title {
+    grid-area: title;
+  }
+  .ex-plan__drawing {
+    grid-area: drawing;
+  }
+  .ex-plan__facts {
+    grid-area: facts;
+  }
+  .ex-plan__rooms-title {
+    grid-area: rooms-title;
+  }
+  .ex-rooms {
+    grid-area: rooms;
+  }
+  .ex-plan > .ex-muted {
+    grid-area: note;
+  }
+}
+.ex-plan__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.5rem;
+}
+.ex-plan__drawing {
+  padding: 0.75rem;
+  background: var(--paper-raised);
+  border: 1px solid var(--line-strong);
+  color: var(--ink);
+}
+.ex-plan__drawing svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 26rem;
+}
+.ex-plan__drawing .u-labels {
+  font-family: var(--font-mono);
+  stroke: var(--paper-raised);
+  stroke-width: 0.3;
+  paint-order: stroke;
+}
+/* The CAD cut draws walls as solid bands; lighten them so labels and doors stay readable at 360 px. */
+.ex-plan__drawing .u-wall {
+  stroke-width: 0.5;
+}
+.ex-plan__drawing .u-edge {
+  stroke-width: 0.22;
+}
+.ex-plan__drawing .u-opening,
+.ex-plan__drawing .u-other,
+.ex-plan__drawing .u-projection {
+  stroke-width: 0.3;
+}
+.ex-plan__drawing .u-size {
+  fill: var(--ink-muted);
+}
+.ex-plan__facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin: 0;
+}
+.ex-plan__facts dt {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+.ex-plan__facts dd {
+  margin: 0.15rem 0 0;
+}
+.ex-plan__rooms-title {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 400;
+  color: var(--ink-muted);
+}
+.ex-rooms {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+}
+.ex-rooms li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid var(--line);
+}
+.ex-rooms__size {
+  color: var(--ink-muted);
+  white-space: nowrap;
+}
+.ex-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+/* picker */
+.ex-picker {
+  display: grid;
+  gap: 1.25rem;
+}
+.ex-picker__label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+.ex-picker__select {
+  max-width: 22rem;
+  min-height: 2.75rem;
+  padding: 0 0.8rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-xs);
+  background: var(--paper-raised);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+}
+
+/* dialog */
+.ex-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-drawer);
+  display: grid;
+  place-items: center;
+}
+.ex-dialog__scrim {
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--ink) 55%, transparent);
+}
+.ex-dialog__panel {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  padding: 1.25rem 1rem 2rem;
+  background: var(--paper);
+  outline: none;
+}
+@media (min-width: 48rem) {
+  .ex-dialog__panel {
+    width: min(64rem, calc(100% - 3rem));
+    height: auto;
+    max-height: calc(100dvh - 3rem);
+    padding: 2rem 2rem 2.5rem;
+    border: 1px solid var(--ink);
+  }
+}
+.ex-dialog__close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 1;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 0;
+  background: none;
+  font-size: 1.9rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ex-band__fill {
+    transition: none;
+  }
+}
