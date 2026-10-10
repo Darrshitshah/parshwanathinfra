@@ -9,7 +9,7 @@ decides and routes it. Unit tests live next to the code and belong to the code's
 | data-lead | `src/content/**` (except `schema.ts`, `i18n/` and `copy/`), `public/media/**`, `public/plan/**`, `tools/pdf/**`, `tools/images/**`, `docs/DATA_NOTES.md` |
 | motion-lead | `src/motion/**`, `src/components/transition/**`, `src/components/loader/**`, `src/components/cursor/**`, `src/app/motion-lab/**` (dev-only review route) |
 | plan-lead | `src/features/plan/**`, `src/features/explorer/**` |
-| scene-lead | `tools/blender/**`, `tools/imagegen/**`, `src/features/diorama/**`, `public/3d/**`, `public/sequences/**`, `docs/IMAGEGEN_LOG.md` |
+| scene-lead | `tools/blender/**`, `tools/imagegen/**`, `public/video/**`, `src/features/diorama/**`, `public/3d/**`, `public/sequences/**`, `docs/IMAGEGEN_LOG.md` |
 | pages-lead | `src/app/**` (except `layout.tsx` and `motion-lab/`, including `globals.css` and `src/app/api/**`), `src/components/**` (except the motion-lead folders), `src/content/i18n/**` (UI strings), `src/content/copy/**` (page copy that is not a fact), `src/features/enquiry/**` |
 | qa-lead | `tests/e2e/**`, `playwright.config.*`, `lighthouserc.*`, `docs/QA_REPORT.md` |
 
