@@ -13,7 +13,7 @@ ignore its CLAUDE.md (excluded in `.claude/settings.json`), and never run, edit,
 - Facts only from `docs/SOURCE_PACK.md`; unknown = visible "TBD" plus an entry in `docs/QUESTIONS.md`. Never invent numbers.
 - No em dashes or en dashes anywhere (Darshit's rule). Use commas, colons, full stops, "·" or "→".
 - Spelling: Parshwanath Infra, Shiv Shiva Township.
-- RERA line on the project page and footer (TBD until known). Renders labelled "Artist's impression".
+- No RERA mention anywhere for now (Darshit, 2026-10-10: Gujarat RERA registration later; revisit before public launch). Renders labelled "Artist's impression".
 - Commit and push after every meaningful step (only the Director runs git). Never commit `_source/`, secrets or 24 MB originals.
 - Paths contain spaces and this folder's name ends with a space: quote every path.
 - Never open Darshit's contacts or bills folders; never publish the raw CAD sheet or its title block.

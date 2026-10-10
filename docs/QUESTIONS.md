@@ -3,8 +3,8 @@
 Every TBD on the site, with where it shows. The Director batches these into popups (4 at a time, options with a recommended one).
 
 ## Legal
-- RERA registration number, and which authority (DNH and DD RERA or Gujarat RERA). Shows: footer, project page.
-- Legal company name: "Parshwanath Infra Pvt. Ltd." or "Parshwanath Infrastructure Pvt. Ltd."? Shows: footer, legal pages.
+- RERA: answered 2026-10-10, not shown for now; Gujarat RERA registration to follow. Add number before public launch.
+- Legal company name: answered 2026-10-10, "Parshwanath Infra Pvt. Ltd.".
 - Approvals (NA, plan sanction, others). Shows: project page.
 
 ## Plan
@@ -17,12 +17,12 @@ Every TBD on the site, with where it shows. The Director batches these into popu
 - Land area.
 
 ## Prices and availability
-- Current starting price (old ads say ₹17.05 L onwards for 1 and 2 BHK flats).
+- Price: answered 2026-10-10, "Price on request".
 - Inventory and availability per building, floor, unit and plot.
 - Brochure PDF.
 
 ## Contact
-- Sales phone numbers (ads show 78743 05000 and 78743 06000) and which is WhatsApp.
+- Sales numbers: answered 2026-10-10, 78743 05000 (WhatsApp) and 78743 06000.
 - Company email, office hours.
 
 ## Story and people
