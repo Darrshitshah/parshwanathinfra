@@ -16,6 +16,7 @@
 import type { HoleController } from "@/motion/hole";
 import type { MotionRuntime } from "@/motion/load";
 import type { Timeline } from "@/motion/types";
+import { normalizePath } from "./link-rules";
 
 /** Hard cap from click to `router.push`. Must stay below 900 ms (BUILD_SPEC section 2). */
 export const COVER_PUSH_LIMIT_MS = 850;
@@ -190,7 +191,7 @@ export function createTransitionController(env: ControllerEnv): TransitionContro
       phase: "covering",
       href,
       hash: hashOf(href),
-      fromPath: window.location.pathname,
+      fromPath: normalizePath(window.location.pathname),
       replace,
       startedAt: performance.now(),
       timeline: null,
@@ -260,8 +261,14 @@ export function createTransitionController(env: ControllerEnv): TransitionContro
       });
     },
 
-    notifyPathname(pathname) {
-      if (!run || run.mode !== "navigate") return;
+    notifyPathname(rawPathname) {
+      if (!run) return;
+      const pathname = normalizePath(rawPathname);
+      if (run.mode === "manual") {
+        // A hand-played cover is not waiting for a route. If the route changes under it, get out of the way.
+        if (pathname !== run.fromPath) abort();
+        return;
+      }
       if (run.phase === "covering") {
         // Something other than this transition changed the route (Back, a redirect): do not fight it.
         abort();

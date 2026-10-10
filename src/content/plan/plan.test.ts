@@ -29,6 +29,64 @@ describe("plan.json", () => {
     if (plan.plots.length > 0) expect(plotByNumber(plan.plots[0].number)).toBeDefined();
     expect(plotByNumber(0)).toBeUndefined();
   });
+
+  it("has all 165 plots, each on an existing row-house strip", () => {
+    expect(plan.plots).toHaveLength(165);
+    for (let n = 1; n <= 165; n += 1) expect(plotByNumber(n), `plot ${n}`).toBeDefined();
+    for (const plot of plan.plots) {
+      const strip = buildingById(plot.strip);
+      expect(strip, `strip of plot ${plot.number}`).toBeDefined();
+      expect(strip?.typology).toBe("rowhouses");
+    }
+  });
+
+  it("marks the plots read from the 2022 sheet high and the photo-read plots low", () => {
+    const high = plan.plots.filter((plot) => plot.numberConfidence === "high").map((plot) => plot.number);
+    const expected = [...Array.from({ length: 20 }, (_, i) => i + 1), ...Array.from({ length: 22 }, (_, i) => i + 144)];
+    expect(high.sort((a, b) => a - b)).toEqual(expected);
+  });
+
+  it("keeps plot polygons inside the render grid area", () => {
+    for (const plot of plan.plots) {
+      for (const [x, y] of plot.polygon) {
+        expect(x).toBeGreaterThan(0);
+        expect(x).toBeLessThan(plan.grid.width);
+        expect(y).toBeGreaterThan(0);
+        expect(y).toBeLessThan(plan.grid.height);
+      }
+    }
+  });
+
+  it("uses the sheet tags B1 to B21, C1 to C13, A and BLDG on the buildings that carry them", () => {
+    const tags = new Set(
+      plan.buildings.flatMap((building) => (building.sheetTag === "TBD" ? [] : building.sheetTag.split("/"))),
+    );
+    for (let n = 1; n <= 21; n += 1) expect(tags.has(`B${n}`), `B${n}`).toBe(true);
+    for (let n = 1; n <= 13; n += 1) expect(tags.has(`C${n}`), `C${n}`).toBe(true);
+    expect(tags.has("A")).toBe(true);
+    expect(tags.has("BLDG")).toBe(true);
+  });
+
+  it("has unique ids across roads, gardens, amenities and entries", () => {
+    for (const list of [plan.roads, plan.gardens, plan.amenities, plan.entries, plan.districts]) {
+      const ids = list.map((item) => item.id);
+      expect(new Set(ids).size).toBe(ids.length);
+    }
+  });
+
+  it("describes the row-house district as indicative and keeps floors TBD with an estimate", () => {
+    expect(plan.districts[0].name).toBe("Row houses, indicative as per the current layout plan");
+    expect(plan.districts[0].indicative).toBe(true);
+    for (const building of plan.buildings) {
+      expect(building.floors).toBe("TBD");
+      if (building.typology === "rowhouses") expect(building.floorsIndicative).toBe(2);
+    }
+  });
+
+  it("flags the clubhouse or temple at the tip as a label still to be confirmed", () => {
+    const tip = plan.amenities.find((amenity) => amenity.id === "tip-building");
+    expect(tip?.labelTbd).toBe(true);
+  });
 });
 
 describe("transform.json", () => {
@@ -64,5 +122,15 @@ describe("transform.json", () => {
   it("gives plan.json the same scale as the transform", () => {
     expect(plan.metresPerPx).toBeCloseTo(planTransform.metresPerRenderPx, 4);
     expect(planTransform.metresPerRenderPx).toBeCloseTo(planTransform.metresPerCadPt / Math.hypot(planTransform.matrix[0], planTransform.matrix[1]), 3);
+  });
+});
+
+describe("project amenities", () => {
+  it("point only at amenity ids that exist in plan.json", async () => {
+    const { shivShiva } = await import("../projects");
+    const ids = new Set(plan.amenities.map((amenity) => amenity.id));
+    for (const amenity of shivShiva.amenities) {
+      if (amenity.planId) expect(ids.has(amenity.planId), amenity.planId).toBe(true);
+    }
   });
 });

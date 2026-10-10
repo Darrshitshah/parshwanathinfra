@@ -24,7 +24,11 @@ export function handleHashClick(url: URL, event: Event): boolean {
   window.history.pushState(null, "", `${url.pathname}${url.search}${url.hash}`);
   scrollToTarget(target);
 
-  if (!target.matches(NATIVELY_FOCUSABLE)) target.setAttribute("tabindex", "-1");
+  // Like a native fragment jump: focus the target, but do not leave a tabindex behind once focus moves on.
+  if (!target.matches(NATIVELY_FOCUSABLE)) {
+    target.setAttribute("tabindex", "-1");
+    target.addEventListener("blur", () => target.removeAttribute("tabindex"), { once: true });
+  }
   target.focus({ preventScroll: true });
   return true;
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePageTransition } from "@/components/transition";
 import { Chip, LabButton, LabSection, Row } from "./lab-ui";
 
@@ -73,13 +73,22 @@ const CASES: LinkCase[] = [
 export function TransitionSection() {
   const transition = usePageTransition();
   const [busy, setBusy] = useState(false);
+  const mounted = useRef(false);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
 
   const roundTrip = async () => {
     setBusy(true);
     await transition.cover("Round trip");
     await wait(700);
+    // Left the lab in the meantime (the route change already released the curtain): do nothing more.
+    if (!mounted.current) return;
     await transition.reveal();
-    setBusy(false);
+    if (mounted.current) setBusy(false);
   };
 
   return (

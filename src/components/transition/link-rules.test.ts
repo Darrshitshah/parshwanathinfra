@@ -106,8 +106,13 @@ describe("evaluateClick: same-page fragments", () => {
     expect(evaluateClick(anchor("/about#team"), click, location).kind).toBe("transition");
   });
 
-  it("does not treat a different query string as the same page", () => {
-    expect(evaluateClick(anchor("/projects?tab=2"), click, location).kind).toBe("transition");
+  it("leaves a query-only change on the same route to Next (no pathname change, so nothing to wait for)", () => {
+    expect(evaluateClick(anchor("/projects?tab=2"), click, location)).toEqual({ kind: "native", reason: "same-path" });
+    expect(evaluateClick(anchor("/projects?tab=2#plan"), click, location)).toEqual({ kind: "native", reason: "same-path" });
+  });
+
+  it("still transitions when the route differs and only the query is new", () => {
+    expect(evaluateClick(anchor("/about?tab=2"), click, location).kind).toBe("transition");
   });
 });
 

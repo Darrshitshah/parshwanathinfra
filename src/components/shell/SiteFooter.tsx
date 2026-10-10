@@ -1,14 +1,18 @@
 /**
  * Site footer, laid out like the title block of a drawing: company and tagline, navigation, legal links, the site
- * office with a map link, the legal name and project facts (TBD chips while unconfirmed), the RERA registration
- * line (TBD until known), the three disclaimers and the copyright line. Owner: pages-lead.
+ * office with a map link and the sales numbers, the legal name and project facts (TBD chips while unconfirmed), the
+ * disclaimers and the copyright line. The RERA line and the RERA disclaimer appear only when SHOW_RERA is on
+ * (src/content/copy/flags.ts; off by Darshit's decision). Owner: pages-lead.
  */
 import Link from "next/link";
 import type { CSSProperties } from "react";
+import { SHOW_RERA } from "@/content/copy/flags";
 import { en } from "@/content/i18n/en";
+import { isTbd } from "@/content/schema";
 import { shivShiva } from "@/content/projects";
 import { site } from "@/content/site";
 import { TextLink } from "@/components/ui/TextLink";
+import { formatPhone } from "@/features/enquiry/phone";
 import { TbdValue, rich } from "@/components/ui/with-tbd";
 import { LEGAL_ITEMS, NAV_ITEMS } from "./nav";
 

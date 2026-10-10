@@ -9,25 +9,16 @@ import type Lenis from "lenis";
 
 let instance: Lenis | null = null;
 let lockCount = 0;
-const listeners = new Set<() => void>();
 
 /** Called by MotionRoot only. */
 export function setLenis(next: Lenis | null): void {
   instance = next;
   if (next && lockCount > 0) next.stop();
-  listeners.forEach((listener) => listener());
 }
 
 /** The running Lenis instance, or null (touch devices, reduced motion, Tier B and C, before mount). */
 export function getLenis(): Lenis | null {
   return instance;
-}
-
-export function subscribeLenis(listener: () => void): () => void {
-  listeners.add(listener);
-  return () => {
-    listeners.delete(listener);
-  };
 }
 
 export interface ScrollTargetOptions {
@@ -95,7 +86,9 @@ export function scrollToTopOrHash(hash = ""): void {
 
 /**
  * Pause smooth scrolling while something modal is open (the enquiry drawer, a lightbox). Returns the release
- * function. Calls nest: scrolling resumes when every lock has been released. Native scroll locking (body overflow)
+ * function, which you MUST call (a lock that is never released leaves smooth scrolling stopped for the whole session);
+ * in React use `useSmoothScrollLock(open)` from `use-scroll-lock.ts`, which releases it for you.
+ * Calls nest: scrolling resumes when every lock has been released. Native scroll locking (body overflow)
  * stays the caller's job; this only stops Lenis, which would otherwise keep scrolling the page behind the modal.
  * Put `data-lenis-prevent` on a scrollable modal panel so wheel scrolling inside it stays native.
  */

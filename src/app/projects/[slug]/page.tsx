@@ -9,11 +9,14 @@ import { getProject, projectIndex } from "@/content/projects";
 
 export const dynamicParams = false;
 
+/** Only `params` is typed: this page reads nothing from the query string (the global PageProps helper also demands searchParams). */
+type ProjectPageProps = { params: Promise<{ slug: string }> };
+
 export function generateStaticParams() {
   return projectIndex.filter((entry) => entry.visible).map((entry) => ({ slug: entry.slug }));
 }
 
-export async function generateMetadata({ params }: PageProps<"/projects/[slug]">): Promise<Metadata> {
+export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {
   const { slug } = await params;
   const project = getProject(slug);
   if (!project) return {};
@@ -30,7 +33,7 @@ export async function generateMetadata({ params }: PageProps<"/projects/[slug]">
   };
 }
 
-export default async function ProjectPage({ params }: PageProps<"/projects/[slug]">) {
+export default async function ProjectPage({ params }: ProjectPageProps) {
   const { slug } = await params;
   const project = getProject(slug);
   if (!project) notFound();

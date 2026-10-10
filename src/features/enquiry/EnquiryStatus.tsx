@@ -6,6 +6,7 @@
  */
 import type { CSSProperties, Ref } from "react";
 import { FilledButton, LineButton } from "@/components/ui/Button";
+import { keepTogether } from "@/components/ui/nowrap";
 import { TextLink } from "@/components/ui/TextLink";
 import { en } from "@/content/i18n/en";
 import { firstName, formatVisitDate, whatsappLink } from "./format";
@@ -124,7 +125,7 @@ export function NotConfiguredPanel({ config, onBack }: NotConfiguredPanelProps) 
       ) : null}
       <div className="grid gap-1.5">
         <p className="t-mono-sm text-ink-muted">{en.enquiry.notConfiguredAddress}</p>
-        <address className="t-small text-ink not-italic">{config.office.address}</address>
+        <address className="t-small text-ink not-italic">{keepTogether(config.office.address)}</address>
         <TextLink href={config.office.mapUrl} className="t-small">
           {en.common.openInMaps}
         </TextLink>

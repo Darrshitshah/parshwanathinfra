@@ -32,7 +32,7 @@ import { Curtain } from "./Curtain";
 import { TransitionContext, type TransitionApi } from "./context";
 import { createTransitionController, type TransitionController } from "./controller";
 import { handleHashClick } from "./hash-scroll";
-import { evaluateClick, findAnchor, toRouterHref } from "./link-rules";
+import { evaluateClick, findAnchor, normalizePath, toRouterHref } from "./link-rules";
 import { resolveTransitionTitle, ROOT_TITLE, titleFromPath } from "./titles";
 
 export interface TransitionProviderProps {
@@ -168,6 +168,8 @@ export function TransitionProvider({ children, shape }: TransitionProviderProps)
         const controller = controllerRef.current;
         if (!enabled || !controller) return "disabled";
         const url = new URL(href, window.location.href);
+        // Same route (query-only or hash-only): the pathname will not change, so there is no page to cover.
+        if (normalizePath(url.pathname) === normalizePath(window.location.pathname)) return "disabled";
         const result = controller.start(toRouterHref(url), {
           title: options?.title ?? titleFromPath(url.pathname),
           replace: options?.replace,

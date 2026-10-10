@@ -132,13 +132,19 @@ def main():
     tags = tag_positions(labels)
     overrides = json.loads(Path(args.overrides).read_text()) if Path(args.overrides).exists() else {}
 
+    keep_traced = set(overrides.get("keepTraced", []))
     items = []
     for tid, kind, poly_r in traced_polygons(args.traced):
+        poly_cad = apply_poly(minv, poly_r)
+        if tid in keep_traced:
+            # on the newer sheet only (not on the 2022 CAD): keep Darshit's trace as it is
+            items.append({"traced": tid, "kind": kind, "fp": poly_cad, "poly_cad": poly_cad, "walls": 0, "iou": 1.0, "fromTrace": True})
+            print(f"{tid:10s} kept as traced (not on the 2022 sheet)")
+            continue
         grown_cad = apply_poly(minv, poly_r.buffer(GROW_PX))
         fp, n = footprint(walls, tree, grown_cad)
-        poly_cad = apply_poly(minv, poly_r)
         iou = 0.0 if fp is None else fp.intersection(poly_cad).area / fp.union(poly_cad).area
-        items.append({"traced": tid, "kind": kind, "fp": fp, "poly_cad": poly_cad, "walls": n, "iou": iou})
+        items.append({"traced": tid, "kind": kind, "fp": fp, "poly_cad": poly_cad, "walls": n, "iou": iou, "fromTrace": False})
         print(f"{tid:10s} walls {n:5d} iou {iou:.2f}", "" if fp is not None else "NO FOOTPRINT")
 
     # tag assignment
@@ -150,7 +156,7 @@ def main():
         p = Point(x, y)
         best = None
         for it in items:
-            if it["fp"] is None or it["kind"] == "office":
+            if it["fp"] is None or it["kind"] == "office" or it.get("fromTrace"):
                 continue
             d = 0.0 if it["fp"].buffer(2.0).contains(p) else it["fp"].distance(p)
             if best is None or d < best[0]:
@@ -161,7 +167,7 @@ def main():
 
     # merge untagged footprints into the touching tagged one
     for it in items:
-        if it["fp"] is None or it["tags"]:
+        if it["fp"] is None or it["tags"] or it.get("fromTrace"):
             continue
         target = overrides.get("mergeInto", {}).get(it["traced"])
         if target is None:
@@ -188,6 +194,8 @@ def main():
                 "kind": it["kind"],
                 "tags": it["tags"],
                 "iou": round(it["iou"], 3),
+                "fromTrace": bool(it.get("fromTrace")),
+                "newTag": overrides.get("newTags", {}).get(it["traced"]),
                 "areaM2": round(fp.area * metres_per_pt**2, 1),
                 "polygonCad": [[round(x, 2), round(y, 2)] for x, y in list(fp.exterior.coords)[:-1]],
             }

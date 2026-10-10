@@ -17,7 +17,7 @@
  * chunk through `loadMotion()` right after hydration, so it stays out of the initial JavaScript (see load.ts).
  * For your own GSAP code use `useMotionEffect`; do not import `gsap` in a component.
  */
-import { useEffect, useLayoutEffect, useRef, type RefObject } from "react";
+import { useLayoutEffect, useRef, type RefObject } from "react";
 import { useDeviceTier } from "@/lib/device-tier-provider";
 import type { Tier } from "@/lib/device-tier";
 import type {

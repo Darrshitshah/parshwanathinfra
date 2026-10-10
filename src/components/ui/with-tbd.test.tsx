@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it } from "vitest";
 
 import { TBD } from "@/content/schema";
 import { Tbd, TBD_TOKEN } from "./Tbd";
+import { keepTogether } from "./nowrap";
 import { rich, TbdValue, withTbd } from "./with-tbd";
 
 afterEach(cleanup);
@@ -88,5 +89,28 @@ describe("TbdValue", () => {
     plain.unmount();
     const formatted = render(<TbdValue value={2024}>{(year) => `Since ${year}`}</TbdValue>);
     expect(formatted.container.textContent).toBe("Since 2024");
+  });
+});
+
+describe("rich: protected phrases", () => {
+  it("leaves the phrase breakable in a display heading when asked to", () => {
+    const { container } = render(<h2>{rich("On the Vapi-Silvassa Road.", { keepPhrases: false })}</h2>);
+    expect(container.querySelector(".whitespace-nowrap")).toBeNull();
+    expect(container.textContent).toBe("On the Vapi-Silvassa Road.");
+  });
+
+  it("still handles markup when phrases are not protected", () => {
+    const { container } = render(<p>{rich("Open *lawn*, area TBD", { keepPhrases: false })}</p>);
+    expect(container.querySelectorAll("em")).toHaveLength(1);
+    expect(container.querySelectorAll("[data-tbd]")).toHaveLength(1);
+  });
+});
+
+describe("keepTogether", () => {
+  it("wraps only the protected phrase and leaves other text alone", () => {
+    const { container } = render(<address>{keepTogether("Opp. Haryana Hotel, Pipariya, Karamkhal, Vapi-Silvassa Road")}</address>);
+    expect(container.querySelector(".whitespace-nowrap")?.textContent).toBe("Vapi-Silvassa Road");
+    expect(container.textContent).toBe("Opp. Haryana Hotel, Pipariya, Karamkhal, Vapi-Silvassa Road");
+    expect(keepTogether("No phrase here")).toBe("No phrase here");
   });
 });

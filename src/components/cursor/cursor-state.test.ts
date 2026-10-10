@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { MAX_LABEL_LENGTH, resolveCursorState, sameState } from "./cursor-state";
 
 function mount(html: string): HTMLElement {
@@ -13,6 +13,11 @@ function resolve(selector: string) {
 
 beforeEach(() => {
   document.body.innerHTML = "";
+});
+
+afterEach(() => {
+  document.documentElement.removeAttribute("data-cursor");
+  document.documentElement.removeAttribute("data-pi-cursor");
 });
 
 describe("resolveCursorState", () => {
@@ -103,14 +108,12 @@ describe("the root element", () => {
     document.documentElement.setAttribute("data-cursor", "on");
     mount("<p id='p'>Some text</p>");
     expect(resolve("#p")).toEqual({ kind: "default" });
-    document.documentElement.removeAttribute("data-cursor");
   });
 
   it("the cursor's own on-flag is data-pi-cursor, which no rule reads", () => {
     document.documentElement.setAttribute("data-pi-cursor", "on");
     mount("<p id='p'>Some text</p>");
     expect(resolve("#p")).toEqual({ kind: "default" });
-    document.documentElement.removeAttribute("data-pi-cursor");
   });
 });
 

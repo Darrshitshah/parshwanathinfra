@@ -43,7 +43,4 @@ export function isHtmlElement(value: unknown): value is HTMLElement {
   return value instanceof HTMLElement;
 }
 
-/** The items that exist: drops nulls and undefined, so optional parts can be passed to GSAP as one list. */
-export function present<T>(...items: (T | null | undefined)[]): T[] {
-  return items.filter((item): item is T => item !== null && item !== undefined);
-}
+export { present } from "../util";

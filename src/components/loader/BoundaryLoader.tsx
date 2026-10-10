@@ -41,6 +41,7 @@ import {
 import { measureViewportRect } from "@/motion/hole";
 import { loadMotion, type MotionRuntime } from "@/motion/load";
 import { hasNavigatedClientSide } from "@/motion/session";
+import { present } from "@/motion/util";
 import "./loader.css";
 import {
   canReveal,
@@ -127,8 +128,8 @@ function play({ runtime, plan, parts, signals, points, origin, finish }: PlayInp
   const { gsap } = runtime;
   const { root, svg, group, plug, guide, ink, arrow, dot, counter, digits } = parts;
   const timing = LOADER_TIMING;
-  const lines = [ink, arrow].filter((shape): shape is SVGPathElement => shape !== null);
-  const accents = [ink, guide, arrow, dot].filter((shape): shape is SVGElement => shape !== null);
+  const lines = present<SVGPathElement>(ink, arrow);
+  const accents = present<SVGElement>(ink, guide, arrow, dot);
   let tick: (() => void) | null = null;
 
   const context = gsap.context(() => {

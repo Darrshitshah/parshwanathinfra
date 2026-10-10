@@ -14,11 +14,13 @@ export function WipeSection() {
     const line = lineRef.current;
     const block = blockRef.current;
     if (!line || !block) return;
+    // Mutated in place, so the cleanup below always sees the timelines that are actually running.
     timelines.current.forEach((timeline) => timeline.progress(1).kill());
-    timelines.current = [
+    timelines.current.length = 0;
+    timelines.current.push(
       boulevardWipe(line, { direction, reduced, mode: "line" }),
       boulevardWipe(block, { direction, reduced, mode: "reveal" }),
-    ];
+    );
   };
 
   useEffect(() => {

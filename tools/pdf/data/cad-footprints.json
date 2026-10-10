@@ -11,6 +11,8 @@
     "B18"
    ],
    "iou": 0.742,
+   "fromTrace": false,
+   "newTag": null,
    "areaM2": 462.8,
    "polygonCad": [
     [
@@ -65,6 +67,8 @@
     "B19"
    ],
    "iou": 0.854,
+   "fromTrace": false,
+   "newTag": null,
    "areaM2": 569.6,
    "polygonCad": [
     [
@@ -110,6 +114,8 @@
     "B17"
    ],
    "iou": 0.881,
+   "fromTrace": false,
+   "newTag": null,
    "areaM2": 778.7,
    "polygonCad": [
     [
@@ -164,6 +170,8 @@
     "B15"
    ],
    "iou": 0.908,
+   "fromTrace": false,
+   "newTag": null,
    "areaM2": 2098.5,
    "polygonCad": [
     [
@@ -289,6 +297,8 @@
     "B7"
    ],
    "iou": 0.785,
+   "fromTrace": false,
+   "newTag": null,
    "areaM2": 1588.0,
    "polygonCad": [
     [
@@ -387,6 +397,8 @@
     "B8"
    ],
    "iou": 0.724,
+   "fromTrace": false,
+   "newTag": null,
    "areaM2": 484.2,
    "polygonCad": [
     [
@@ -465,6 +477,8 @@
     "B9"
    ],
    "iou": 0.62,
+   "fromTrace": false,
+   "newTag": null,
    "areaM2": 462.7,
    "polygonCad": [
     [
@@ -519,6 +533,8 @@
     "B11"
    ],
    "iou": 0.78,
+   "fromTrace": false,
+   "newTag": null,
    "areaM2": 487.6,
    "polygonCad": [
     [
@@ -601,6 +617,8 @@
     "B10"
    ],
    "iou": 0.88,
+   "fromTrace": false,
+   "newTag": null,
    "areaM2": 472.8,
    "polygonCad": [
     [
@@ -667,6 +685,8 @@
     "B12"
    ],
    "iou": 0.52,
+   "fromTrace": false,
+   "newTag": null,
    "areaM2": 463.8,
    "polygonCad": [
     [
@@ -720,6 +740,8 @@
     "C2"
    ],
    "iou": 0.772,
+   "fromTrace": false,
+   "newTag": null,
    "areaM2": 1071.7,
    "polygonCad": [
     [
@@ -846,6 +868,8 @@
     "C5"
    ],
    "iou": 0.855,
+   "fromTrace": false,
+   "newTag": null,
    "areaM2": 1146.5,
    "polygonCad": [
     [
@@ -1000,6 +1024,8 @@
     "C10"
    ],
    "iou": 0.896,
+   "fromTrace": false,
+   "newTag": null,
    "areaM2": 1073.9,
    "polygonCad": [
     [
@@ -1138,9 +1164,7 @@
   },
   {
    "traced": "flats-22",
-   "absorbed": [
-    "flats-23"
-   ],
+   "absorbed": [],
    "kind": "flats",
    "tags": [
     "C11",
@@ -1148,68 +1172,10 @@
     "C13"
    ],
    "iou": 0.83,
-   "areaM2": 1312.5,
+   "fromTrace": false,
+   "newTag": null,
+   "areaM2": 1127.7,
    "polygonCad": [
-    [
-     638.58,
-     200.13
-    ],
-    [
-     653.02,
-     195.23
-    ],
-    [
-     653.02,
-     174.72
-    ],
-    [
-     648.82,
-     169.43
-    ],
-    [
-     653.02,
-     163.6
-    ],
-    [
-     653.02,
-     142.37
-    ],
-    [
-     649.48,
-     140.12
-    ],
-    [
-     587.28,
-     140.12
-    ],
-    [
-     583.74,
-     142.15
-    ],
-    [
-     586.67,
-     161.1
-    ],
-    [
-     558.8,
-     168.6
-    ],
-    [
-     556.88,
-     185.46
-    ],
-    [
-     562.22,
-     205.22
-    ],
-    [
-     558.05,
-     211.26
-    ],
-    [
-     556.88,
-     241.98
-    ],
     [
      563.24,
      262.25
@@ -1227,8 +1193,12 @@
      339.27
     ],
     [
-     581.35,
-     335.53
+     576.44,
+     336.34
+    ],
+    [
+     581.52,
+     339.74
     ],
     [
      583.74,
@@ -1297,6 +1267,94 @@
     [
      620.66,
      196.54
+    ],
+    [
+     631.25,
+     198.08
+    ],
+    [
+     627.25,
+     180.41
+    ],
+    [
+     633.41,
+     174.91
+    ],
+    [
+     632.24,
+     163.46
+    ],
+    [
+     585.28,
+     161.48
+    ],
+    [
+     558.8,
+     168.6
+    ],
+    [
+     556.88,
+     185.46
+    ],
+    [
+     562.22,
+     205.22
+    ],
+    [
+     558.05,
+     211.26
+    ],
+    [
+     556.88,
+     241.98
+    ]
+   ]
+  },
+  {
+   "traced": "flats-23",
+   "absorbed": [],
+   "kind": "flats",
+   "tags": [],
+   "iou": 1.0,
+   "fromTrace": true,
+   "newTag": "Q1",
+   "areaM2": 563.0,
+   "polygonCad": [
+    [
+     710.57,
+     166.9
+    ],
+    [
+     705.33,
+     151.99
+    ],
+    [
+     687.83,
+     121.28
+    ],
+    [
+     681.72,
+     103.74
+    ],
+    [
+     588.74,
+     143.95
+    ],
+    [
+     580.84,
+     152.71
+    ],
+    [
+     601.85,
+     173.77
+    ],
+    [
+     614.98,
+     196.58
+    ],
+    [
+     630.75,
+     198.36
     ]
    ]
   },
@@ -1310,6 +1368,8 @@
     "C7"
    ],
    "iou": 0.85,
+   "fromTrace": false,
+   "newTag": null,
    "areaM2": 932.4,
    "polygonCad": [
     [
@@ -1426,6 +1486,8 @@
     "C6"
    ],
    "iou": 0.721,
+   "fromTrace": false,
+   "newTag": null,
    "areaM2": 280.4,
    "polygonCad": [
     [
@@ -1499,6 +1561,8 @@
     "B4"
    ],
    "iou": 0.825,
+   "fromTrace": false,
+   "newTag": null,
    "areaM2": 825.1,
    "polygonCad": [
     [
@@ -1612,6 +1676,8 @@
     "B21"
    ],
    "iou": 0.89,
+   "fromTrace": false,
+   "newTag": null,
    "areaM2": 1133.0,
    "polygonCad": [
     [
@@ -1765,6 +1831,8 @@
     "B2"
    ],
    "iou": 0.816,
+   "fromTrace": false,
+   "newTag": null,
    "areaM2": 1119.0,
    "polygonCad": [
     [
@@ -1965,6 +2033,8 @@
     "A"
    ],
    "iou": 0.75,
+   "fromTrace": false,
+   "newTag": null,
    "areaM2": 510.3,
    "polygonCad": [
     [
@@ -2053,6 +2123,8 @@
     "BLDG"
    ],
    "iou": 0.645,
+   "fromTrace": false,
+   "newTag": null,
    "areaM2": 86.8,
    "polygonCad": [
     [

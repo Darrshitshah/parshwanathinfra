@@ -22,7 +22,8 @@ export type NativeReason =
   | "unsupported-protocol"
   | "cross-origin"
   | "file-link"
-  | "same-url";
+  | "same-url"
+  | "same-path";
 
 export type ClickDecision =
   | { kind: "transition"; url: URL }
@@ -53,6 +54,11 @@ export const FILE_LINK = /\.(?:pdf|zip|rar|7z|docx?|xlsx?|pptx?|csv|txt|rtf|xml|
 
 function native(reason: NativeReason): ClickDecision {
   return { kind: "native", reason };
+}
+
+/** "/about/" and "/about" are the same route (Next normalises the slash away), so compare them without it. */
+export function normalizePath(pathname: string): string {
+  return pathname.length > 1 ? pathname.replace(/\/+$/, "") || "/" : pathname;
 }
 
 /** The `<a href>` a click landed on, or null (SVG anchors and non-link targets are never intercepted). */
@@ -87,8 +93,12 @@ export function evaluateClick(anchor: HTMLAnchorElement | null, event: ClickLike
   if (url.origin !== location.origin) return native("cross-origin");
   if (FILE_LINK.test(url.pathname)) return native("file-link");
 
-  const samePage = url.pathname === current.pathname && url.search === current.search;
-  if (samePage) return url.hash ? { kind: "hash", url } : native("same-url");
+  if (normalizePath(url.pathname) === normalizePath(current.pathname)) {
+    // Same route. A new query string (filters, tabs) changes state, not the page, and the pathname never changes, so
+    // there would be nothing to wait for: leave it to Next. A bare #fragment is a scroll.
+    if (url.search !== current.search) return native("same-path");
+    return url.hash ? { kind: "hash", url } : native("same-url");
+  }
   return { kind: "transition", url };
 }
 

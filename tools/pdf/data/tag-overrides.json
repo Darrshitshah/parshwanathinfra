@@ -1,8 +1,14 @@
 {
- "_about": "Hand decisions for cad_buildings.py: tags forced onto a traced footprint, footprints merged into another.",
+ "_about": "Hand decisions for cad_buildings.py: tags forced onto a traced footprint, footprints merged into another, footprints kept exactly as traced because they are not on the 2022 sheet, and tags read from the newer printed sheet (low resolution photo).",
  "tagToTraced": {
   "BLDG": "office-00",
   "A": "shops-00"
  },
- "mergeInto": {}
+ "mergeInto": {},
+ "keepTraced": [
+  "flats-23"
+ ],
+ "newTags": {
+  "flats-23": "Q1"
+ }
 }

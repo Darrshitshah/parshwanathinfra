@@ -1,0 +1,18 @@
+{
+  "_about": "Points read from the 2022 CAD sheet (display points) that build-plan.mjs maps to the render grid with transform.json: the ENTRY arrows into the five courts, the security cabins beside them (7'2\" x 9'0\") and the row-house entry where the 30 ft spine passes from the flats into the row houses. Court sectors follow the SECTOR label whose court the entry opens into.",
+  "courtEntries": [
+    { "id": "court-entry-01", "sector": "01", "cad": [186.1, 437.2] },
+    { "id": "court-entry-02", "sector": "02", "cad": [409.6, 437.1] },
+    { "id": "court-entry-03", "sector": "03", "cad": [848.8, 425.4] },
+    { "id": "court-entry-04", "sector": "04", "cad": [937.5, 396.3] },
+    { "id": "court-entry-05", "sector": "05", "cad": [671.3, 396.3] }
+  ],
+  "courtCabins": [
+    { "id": "court-cabin-01", "sector": "01", "cad": [201.2, 448.0] },
+    { "id": "court-cabin-02", "sector": "02", "cad": [425.1, 448.0] },
+    { "id": "court-cabin-03", "sector": "03", "cad": [834.2, 431.1] },
+    { "id": "court-cabin-04", "sector": "04", "cad": [923.8, 387.4] },
+    { "id": "court-cabin-05", "sector": "05", "cad": [656.6, 387.1] }
+  ],
+  "rowhouseEntry": { "cad": [1048.5, 412.5] }
+}

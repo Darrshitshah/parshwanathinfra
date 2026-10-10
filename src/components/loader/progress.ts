@@ -92,21 +92,19 @@ export function findHeroImage(selector: string, root: ParentNode = document): HT
   return element?.querySelector("img") ?? null;
 }
 
-/** Resolves once the image is loaded and decoded, or has failed (a broken hero must never hold the loader). */
-export function decodeImage(image: HTMLImageElement): Promise<void> {
+/**
+ * Resolves once the image is loaded and decoded, or has failed (a broken hero must never hold the loader).
+ * If `signal` aborts first, the listeners are removed and the promise never settles (nothing awaits it any more).
+ */
+export function decodeImage(image: HTMLImageElement, signal?: AbortSignal): Promise<void> {
   const decode = () => (image.decode ? image.decode().catch(() => undefined) : Promise.resolve());
   if (image.complete && image.naturalWidth > 0) return decode();
   return new Promise<void>((resolve) => {
-    const settle = () => {
-      image.removeEventListener("load", onLoad);
-      image.removeEventListener("error", settle);
-      resolve();
-    };
     const onLoad = () => {
-      void decode().then(settle);
+      void decode().then(resolve);
     };
-    image.addEventListener("load", onLoad, { once: true });
-    image.addEventListener("error", settle, { once: true });
+    image.addEventListener("load", onLoad, { once: true, signal });
+    image.addEventListener("error", () => resolve(), { once: true, signal });
   });
 }
 
@@ -116,6 +114,7 @@ export function decodeImage(image: HTMLImageElement): Promise<void> {
  */
 export function trackLoading(heroSelector: string, onSignal: (signal: LoadSignal) => void): () => void {
   let cancelled = false;
+  const listeners = new AbortController();
   const mark = (signal: LoadSignal) => {
     if (!cancelled) onSignal(signal);
   };
@@ -129,11 +128,12 @@ export function trackLoading(heroSelector: string, onSignal: (signal: LoadSignal
   else window.addEventListener("load", onWindowLoad, { once: true });
 
   const hero = findHeroImage(heroSelector);
-  if (hero) void decodeImage(hero).then(() => mark("hero"));
+  if (hero) void decodeImage(hero, listeners.signal).then(() => mark("hero"));
   else mark("hero");
 
   return () => {
     cancelled = true;
+    listeners.abort();
     window.removeEventListener("load", onWindowLoad);
   };
 }

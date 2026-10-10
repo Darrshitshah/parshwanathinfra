@@ -36,12 +36,12 @@ export function Location({ id = "location", index = "07" }: LocationProps) {
     <section id={id} aria-labelledby={`${id}-title`} className="section-pad border-y border-line bg-paper-sunk">
       <div className="wrap">
         <Eyebrow index={index}>{homeCopy.location.eyebrow}</Eyebrow>
+        <h2 id={`${id}-title`} className="t-display-2 mt-10 text-ink md:mt-14">
+          {rich(homeCopy.location.heading, { keepPhrases: false })}
+        </h2>
         <div className="mt-10 grid gap-12 md:mt-14 lg:grid-cols-12 lg:gap-x-(--gutter)">
           <div className="lg:col-span-5">
-            <h2 id={`${id}-title`} className="t-display-2 text-ink">
-              {rich(homeCopy.location.heading)}
-            </h2>
-            <p className="t-lead mt-6 text-ink-muted">{rich(homeCopy.location.body)}</p>
+            <p className="t-lead m-0 text-ink-muted">{rich(homeCopy.location.body)}</p>
 
             <dl className="m-0 mt-10 grid gap-0 border-t border-line-strong">
               <FactRow label={labels.address}>

@@ -18,7 +18,8 @@
  * Constants are safe anywhere: `@/motion/constants`.
  *
  * React pieces live next to this barrel:
- *   `@/motion/hooks`        useSplitReveal, useInkDraw, useDimensionCount, useStripBlinds, useBoulevardWipe, useParallax, ...
+ *   `@/motion/use-scroll-lock`  useSmoothScrollLock(open) for modals
+ *   `@/motion/hooks`        useMotionEffect, useSplitReveal, useInkDraw, useDimensionCount, useStripBlinds, useBoulevardWipe, useParallax, ...
  *   `@/motion/Reveal`       <Reveal kind="split|ink|blinds|wipe|fade">, <DimensionStat>, <Parallax>
  *   `@/motion/MotionRoot`   mounted once by layout.tsx
  *   `@/components/cursor`   <Magnetic>, useMagnetic, data-cursor attributes

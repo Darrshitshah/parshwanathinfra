@@ -4,6 +4,7 @@
  */
 import { Fragment, type ReactNode } from "react";
 import { Tbd, TBD_TOKEN } from "./Tbd";
+import { isNowrapPhrase, NOWRAP_SOURCE } from "./nowrap";
 
 const TOKEN_PATTERN = /\b(TBD)\b/;
 
@@ -15,20 +16,26 @@ export function withTbd(text: string): ReactNode {
   );
 }
 
-/** Phrases that must never break across lines, wherever they appear (a hyphen is a line-break opportunity). */
-const NOWRAP_PHRASES = ["Vapi-Silvassa Road"] as const;
+/** The markup tokens, and the same with the protected phrases added (both capture, so split keeps the separators). */
+const MARKUP = String.raw`\*[^*]+\*|~[^~]+~|\bTBD\b`;
+const MARKUP_PATTERN = new RegExp(`(${MARKUP})`);
+const MARKUP_AND_PHRASES_PATTERN = new RegExp(`(${MARKUP}|${NOWRAP_SOURCE})`);
 
-const RICH_PATTERN = new RegExp(
-  `(\\*[^*]+\\*|~[^~]+~|\\bTBD\\b|${NOWRAP_PHRASES.map((phrase) => phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})`,
-);
+interface RichOptions {
+  /**
+   * Keep named phrases such as "Vapi-Silvassa Road" on one line (default). Turn it off in display headings, where a
+   * phrase wider than its column would overflow instead of wrapping.
+   */
+  keepPhrases?: boolean;
+}
 
 /**
  * Page copy with light markup: the word TBD becomes a chip, *starred words* become italic emphasis (in the display
- * serif's italic) and ~tilde words~ never break across lines. "Vapi-Silvassa Road" never breaks at its hyphen, wherever
- * it appears (also in content strings). Used for headings, statements and any text that may carry these phrases.
+ * serif's italic) and ~tilde words~ never break across lines. Named phrases ("Vapi-Silvassa Road") also stay on one
+ * line, wherever they appear (also in content strings), unless `keepPhrases` is false.
  */
-export function rich(text: string): ReactNode {
-  const parts = text.split(RICH_PATTERN);
+export function rich(text: string, { keepPhrases = true }: RichOptions = {}): ReactNode {
+  const parts = text.split(keepPhrases ? MARKUP_AND_PHRASES_PATTERN : MARKUP_PATTERN);
   if (parts.length === 1) return text;
   return parts.map((part, index) => {
     if (part === TBD_TOKEN) return <Tbd key={`tbd-${index}`} />;
@@ -46,7 +53,7 @@ export function rich(text: string): ReactNode {
         </span>
       );
     }
-    if ((NOWRAP_PHRASES as readonly string[]).includes(part)) {
+    if (keepPhrases && isNowrapPhrase(part)) {
       return (
         <span key={`nb-${index}`} className="whitespace-nowrap">
           {part}

@@ -17,6 +17,7 @@ import dynamic from "next/dynamic";
 import { useEffect, type ReactNode } from "react";
 import { TransitionProvider } from "@/components/transition";
 import { useDeviceTier } from "@/lib/device-tier-provider";
+import { getMotion } from "./load";
 import "./motion.css";
 import type { TownshipShape } from "./township";
 import { useLenisScroll } from "./use-lenis-scroll";
@@ -38,7 +39,9 @@ export function MotionRoot({ children, shape }: MotionRootProps) {
     const html = document.documentElement;
     html.dataset.motion = "off";
     return () => {
-      delete html.dataset.motion;
+      // Back to a tier that animates: "ready" if the runtime is already there (it will not announce itself again).
+      if (getMotion()) html.dataset.motion = "ready";
+      else delete html.dataset.motion;
     };
   }, [ready, tier]);
 

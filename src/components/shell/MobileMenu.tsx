@@ -12,6 +12,7 @@ import { useRef } from "react";
 import { createPortal } from "react-dom";
 import { EnquireButton } from "@/components/ui/EnquireButton";
 import { Icon } from "@/components/ui/Icon";
+import { keepTogether } from "@/components/ui/nowrap";
 import { TextLink } from "@/components/ui/TextLink";
 import { useDialog } from "@/components/ui/use-dialog";
 import { useDeviceTier } from "@/lib/device-tier-provider";
@@ -101,7 +102,7 @@ function MenuPanel({ onClose, pathname, nav, labels, office, fadesOnly }: PanelP
         </div>
         <div className="grid gap-1.5 border-t border-line pt-5">
           <p className="t-mono-sm m-0 text-ink-muted">{office.heading}</p>
-          <address className="t-small not-italic text-ink">{office.address}</address>
+          <address className="t-small not-italic text-ink">{keepTogether(office.address)}</address>
           <TextLink href={office.mapUrl} className="t-small">
             {office.mapLabel}
           </TextLink>
