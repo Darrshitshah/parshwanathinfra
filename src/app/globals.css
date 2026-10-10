@@ -1,7 +1,11 @@
 @import "tailwindcss";
 @import "../styles/tokens.css";
 
-/* Base layer. Owner: pages-lead (extend freely; keep tokens in src/styles/tokens.css). */
+/*
+ * Look A "Drafting table". Owner: pages-lead. Tokens live in src/styles/tokens.css (Director); this file holds the
+ * base layer, the typographic scale and the small component vocabulary of the site: drawn underlines, the single
+ * filled button, TBD chips, drawing marks and on-image callouts. No raw hex values: tokens only.
+ */
 
 @layer base {
   html {
@@ -9,6 +13,8 @@
     color: var(--ink);
     -webkit-text-size-adjust: 100%;
     text-rendering: optimizeLegibility;
+    /* Anchored sections clear the sticky header and the project sub-nav. */
+    scroll-padding-top: calc(var(--header-h) + 4.5rem);
   }
 
   body {
@@ -16,6 +22,8 @@
     background: var(--paper);
     color: var(--ink);
     font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.6;
     font-feature-settings: "ss01", "cv11";
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -32,12 +40,722 @@
     color: var(--on-brick);
   }
 
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+  }
+
+  p,
+  li {
+    text-wrap: pretty;
+  }
+
   .font-mono,
   code,
   kbd {
     font-variant-ligatures: none;
   }
+
+  /* Native form controls follow the theme. */
+  input,
+  select,
+  textarea,
+  button {
+    font: inherit;
+    color: inherit;
+  }
 }
+
+/* ------------------------------------------------------------------------------------------------ */
+/* Layout and type utilities                                                                          */
+/* ------------------------------------------------------------------------------------------------ */
+
+@utility wrap {
+  width: 100%;
+  max-width: var(--content-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+@utility section-pad {
+  padding-block: var(--section-space);
+}
+
+/* Mono annotation: the drawing-label voice. */
+@utility t-mono {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.5;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-variant-ligatures: none;
+}
+
+@utility t-mono-sm {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  line-height: 1.45;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-variant-ligatures: none;
+}
+
+/* Display serif scale: huge against the small mono labels. Instrument Serif has one weight: never bold it. */
+@utility t-display-1 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(5.5rem, 1.5rem + 24vw, 9rem);
+  line-height: 0.86;
+  letter-spacing: -0.03em;
+}
+
+@utility t-display-2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2.875rem, 1.6rem + 5.4vw, 6.75rem);
+  line-height: 0.95;
+  letter-spacing: -0.022em;
+}
+
+@utility t-display-3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2.125rem, 1.5rem + 2.5vw, 3.875rem);
+  line-height: 1.02;
+  letter-spacing: -0.016em;
+}
+
+@utility t-display-4 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.625rem, 1.3rem + 1.1vw, 2.375rem);
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+}
+
+@utility t-lead {
+  font-size: clamp(1.125rem, 1.04rem + 0.38vw, 1.375rem);
+  line-height: 1.5;
+}
+
+@utility t-small {
+  font-size: 0.875rem;
+  line-height: 1.55;
+}
+
+/* Horizontal scrollers (amenities, gallery): keep the native scrollbar, make it quiet. */
+@utility scroller {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+
+/* ------------------------------------------------------------------------------------------------ */
+/* Component vocabulary                                                                               */
+/* ------------------------------------------------------------------------------------------------ */
+
+@layer components {
+  /* Skip link: first focusable thing on every page. */
+  .skip-link {
+    position: fixed;
+    left: var(--gutter);
+    top: 0.75rem;
+    z-index: calc(var(--z-cursor) + 10);
+    padding: 0.75rem 1rem;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transform: translateY(-300%);
+    transition: transform var(--duration-quick) var(--ease-out);
+  }
+  .skip-link:focus-visible {
+    transform: translateY(0);
+  }
+
+  /* Text link whose underline draws on hover and focus. A faint rule is always there. */
+  .link-draw {
+    background-image: linear-gradient(var(--line-strong), var(--line-strong)), linear-gradient(currentColor, currentColor);
+    background-size:
+      100% 1px,
+      0% 1px;
+    background-position:
+      0 100%,
+      0 100%;
+    background-repeat: no-repeat;
+    padding-bottom: 0.12em;
+    transition: background-size 520ms var(--ease-draft);
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+  .link-draw:hover,
+  .link-draw:focus-visible,
+  .link-draw[aria-current="page"] {
+    background-size:
+      100% 1px,
+      100% 1px;
+  }
+  .link-draw[aria-current="page"] {
+    background-image: linear-gradient(var(--brick), var(--brick)), linear-gradient(var(--brick), var(--brick));
+    background-size:
+      100% 2px,
+      100% 2px;
+  }
+
+  /* Quiet variant for navigation lists: no resting rule, the underline only draws on hover and focus. */
+  .link-draw--quiet {
+    background-size:
+      0% 1px,
+      0% 1px;
+  }
+  .link-draw--quiet:hover,
+  .link-draw--quiet:focus-visible {
+    background-size:
+      0% 1px,
+      100% 1px;
+  }
+  .link-draw--quiet[aria-current="page"] {
+    background-size:
+      100% 2px,
+      100% 2px;
+  }
+
+  /* The single filled button: the enquiry call to action. */
+  .btn-enquire {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    min-height: 2.75rem;
+    padding: 0.7rem 1.25rem;
+    background: var(--brick);
+    color: var(--on-brick);
+    border: 1px solid var(--brick);
+    border-radius: var(--radius-xs);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    line-height: 1;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition:
+      background-color var(--duration-quick) linear,
+      border-color var(--duration-quick) linear;
+  }
+  .btn-enquire:hover {
+    background: var(--brick-ink);
+    border-color: var(--brick-ink);
+  }
+  .btn-enquire:disabled {
+    cursor: progress;
+    opacity: 0.72;
+  }
+  .btn-enquire__arrow {
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+  .btn-enquire:hover .btn-enquire__arrow {
+    transform: translateX(0.25rem);
+  }
+  .btn-enquire--lg {
+    min-height: 3.5rem;
+    padding: 1rem 1.75rem;
+    font-size: 0.8125rem;
+  }
+
+  /* Outline button: only for secondary and disabled states (never filled). */
+  .btn-line {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.625rem;
+    min-height: 2.75rem;
+    padding: 0.7rem 1.1rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-xs);
+    background: transparent;
+    color: var(--ink);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    line-height: 1;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition:
+      border-color var(--duration-quick) linear,
+      background-color var(--duration-quick) linear;
+  }
+  .btn-line:hover:not(:disabled) {
+    border-color: var(--ink);
+    background: var(--paper-raised);
+  }
+  .btn-line:disabled,
+  .btn-line[aria-disabled="true"] {
+    cursor: not-allowed;
+    color: var(--ink-muted);
+    border-style: dashed;
+  }
+
+  /* Round icon button (theme toggle, close, scroller arrows). */
+  .btn-icon {
+    display: inline-grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid transparent;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+    transition:
+      border-color var(--duration-quick) linear,
+      background-color var(--duration-quick) linear;
+  }
+  .btn-icon:hover {
+    border-color: var(--line-strong);
+    background: var(--paper-raised);
+  }
+  .btn-icon--outlined {
+    border-color: var(--line-strong);
+  }
+  .btn-icon:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+
+  /* TBD chip: loud enough that a gap in the data is obvious, quiet enough not to shout. */
+  .chip-tbd {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.05em 0.5em;
+    background: var(--paper-sunk);
+    color: var(--ink-muted);
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--radius-xs);
+    font-family: var(--font-mono);
+    font-size: 0.72em;
+    line-height: 1.5;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    vertical-align: 0.1em;
+    white-space: nowrap;
+  }
+
+  /* Small evidence / status chip. */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.2rem 0.55rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-xs);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    line-height: 1.4;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  /* "Artist's impression" corner label over an image. */
+  .tag-impression {
+    position: absolute;
+    left: 0.5rem;
+    bottom: 0.5rem;
+    z-index: 3;
+    max-width: calc(100% - 1rem);
+    padding: 0.2rem 0.5rem;
+    background: color-mix(in srgb, var(--paper) 90%, transparent);
+    color: var(--ink);
+    border: 1px solid var(--line-strong);
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    line-height: 1.4;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+
+  /* Drawing registration marks around a frame (four corner ticks). */
+  .marks {
+    position: relative;
+  }
+  .marks::before {
+    content: "";
+    position: absolute;
+    inset: -0.65rem;
+    pointer-events: none;
+    --mark: var(--line-strong);
+    --mark-len: 0.875rem;
+    background:
+      linear-gradient(var(--mark), var(--mark)) top left / var(--mark-len) 1px,
+      linear-gradient(var(--mark), var(--mark)) top left / 1px var(--mark-len),
+      linear-gradient(var(--mark), var(--mark)) top right / var(--mark-len) 1px,
+      linear-gradient(var(--mark), var(--mark)) top right / 1px var(--mark-len),
+      linear-gradient(var(--mark), var(--mark)) bottom left / var(--mark-len) 1px,
+      linear-gradient(var(--mark), var(--mark)) bottom left / 1px var(--mark-len),
+      linear-gradient(var(--mark), var(--mark)) bottom right / var(--mark-len) 1px,
+      linear-gradient(var(--mark), var(--mark)) bottom right / 1px var(--mark-len);
+    background-repeat: no-repeat;
+  }
+
+  /* Faint drafting grid for sheets that should feel like paper on a table. */
+  .bg-grid {
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 4rem 4rem;
+    background-position: -1px -1px;
+  }
+
+  /* Ruler: a hairline with minor and major ticks. Decorative only. */
+  .rule-ticks {
+    height: 0.625rem;
+    background:
+      repeating-linear-gradient(90deg, var(--line-strong) 0 1px, transparent 1px 0.75rem) bottom / 100% 0.3125rem no-repeat,
+      repeating-linear-gradient(90deg, var(--line-strong) 0 1px, transparent 1px 7.5rem) bottom / 100% 0.625rem no-repeat,
+      linear-gradient(var(--line-strong), var(--line-strong)) bottom / 100% 1px no-repeat;
+  }
+
+  /* Theme toggle icons: one is visible, driven by data-theme (system preference when JavaScript is off). */
+  .theme-sun {
+    display: none;
+  }
+  html[data-theme="dark"] .theme-sun {
+    display: block;
+  }
+  html[data-theme="dark"] .theme-moon {
+    display: none;
+  }
+  @media (prefers-color-scheme: dark) {
+    html:not([data-theme]) .theme-sun {
+      display: block;
+    }
+    html:not([data-theme]) .theme-moon {
+      display: none;
+    }
+  }
+
+  /* ---------------------------------------------------------------------------------------------- */
+  /* On-image callouts: a pin, an orthogonal leader and a mono label. Numbered pins below lg.        */
+  /* ---------------------------------------------------------------------------------------------- */
+
+  .callout {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    z-index: 2;
+    width: 0;
+    height: 0;
+    --len: 2.75rem;
+  }
+  .callout__pin {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: 1.375rem;
+    height: 1.375rem;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: var(--brick);
+    color: var(--on-brick);
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    font-weight: 600;
+    line-height: 1;
+    box-shadow:
+      0 0 0 2px color-mix(in srgb, var(--paper) 88%, transparent),
+      0 1px 6px rgb(0 0 0 / 0.28);
+  }
+  .callout__leader,
+  .callout__label {
+    display: none;
+  }
+
+  @media (min-width: 64rem) {
+    .callout__pin {
+      width: 0.6875rem;
+      height: 0.6875rem;
+      font-size: 0;
+    }
+    .callout__leader {
+      display: block;
+      position: absolute;
+      background: var(--ink);
+      box-shadow: 0 0 0 1px color-mix(in srgb, var(--paper) 78%, transparent);
+    }
+    .callout__label {
+      display: block;
+      position: absolute;
+      white-space: nowrap;
+      padding: 0.3rem 0.55rem;
+      background: color-mix(in srgb, var(--paper) 93%, transparent);
+      color: var(--ink);
+      border: 1px solid var(--line-strong);
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      line-height: 1.3;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+    .callout__label b {
+      margin-right: 0.45rem;
+      color: var(--brick-ink);
+      font-weight: 600;
+    }
+    .callout[data-dir="up"] .callout__leader {
+      left: -0.5px;
+      bottom: 0;
+      width: 1px;
+      height: var(--len);
+    }
+    .callout[data-dir="up"] .callout__label {
+      left: -0.5px;
+      bottom: var(--len);
+    }
+    .callout[data-dir="down"] .callout__leader {
+      left: -0.5px;
+      top: 0;
+      width: 1px;
+      height: var(--len);
+    }
+    .callout[data-dir="down"] .callout__label {
+      left: -0.5px;
+      top: var(--len);
+    }
+    .callout[data-dir="right"] .callout__leader {
+      left: 0;
+      top: -0.5px;
+      height: 1px;
+      width: var(--len);
+    }
+    .callout[data-dir="right"] .callout__label {
+      left: var(--len);
+      top: 0;
+      transform: translateY(-50%);
+    }
+    .callout[data-dir="left"] .callout__leader {
+      right: 0;
+      top: -0.5px;
+      height: 1px;
+      width: var(--len);
+    }
+    .callout[data-dir="left"] .callout__label {
+      right: var(--len);
+      top: 0;
+      transform: translateY(-50%);
+    }
+  }
+
+  .callout[data-align="end"][data-dir="up"] .callout__label,
+  .callout[data-align="end"][data-dir="down"] .callout__label {
+    left: auto;
+    right: -0.5px;
+  }
+
+  /* ---------------------------------------------------------------------------------------------- */
+  /* Section annotation: a numbered detail marker, a label, a ruled line and an optional note.       */
+  /* ---------------------------------------------------------------------------------------------- */
+
+  .eyebrow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: 0.75rem;
+    row-gap: 0.4rem;
+    color: var(--ink-muted);
+  }
+  .eyebrow__marker {
+    display: inline-grid;
+    place-items: center;
+    flex: none;
+    width: 1.875rem;
+    height: 1.875rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+    color: var(--ink);
+    font-size: 0.6875rem;
+    letter-spacing: 0;
+  }
+  .eyebrow__label {
+    color: var(--ink);
+  }
+  .eyebrow__rule {
+    display: none;
+    flex: 1 1 2rem;
+    height: 1px;
+    background: var(--line);
+  }
+  .eyebrow__note {
+    flex: 1 0 100%;
+    color: var(--ink-muted);
+  }
+  @media (min-width: 40rem) {
+    .eyebrow__rule {
+      display: block;
+    }
+    .eyebrow__note {
+      flex: 0 1 auto;
+      text-align: right;
+    }
+  }
+
+  /* Legend under a figure: the text equivalent of the on-image callouts. */
+  .legend {
+    display: grid;
+    gap: 0;
+    border-top: 1px solid var(--line-strong);
+    counter-reset: legend;
+  }
+  .legend > li {
+    display: grid;
+    grid-template-columns: 2.25rem 1fr;
+    gap: 0.5rem;
+    align-items: baseline;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .legend__n {
+    color: var(--brick-ink);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+  }
+
+  /* Title-block table: drawing-sheet fields (label above, value below) separated by hairlines. */
+  .titleblock {
+    display: grid;
+    gap: 1px;
+    background: var(--line-strong);
+    border: 1px solid var(--line-strong);
+  }
+  .titleblock__cell {
+    min-width: 0;
+    padding: 0.85rem 1rem 1rem;
+    background: var(--paper-raised);
+  }
+  .titleblock__label {
+    display: block;
+    margin-bottom: 0.3rem;
+    color: var(--ink-muted);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .titleblock__value {
+    display: block;
+    color: var(--ink);
+    overflow-wrap: anywhere;
+  }
+  @media (min-width: 48rem) {
+    .titleblock {
+      grid-template-columns: repeat(var(--tb-cols, 2), minmax(0, 1fr));
+    }
+  }
+
+  /* ---------------------------------------------------------------------------------------------- */
+  /* Drawn strokes: pathLength="1" paths draw themselves. Reduced motion jumps to the end state.     */
+  /* ---------------------------------------------------------------------------------------------- */
+
+  .draw-path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: draw-stroke var(--draw-duration, 1400ms) var(--ease-draft) var(--draw-delay, 0ms) forwards;
+  }
+
+  @keyframes draw-stroke {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  /* Enquiry drawer: no-JS-safe honeypot, parked off screen (not display none, so naive bots still fill it). */
+  .hp-field {
+    position: absolute !important;
+    left: -10000px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  /* Form controls: drafted fields with a ruled baseline. */
+  .field-input {
+    width: 100%;
+    min-height: 2.875rem;
+    padding: 0.55rem 0.75rem;
+    background: var(--paper);
+    color: var(--ink);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-xs);
+    transition: border-color var(--duration-quick) linear;
+  }
+  .field-input::placeholder {
+    color: var(--ink-muted);
+    opacity: 0.8;
+  }
+  .field-input:hover {
+    border-color: var(--ink-muted);
+  }
+  .field-input:focus-visible {
+    border-color: var(--ink);
+    outline-offset: 2px;
+  }
+  .field-input[aria-invalid="true"] {
+    border-color: var(--brick);
+  }
+
+  /* Radio chips: native radios, drawn as drafted tags. */
+  .radio-chip {
+    position: relative;
+    display: inline-flex;
+  }
+  .radio-chip input {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+  .radio-chip span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.5rem;
+    padding: 0.4rem 0.8rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-xs);
+    font-size: 0.875rem;
+    line-height: 1.2;
+    transition:
+      border-color var(--duration-quick) linear,
+      background-color var(--duration-quick) linear,
+      color var(--duration-quick) linear;
+  }
+  .radio-chip:hover span {
+    border-color: var(--ink);
+  }
+  .radio-chip input:checked + span {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+  }
+  .radio-chip input:focus-visible + span {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
+  }
+}
+
+/* ------------------------------------------------------------------------------------------------ */
+/* Reduced motion: every transition and animation lands on its end state at once.                     */
+/* ------------------------------------------------------------------------------------------------ */
 
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -45,6 +763,7 @@
   *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }

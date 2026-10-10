@@ -1,0 +1,810 @@
+{
+ "version": "0.1.0",
+ "notes": [
+  "v0: Darshit's traced geometry (portfolio app.js PJ_B, PJ_ROADS, PJ_MAIN, PJ_BOUND, PJ_AMENITY, PJ_OFFICE, PJ_LAWNS) ported to the render grid. Building ids are provisional and are renamed to sheet tags in v1.",
+  "metresPerPx comes from transform.json (CAD dimension lines through the fitted transform); treat every metre value as indicative.",
+  "Plots 1 to 165 are not placed yet (v1).",
+  "northDeg 180: the render is the 2022 sheet turned 180 degrees and the sheet compass points up the paper (SOURCE_PACK section 3)."
+ ],
+ "grid": {
+  "width": 2000,
+  "height": 1342,
+  "viewBox": [0, 150, 2000, 1100]
+ },
+ "metresPerPx": 0.2495,
+ "northDeg": 180,
+ "boundary": [
+  [1882, 329], [1768, 325], [1747, 340], [1710, 355], [1676, 366], [1641, 361],
+  [1599, 353], [1543, 339], [1467, 331], [1411, 323], [1355, 306], [1298, 288],
+  [1241, 271], [1187, 252], [1093, 293], [1069, 301], [1052, 322], [1041, 350],
+  [1033, 375], [1019, 400], [1000, 412], [976, 424], [948, 430], [924, 430],
+  [901, 412], [886, 395], [877, 385], [863, 382], [825, 376], [770, 367],
+  [715, 368], [710, 357], [702, 349], [665, 382], [625, 415], [565, 450],
+  [525, 477], [500, 498], [395, 508], [295, 523], [275, 522], [235, 537],
+  [220, 547], [205, 551], [165, 557], [155, 562], [125, 582], [105, 602],
+  [95, 619], [65, 669], [33, 707], [40, 757], [50, 812], [32, 868],
+  [33, 898], [97, 950], [115, 961], [178, 1003], [197, 1020], [220, 1047],
+  [285, 875], [310, 847], [350, 814], [425, 822], [520, 855], [590, 879],
+  [685, 937], [763, 977], [740, 1019], [849, 1088], [929, 1095], [976, 1077],
+  [995, 1040], [1019, 1005], [1043, 975], [1064, 957], [1164, 1030], [1171, 1055],
+  [1196, 1017], [1213, 1032], [1298, 967], [1334, 943], [1341, 889], [1369, 863],
+  [1394, 846], [1430, 826], [1467, 811], [1524, 790], [1561, 769], [1599, 757],
+  [1630, 744], [1706, 720], [1760, 752], [1824, 783], [1882, 790]
+ ],
+ "roads": [
+  {
+   "id": "vapi-silvassa-road",
+   "name": "Vapi-Silvassa Road",
+   "widthLabel": "9.00 MT",
+   "widthM": 9,
+   "centerline": [
+    [1795, 0], [1796.3, 18.6], [1797.8, 37.1], [1799.4, 55.3], [1801.2, 73.3], [1803, 91.1],
+    [1805, 108.6], [1807.1, 125.9], [1809.3, 143], [1811.6, 159.8], [1814, 176.4], [1816.5, 192.7],
+    [1819, 208.8], [1821.6, 224.6], [1824.2, 240.1], [1826.9, 255.4], [1829.7, 270.4], [1832.4, 285.1],
+    [1835.2, 299.5], [1838, 313.7], [1840.8, 327.5], [1843.6, 341.1], [1846.4, 354.4], [1849.2, 367.3],
+    [1852, 380], [1855.4, 394.9], [1858.7, 409.6], [1861.9, 424.1], [1864.9, 438.4], [1867.8, 452.6],
+    [1870.5, 466.6], [1873.1, 480.4], [1875.5, 494.1], [1877.8, 507.6], [1879.9, 521], [1881.9, 534.3],
+    [1883.8, 547.5], [1885.4, 560.6], [1886.9, 573.6], [1888.3, 586.4], [1889.5, 599.3], [1890.5, 612],
+    [1891.4, 624.7], [1892.1, 637.3], [1892.6, 649.9], [1893, 662.5], [1893.1, 675], [1893.2, 687.5],
+    [1893, 700], [1892.5, 712.5], [1891.8, 725], [1890.9, 737.5], [1889.9, 750], [1888.7, 762.5],
+    [1887.3, 775], [1885.9, 787.5], [1884.3, 800], [1882.7, 812.5], [1881, 825], [1879.2, 837.5],
+    [1877.5, 850], [1875.8, 862.5], [1874, 875], [1872.3, 887.5], [1870.7, 900], [1869.1, 912.5],
+    [1867.7, 925], [1866.3, 937.5], [1865.1, 950], [1864.1, 962.5], [1863.2, 975], [1862.5, 987.5],
+    [1862, 1000], [1861.8, 1012.5], [1861.6, 1025], [1861.6, 1037.6], [1861.6, 1050.2], [1861.7, 1062.9],
+    [1861.9, 1075.7], [1862.1, 1088.5], [1862.4, 1101.6], [1862.9, 1114.7], [1863.4, 1128], [1864, 1141.5],
+    [1864.6, 1155.3], [1865.4, 1169.2], [1866.2, 1183.3], [1867.2, 1197.8], [1868.2, 1212.4], [1869.4, 1227.4],
+    [1870.6, 1242.7], [1871.9, 1258.3], [1873.3, 1274.3], [1874.8, 1290.6], [1876.5, 1307.4], [1878.2, 1324.5],
+    [1880, 1342]
+   ],
+   "public": true
+  },
+  {
+   "id": "boulevard-40ft",
+   "name": "Entry boulevard",
+   "widthLabel": "40'0\"",
+   "widthM": 12.19,
+   "centerline": [[1335, 652], [1895, 652]],
+   "public": false
+  },
+  {
+   "id": "spine-30ft",
+   "name": "Spine road",
+   "widthLabel": "30'0\"",
+   "widthM": 9.14,
+   "centerline": [[150, 650], [1330, 650]],
+   "public": false
+  },
+  {
+   "id": "diagonal-40ft",
+   "name": "Diagonal internal road",
+   "widthLabel": "40'0\"",
+   "widthM": 12.19,
+   "centerline": [
+    [1300, 625], [1296.2, 620.5], [1292.4, 615.6], [1288.5, 610.5], [1284.5, 605.1], [1280.5, 599.4],
+    [1276.3, 593.5], [1272.1, 587.3], [1267.8, 580.8], [1263.3, 574.1], [1258.8, 567.2], [1254.2, 560.1],
+    [1249.4, 552.8], [1244.5, 545.2], [1239.4, 537.5], [1234.2, 529.6], [1228.9, 521.5], [1223.4, 513.3],
+    [1217.7, 504.9], [1211.9, 496.4], [1205.9, 487.7], [1199.7, 479], [1193.3, 470.1], [1186.8, 461.1],
+    [1180, 452], [1176.2, 446.7], [1172.3, 441.4], [1168.3, 436.1], [1164.3, 430.8], [1160.2, 425.5],
+    [1156, 420.2], [1151.8, 414.9], [1147.6, 409.7], [1143.3, 404.4], [1139.1, 399.2], [1134.9, 394.1],
+    [1130.6, 389], [1126.4, 384], [1122.3, 379], [1118.1, 374.1], [1114.1, 369.3], [1110.1, 364.6],
+    [1106.2, 360], [1102.4, 355.5], [1098.6, 351.2], [1095, 346.9], [1091.5, 342.8], [1088.2, 338.8],
+    [1085, 335]
+   ],
+   "public": false
+  },
+  {
+   "id": "north-road-20ft",
+   "name": "20 ft road from the roundabout",
+   "widthLabel": "20'0\"",
+   "widthM": 6.1,
+   "centerline": [[1342, 672], [1342, 932]],
+   "public": false
+  }
+ ],
+ "roundabout": {
+  "center": [1320, 651],
+  "radius": 30
+ },
+ "entries": [
+  {
+   "id": "main-entry",
+   "point": [1892, 652],
+   "kind": "main",
+   "label": "Main entry"
+  }
+ ],
+ "gardens": [
+  {
+   "id": "garden-01",
+   "polygon": [
+    [1216, 812], [1215.6, 823.6], [1214.4, 834.6], [1212.5, 844.4], [1210, 852.7], [1206.9, 858.9],
+    [1203.6, 862.7], [1200, 864], [1196.4, 862.7], [1193.1, 858.9], [1190, 852.7], [1187.5, 844.4],
+    [1185.6, 834.6], [1184.4, 823.6], [1184, 812], [1184.4, 800.4], [1185.6, 789.4], [1187.5, 779.6],
+    [1190, 771.3], [1193.1, 765.1], [1196.4, 761.3], [1200, 760], [1203.6, 761.3], [1206.9, 765.1],
+    [1210, 771.3], [1212.5, 779.6], [1214.4, 789.4], [1215.6, 800.4]
+   ]
+  },
+  {
+   "id": "garden-02",
+   "polygon": [
+    [1522, 764], [1520.7, 766.7], [1516.9, 769.2], [1510.7, 771.5], [1502.4, 773.4], [1492.6, 774.8],
+    [1481.6, 775.7], [1470, 776], [1458.4, 775.7], [1447.4, 774.8], [1437.6, 773.4], [1429.3, 771.5],
+    [1423.1, 769.2], [1419.3, 766.7], [1418, 764], [1419.3, 761.3], [1423.1, 758.8], [1429.3, 756.5],
+    [1437.6, 754.6], [1447.4, 753.2], [1458.4, 752.3], [1470, 752], [1481.6, 752.3], [1492.6, 753.2],
+    [1502.4, 754.6], [1510.7, 756.5], [1516.9, 758.8], [1520.7, 761.3]
+   ]
+  },
+  {
+   "id": "garden-03",
+   "polygon": [
+    [919, 547], [918.2, 549], [916, 550.9], [912.5, 552.6], [907.7, 554], [902, 555.1],
+    [895.7, 555.8], [889, 556], [882.3, 555.8], [876, 555.1], [870.3, 554], [865.5, 552.6],
+    [862, 550.9], [859.8, 549], [859, 547], [859.8, 545], [862, 543.1], [865.5, 541.4],
+    [870.3, 540], [876, 538.9], [882.3, 538.2], [889, 538], [895.7, 538.2], [902, 538.9],
+    [907.7, 540], [912.5, 541.4], [916, 543.1], [918.2, 545]
+   ]
+  },
+  {
+   "id": "garden-04",
+   "polygon": [
+    [978, 547], [977.3, 549], [975.2, 550.9], [971.9, 552.6], [967.5, 554], [962.1, 555.1],
+    [956.2, 555.8], [950, 556], [943.8, 555.8], [937.9, 555.1], [932.5, 554], [928.1, 552.6],
+    [924.8, 550.9], [922.7, 549], [922, 547], [922.7, 545], [924.8, 543.1], [928.1, 541.4],
+    [932.5, 540], [937.9, 538.9], [943.8, 538.2], [950, 538], [956.2, 538.2], [962.1, 538.9],
+    [967.5, 540], [971.9, 541.4], [975.2, 543.1], [977.3, 545]
+   ]
+  },
+  {
+   "id": "garden-05",
+   "polygon": [
+    [113, 633], [108, 605], [125, 584], [155, 563], [165, 558], [220, 549],
+    [235, 537], [275, 523], [295, 521], [320, 523], [320, 633]
+   ]
+  },
+  {
+   "id": "garden-06",
+   "polygon": [[98, 620], [65, 669], [33, 707], [40, 757], [47, 750], [100, 617]]
+  },
+  {
+   "id": "garden-07",
+   "polygon": [
+    [292, 672], [320, 674], [322, 737], [316, 800], [308, 838], [294, 838],
+    [297, 780], [294, 722]
+   ]
+  },
+  {
+   "id": "garden-08",
+   "polygon": [[1630, 680], [1706, 680], [1706, 720], [1630, 744]]
+  }
+ ],
+ "districts": [],
+ "buildings": [
+  {
+   "id": "rh-strip-01",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "rowhouses",
+   "floors": "TBD",
+   "floorsIndicative": 2,
+   "polygon": [[323, 533], [383, 533], [383, 635], [323, 635]],
+   "label": "Row-house strip 1",
+   "indicative": true
+  },
+  {
+   "id": "rh-strip-02",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "rowhouses",
+   "floors": "TBD",
+   "floorsIndicative": 2,
+   "polygon": [[383, 513], [433, 513], [433, 635], [383, 635]],
+   "label": "Row-house strip 2",
+   "indicative": true
+  },
+  {
+   "id": "rh-strip-03",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "rowhouses",
+   "floors": "TBD",
+   "floorsIndicative": 2,
+   "polygon": [[435, 512], [492, 512], [492, 635], [435, 635]],
+   "label": "Row-house strip 3",
+   "indicative": true
+  },
+  {
+   "id": "rh-strip-04",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "rowhouses",
+   "floors": "TBD",
+   "floorsIndicative": 2,
+   "polygon": [[497, 497], [545, 497], [545, 635], [497, 635]],
+   "label": "Row-house strip 4",
+   "indicative": true
+  },
+  {
+   "id": "rh-strip-05",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "rowhouses",
+   "floors": "TBD",
+   "floorsIndicative": 2,
+   "polygon": [[545, 478], [567, 478], [567, 461], [598, 461], [598, 635], [545, 635]],
+   "label": "Row-house strip 5",
+   "indicative": true
+  },
+  {
+   "id": "rh-strip-06",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "rowhouses",
+   "floors": "TBD",
+   "floorsIndicative": 2,
+   "polygon": [
+    [600, 425], [625, 425], [625, 418], [637, 418], [637, 407], [653, 407],
+    [653, 635], [600, 635]
+   ],
+   "label": "Row-house strip 6",
+   "indicative": true
+  },
+  {
+   "id": "rh-strip-07",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "rowhouses",
+   "floors": "TBD",
+   "floorsIndicative": 2,
+   "polygon": [[655, 380], [705, 380], [705, 635], [655, 635]],
+   "label": "Row-house strip 7",
+   "indicative": true
+  },
+  {
+   "id": "rh-strip-08",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "rowhouses",
+   "floors": "TBD",
+   "floorsIndicative": 2,
+   "polygon": [[723, 375], [765, 375], [765, 635], [723, 635]],
+   "label": "Row-house strip 8",
+   "indicative": true
+  },
+  {
+   "id": "rh-strip-09",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "rowhouses",
+   "floors": "TBD",
+   "floorsIndicative": 2,
+   "polygon": [[353, 668], [385, 668], [385, 808], [353, 808]],
+   "label": "Row-house strip 9",
+   "indicative": true
+  },
+  {
+   "id": "rh-strip-10",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "rowhouses",
+   "floors": "TBD",
+   "floorsIndicative": 2,
+   "polygon": [[387, 668], [445, 668], [445, 813], [387, 813]],
+   "label": "Row-house strip 10",
+   "indicative": true
+  },
+  {
+   "id": "rh-strip-11",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "rowhouses",
+   "floors": "TBD",
+   "floorsIndicative": 2,
+   "polygon": [[455, 670], [500, 670], [500, 832], [473, 832], [473, 823], [455, 823]],
+   "label": "Row-house strip 11",
+   "indicative": true
+  },
+  {
+   "id": "rh-strip-12",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "rowhouses",
+   "floors": "TBD",
+   "floorsIndicative": 2,
+   "polygon": [[505, 670], [567, 670], [567, 848], [505, 848]],
+   "label": "Row-house strip 12",
+   "indicative": true
+  },
+  {
+   "id": "rh-strip-13",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "rowhouses",
+   "floors": "TBD",
+   "floorsIndicative": 2,
+   "polygon": [[585, 670], [632, 670], [632, 882], [603, 882], [603, 872], [585, 872]],
+   "label": "Row-house strip 13",
+   "indicative": true
+  },
+  {
+   "id": "rh-strip-14",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "rowhouses",
+   "floors": "TBD",
+   "floorsIndicative": 2,
+   "polygon": [[637, 670], [693, 670], [693, 905], [637, 905]],
+   "label": "Row-house strip 14",
+   "indicative": true
+  },
+  {
+   "id": "rh-strip-15",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "rowhouses",
+   "floors": "TBD",
+   "floorsIndicative": 2,
+   "polygon": [[717, 670], [763, 670], [763, 955], [735, 955], [735, 935], [717, 935]],
+   "label": "Row-house strip 15",
+   "indicative": true
+  },
+  {
+   "id": "rh-tip-01",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "rowhouses",
+   "floors": "TBD",
+   "floorsIndicative": 2,
+   "polygon": [[100, 617], [157, 632], [100, 760], [47, 750]],
+   "label": "Row-house slab 1 at the tip",
+   "indicative": true
+  },
+  {
+   "id": "rh-tip-02",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "rowhouses",
+   "floors": "TBD",
+   "floorsIndicative": 2,
+   "polygon": [[145, 673], [228, 685], [186, 764], [160, 840], [125, 940], [100, 926], [75, 915], [51, 894]],
+   "label": "Row-house slab 2 at the tip",
+   "indicative": true
+  },
+  {
+   "id": "rh-tip-03",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "rowhouses",
+   "floors": "TBD",
+   "floorsIndicative": 2,
+   "polygon": [
+    [232, 695], [278, 705], [272, 722], [238, 757], [290, 769], [187, 987],
+    [169, 988], [148, 972], [122, 960], [125, 940], [160, 840], [186, 764]
+   ],
+   "label": "Row-house slab 3 at the tip",
+   "indicative": true
+  },
+  {
+   "id": "rh-tip-04",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "rowhouses",
+   "floors": "TBD",
+   "floorsIndicative": 2,
+   "polygon": [[268, 862], [292, 866], [295, 902], [225, 1022], [203, 1013]],
+   "label": "Row-house slab 4 at the tip",
+   "indicative": true
+  },
+  {
+   "id": "flat-01",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "flats",
+   "floors": "TBD",
+   "polygon": [[770, 403], [832, 403], [832, 483], [770, 483]],
+   "indicative": true
+  },
+  {
+   "id": "flat-02",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "flats",
+   "floors": "TBD",
+   "polygon": [[770, 485], [832, 485], [832, 560], [770, 560]],
+   "indicative": true
+  },
+  {
+   "id": "flat-03",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "flats",
+   "floors": "TBD",
+   "polygon": [[842, 407], [895, 407], [895, 483], [842, 483]],
+   "indicative": true
+  },
+  {
+   "id": "flat-04",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "flats",
+   "floors": "TBD",
+   "polygon": [[902, 445], [980, 445], [982, 513], [868, 513], [868, 480], [902, 480]],
+   "indicative": true
+  },
+  {
+   "id": "flat-05",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "flats",
+   "floors": "TBD",
+   "polygon": [[770, 570], [987, 570], [987, 635], [770, 635]],
+   "indicative": true
+  },
+  {
+   "id": "flat-06",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "flats",
+   "floors": "TBD",
+   "polygon": [
+    [997, 438], [1078, 372], [1250, 588], [1272, 612], [1272, 632], [1015, 635],
+    [1015, 560], [1177, 562], [1075, 486], [1041, 502], [998, 442]
+   ],
+   "indicative": true
+  },
+  {
+   "id": "flat-07",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "flats",
+   "floors": "TBD",
+   "polygon": [[1111, 327], [1140, 299], [1172, 288], [1197, 323], [1175, 355], [1160, 383]],
+   "indicative": true
+  },
+  {
+   "id": "flat-08",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "flats",
+   "floors": "TBD",
+   "polygon": [
+    [1175, 355], [1197, 323], [1213, 330], [1307, 450], [1370, 544], [1403, 582],
+    [1395, 613], [1383, 617], [1320, 588], [1250, 488], [1160, 383]
+   ],
+   "indicative": true
+  },
+  {
+   "id": "flat-09",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "flats",
+   "floors": "TBD",
+   "polygon": [[1258, 294], [1313, 313], [1305, 380], [1288, 381], [1233, 356]],
+   "indicative": true
+  },
+  {
+   "id": "flat-10",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "flats",
+   "floors": "TBD",
+   "polygon": [[1323, 313], [1397, 342], [1383, 390], [1377, 392], [1353, 405], [1305, 382], [1312, 353]],
+   "indicative": true
+  },
+  {
+   "id": "flat-11",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "flats",
+   "floors": "TBD",
+   "polygon": [[1393, 373], [1468, 373], [1468, 450], [1393, 450]],
+   "indicative": true
+  },
+  {
+   "id": "flat-12",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "flats",
+   "floors": "TBD",
+   "polygon": [[1393, 450], [1468, 450], [1468, 532], [1393, 532]],
+   "indicative": true
+  },
+  {
+   "id": "flat-13",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "flats",
+   "floors": "TBD",
+   "polygon": [[1468, 388], [1560, 388], [1560, 453], [1468, 453]],
+   "indicative": true
+  },
+  {
+   "id": "flat-14",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "flats",
+   "floors": "TBD",
+   "polygon": [[1468, 465], [1560, 465], [1560, 527], [1468, 527]],
+   "indicative": true
+  },
+  {
+   "id": "flat-15",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "flats",
+   "floors": "TBD",
+   "polygon": [[1560, 388], [1640, 388], [1640, 452], [1560, 452]],
+   "indicative": true
+  },
+  {
+   "id": "flat-16",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "flats",
+   "floors": "TBD",
+   "polygon": [[1562, 465], [1640, 465], [1640, 520], [1562, 520]],
+   "indicative": true
+  },
+  {
+   "id": "flat-17",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "flats",
+   "floors": "TBD",
+   "polygon": [[1632, 385], [1717, 385], [1717, 453], [1632, 453]],
+   "indicative": true
+  },
+  {
+   "id": "flat-18",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "flats",
+   "floors": "TBD",
+   "polygon": [[1632, 467], [1717, 467], [1717, 542], [1632, 542]],
+   "indicative": true
+  },
+  {
+   "id": "flat-19",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "flats",
+   "floors": "TBD",
+   "polygon": [[1400, 557], [1472, 557], [1472, 617], [1400, 617]],
+   "indicative": true
+  },
+  {
+   "id": "flat-20",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "flats",
+   "floors": "TBD",
+   "polygon": [
+    [803, 668], [887, 668], [887, 737], [862, 737], [862, 897], [777, 897],
+    [777, 698], [803, 698]
+   ],
+   "indicative": true
+  },
+  {
+   "id": "flat-21",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "flats",
+   "floors": "TBD",
+   "polygon": [
+    [913, 668], [990, 668], [990, 735], [1027, 735], [1027, 942], [950, 942],
+    [950, 698], [913, 698]
+   ],
+   "indicative": true
+  },
+  {
+   "id": "flat-22",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "flats",
+   "floors": "TBD",
+   "polygon": [
+    [1105, 668], [1185, 668], [1185, 737], [1150, 737], [1150, 898], [1077, 898],
+    [1077, 698], [1105, 698]
+   ],
+   "indicative": true
+  },
+  {
+   "id": "flat-23",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "flats",
+   "floors": "TBD",
+   "polygon": [
+    [1215, 668], [1293, 668], [1293, 735], [1325, 735], [1325, 928], [1245, 928],
+    [1245, 698], [1215, 698]
+   ],
+   "indicative": true
+  },
+  {
+   "id": "flat-24",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "flats",
+   "floors": "TBD",
+   "polygon": [
+    [1151, 928], [1242, 892], [1260, 894], [1275, 920], [1299, 944], [1290, 954],
+    [1184, 1000], [1177, 980], [1157, 945]
+   ],
+   "indicative": true
+  },
+  {
+   "id": "flat-25",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "flats",
+   "floors": "TBD",
+   "polygon": [
+    [748, 1005], [780, 942], [802, 912], [808, 902], [867, 926], [847, 968],
+    [827, 991], [850, 1024], [848, 1050], [842, 1059], [831, 1056], [775, 1022]
+   ],
+   "indicative": true
+  },
+  {
+   "id": "flat-26",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "flats",
+   "floors": "TBD",
+   "polygon": [
+    [848, 1007], [882, 1000], [883, 975], [895, 958], [923, 965], [928, 990],
+    [940, 1038], [928, 1062], [877, 1043], [862, 1058], [850, 1050]
+   ],
+   "indicative": true
+  },
+  {
+   "id": "flat-27",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "flats",
+   "floors": "TBD",
+   "polygon": [
+    [958, 947], [1010, 973], [1010, 997], [973, 1055], [963, 1043], [953, 1062],
+    [935, 1060], [940, 1030], [947, 1003], [950, 970]
+   ],
+   "indicative": true
+  },
+  {
+   "id": "flat-28",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "flats",
+   "floors": "TBD",
+   "polygon": [[1480, 557], [1732, 557], [1732, 617], [1480, 617]],
+   "indicative": true
+  },
+  {
+   "id": "flat-29",
+   "sheetTag": "TBD",
+   "sector": "TBD",
+   "typology": "flats",
+   "floors": "TBD",
+   "polygon": [
+    [1355, 688], [1630, 688], [1630, 712], [1617, 712], [1617, 745], [1407, 745],
+    [1407, 818], [1355, 818]
+   ],
+   "indicative": true
+  },
+  {
+   "id": "shops-a",
+   "sheetTag": "A",
+   "sector": "TBD",
+   "typology": "shops",
+   "floors": "TBD",
+   "polygon": [[1730, 688], [1880, 688], [1880, 776], [1828, 776]],
+   "label": "Shops block A",
+   "indicative": false
+  },
+  {
+   "id": "mixed-b1b2",
+   "sheetTag": "B1/B2",
+   "sector": "01",
+   "typology": "mixed",
+   "floors": "TBD",
+   "polygon": [
+    [1742, 358], [1850, 358], [1850, 387], [1872, 387], [1872, 593], [1843, 593],
+    [1843, 622], [1777, 622], [1777, 590], [1768, 590], [1768, 560], [1818, 560],
+    [1818, 417], [1742, 417]
+   ],
+   "label": "Mixed-use building, commercial and residential",
+   "indicative": false
+  },
+  {
+   "id": "office",
+   "sheetTag": "BLDG",
+   "sector": "TBD",
+   "typology": "office",
+   "floors": "TBD",
+   "polygon": [[1643, 688], [1693, 688], [1693, 722], [1643, 722]],
+   "label": "Parshwanath Infra site office",
+   "indicative": false
+  }
+ ],
+ "plots": [],
+ "amenities": [
+  {
+   "id": "traced-outline-01",
+   "name": "Traced open-space outline 1 (label TBD)",
+   "kind": "other",
+   "point": [902, 785],
+   "polygon": [[887, 757], [917, 757], [917, 813], [887, 813]],
+   "evidence": "plan-and-render",
+   "labelTbd": true
+  },
+  {
+   "id": "traced-outline-02",
+   "name": "Traced open-space outline 2 (label TBD)",
+   "kind": "other",
+   "point": [1190, 767],
+   "polygon": [[1173, 752], [1207, 752], [1207, 782], [1173, 782]],
+   "evidence": "plan-and-render",
+   "labelTbd": true
+  },
+  {
+   "id": "traced-outline-03",
+   "name": "Traced open-space outline 3 (label TBD)",
+   "kind": "other",
+   "point": [1192.5, 859],
+   "polygon": [[1177, 838], [1208, 838], [1208, 880], [1177, 880]],
+   "evidence": "plan-and-render",
+   "labelTbd": true
+  },
+  {
+   "id": "traced-outline-04",
+   "name": "Traced open-space outline 4 (label TBD)",
+   "kind": "other",
+   "point": [1818.5, 652.5],
+   "polygon": [[1805, 630], [1832, 630], [1832, 675], [1805, 675]],
+   "evidence": "plan-and-render",
+   "labelTbd": true
+  },
+  {
+   "id": "traced-outline-05",
+   "name": "Traced open-space outline 5 (label TBD)",
+   "kind": "other",
+   "point": [1769, 489],
+   "polygon": [[1737, 433], [1801, 433], [1801, 545], [1737, 545]],
+   "evidence": "plan-and-render",
+   "labelTbd": true
+  },
+  {
+   "id": "traced-outline-06",
+   "name": "Traced open-space outline 6 (label TBD)",
+   "kind": "other",
+   "point": [1054, 799],
+   "polygon": [[1043, 668], [1065, 668], [1065, 930], [1043, 930]],
+   "evidence": "plan-and-render",
+   "labelTbd": true
+  },
+  {
+   "id": "traced-outline-07",
+   "name": "Traced open-space outline 7 (label TBD)",
+   "kind": "other",
+   "point": [301, 846],
+   "polygon": [[288, 838], [314, 838], [314, 854], [288, 854]],
+   "evidence": "plan-and-render",
+   "labelTbd": true
+  },
+  {
+   "id": "traced-outline-08",
+   "name": "Traced open-space outline 8 (label TBD)",
+   "kind": "other",
+   "point": [1064.3, 531],
+   "polygon": [[1075, 499], [1104, 547], [1014, 547]],
+   "evidence": "plan-and-render",
+   "labelTbd": true
+  },
+  {
+   "id": "traced-outline-09",
+   "name": "Traced open-space outline 9 (label TBD)",
+   "kind": "other",
+   "point": [1352.7, 455.7],
+   "polygon": [[1300, 405], [1376, 428], [1382, 534]],
+   "evidence": "plan-and-render",
+   "labelTbd": true
+  }
+ ]
+}

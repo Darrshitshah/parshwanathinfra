@@ -1,0 +1,86 @@
+/*
+ * Page-transition curtain. Owner: motion-lead.
+ * Hidden until the transition provider plays it (GSAP toggles opacity and visibility).
+ * Colours come from the design tokens, so it follows light and dark themes.
+ * No transforms are set here on purpose: GSAP owns the transforms of the title, the rule and the panel, and would
+ * otherwise read a CSS transform as an extra offset.
+ */
+
+.pi-curtain {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-curtain, 80);
+  overflow: hidden;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  contain: layout paint;
+}
+
+.pi-curtain__svg {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.pi-curtain__sheet {
+  fill: var(--brick);
+}
+
+.pi-curtain__panel {
+  position: absolute;
+  inset: 0;
+  background: var(--brick);
+}
+
+.pi-curtain[data-variant="hole"] .pi-curtain__panel,
+.pi-curtain[data-variant="panel"] .pi-curtain__svg {
+  display: none;
+}
+
+.pi-curtain__title {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 0.9rem;
+  padding-inline: var(--gutter, 1.5rem);
+  color: var(--on-brick);
+  text-align: center;
+}
+
+.pi-curtain__eyebrow {
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0;
+}
+
+.pi-curtain__mask {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  /* room for descenders and italic overshoot, given back by the negative margin */
+  padding-block: 0.12em;
+  margin-block: -0.12em;
+}
+
+.pi-curtain__label {
+  display: block;
+  font-family: var(--font-instrument-serif), "Times New Roman", serif;
+  font-size: clamp(2.75rem, 9vw, 8rem);
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+.pi-curtain__rule {
+  display: block;
+  width: min(18rem, 50vw);
+  height: 1px;
+  background: currentColor;
+}

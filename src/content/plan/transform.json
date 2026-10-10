@@ -1,0 +1,259 @@
+{
+ "from": "cad-display-pt",
+ "to": "render-px",
+ "matrix": [
+  -1.140699,
+  0.001441,
+  -0.001441,
+  -1.140699,
+  1961.785329,
+  1117.355024
+ ],
+ "controlPoints": [
+  {
+   "name": "B10 block, sheet top left corner",
+   "cad": [
+    280.62,
+    524.48
+   ],
+   "render": [
+    1639.9,
+    523.7
+   ],
+   "residualPx": 4.35
+  },
+  {
+   "name": "B10 block, sheet top right corner",
+   "cad": [
+    411.34,
+    524.48
+   ],
+   "render": [
+    1492.1,
+    523.9
+   ],
+   "residualPx": 4.25
+  },
+  {
+   "name": "B10 block, sheet bottom right corner",
+   "cad": [
+    411.34,
+    573.32
+   ],
+   "render": [
+    1492.1,
+    464.3
+   ],
+   "residualPx": 0.45
+  },
+  {
+   "name": "B10 block, sheet bottom left corner",
+   "cad": [
+    280.62,
+    573.32
+   ],
+   "render": [
+    1639.9,
+    464.1
+   ],
+   "residualPx": 1.05
+  },
+  {
+   "name": "B12 block, sheet top left corner",
+   "cad": [
+    213.35,
+    511.14
+   ],
+   "render": [
+    1716.9,
+    536.8
+   ],
+   "residualPx": 2.28
+  },
+  {
+   "name": "B12 block, sheet top right corner",
+   "cad": [
+    262.13,
+    511.14
+   ],
+   "render": [
+    1662.3,
+    536.8
+   ],
+   "residualPx": 2.17
+  },
+  {
+   "name": "B12 block, sheet bottom right corner",
+   "cad": [
+    262.13,
+    641.98
+   ],
+   "render": [
+    1662.2,
+    385.0
+   ],
+   "residualPx": 0.53
+  },
+  {
+   "name": "B12 block, sheet bottom left corner",
+   "cad": [
+    213.35,
+    641.98
+   ],
+   "render": [
+    1716.8,
+    384.9
+   ],
+   "residualPx": 0.86
+  },
+  {
+   "name": "B9 block, sheet top left corner",
+   "cad": [
+    431.99,
+    521.22
+   ],
+   "render": [
+    1467.0,
+    525.9
+   ],
+   "residualPx": 2.83
+  },
+  {
+   "name": "B9 block, sheet top right corner",
+   "cad": [
+    480.77,
+    521.22
+   ],
+   "render": [
+    1413.1,
+    526.0
+   ],
+   "residualPx": 2.55
+  },
+  {
+   "name": "B9 block, sheet bottom right corner",
+   "cad": [
+    480.77,
+    652.06
+   ],
+   "render": [
+    1412.9,
+    373.0
+   ],
+   "residualPx": 1.32
+  },
+  {
+   "name": "B9 block, sheet bottom left corner",
+   "cad": [
+    431.99,
+    652.06
+   ],
+   "render": [
+    1466.8,
+    372.9
+   ],
+   "residualPx": 1.81
+  },
+  {
+   "name": "B16 block, sheet top left corner",
+   "cad": [
+    996.95,
+    494.82
+   ],
+   "render": [
+    827.1,
+    555.8
+   ],
+   "residualPx": 3.53
+  },
+  {
+   "name": "B16 block, sheet top right corner",
+   "cad": [
+    1045.73,
+    494.82
+   ],
+   "render": [
+    769.3,
+    555.8
+   ],
+   "residualPx": 1.79
+  },
+  {
+   "name": "B16 block, sheet bottom right corner",
+   "cad": [
+    1045.73,
+    625.66
+   ],
+   "render": [
+    769.1,
+    404.1
+   ],
+   "residualPx": 1.5
+  },
+  {
+   "name": "B16 block, sheet bottom left corner",
+   "cad": [
+    996.95,
+    625.66
+   ],
+   "render": [
+    826.9,
+    404.1
+   ],
+   "residualPx": 3.39
+  },
+  {
+   "name": "B11 block, sheet top left corner",
+   "cad": [
+    280.62,
+    591.8
+   ],
+   "render": [
+    1640.0,
+    446.1
+   ],
+   "residualPx": 3.46
+  },
+  {
+   "name": "B11 block, sheet top right corner",
+   "cad": [
+    411.34,
+    591.8
+   ],
+   "render": [
+    1492.3,
+    446.2
+   ],
+   "residualPx": 3.41
+  },
+  {
+   "name": "B11 block, sheet bottom right corner",
+   "cad": [
+    411.34,
+    640.64
+   ],
+   "render": [
+    1492.2,
+    387.3
+   ],
+   "residualPx": 0.57
+  },
+  {
+   "name": "B11 block, sheet bottom left corner",
+   "cad": [
+    280.62,
+    640.64
+   ],
+   "render": [
+    1639.9,
+    387.1
+   ],
+   "residualPx": 0.82
+  }
+ ],
+ "rmsPx": 2.48,
+ "maxPx": 4.35,
+ "metresPerCadPt": 0.2846,
+ "metresPerRenderPx": 0.2495,
+ "method": "affine"
+}

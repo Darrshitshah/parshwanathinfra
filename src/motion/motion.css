@@ -1,0 +1,57 @@
+/*
+ * Motion layer base styles. Owner: motion-lead. Imported once by MotionRoot.
+ * Plain CSS on purpose: no Tailwind directives, only the design tokens from src/styles/tokens.css.
+ */
+
+/* Lenis (smooth wheel scrolling), scoped to the classes Lenis itself adds to <html> while it runs. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+html.lenis {
+  scroll-behavior: auto !important;
+}
+
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+
+.lenis [data-lenis-prevent],
+.lenis [data-lenis-prevent-wheel],
+.lenis [data-lenis-prevent-touch],
+.lenis [data-lenis-prevent-vertical],
+.lenis [data-lenis-prevent-horizontal] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+/*
+ * SplitText masks (splitReveal). Each line sits in an overflow-clipped box; a little vertical room keeps
+ * descenders and italic overshoot from being cut, and the negative margin gives the room back so layout is unchanged.
+ */
+.pi-line-mask {
+  padding-block: 0.12em;
+  margin-block: -0.12em;
+}
+
+/*
+ * <Reveal pre>: content is hidden by CSS until the motion runtime has loaded, so above-the-fold content never shows once
+ * and then replays. Only with JavaScript on and motion allowed. `data-motion` is set on <html> by the runtime
+ * ("ready") or by MotionRoot on Tier C ("off"); a failsafe shows the content after 3.5 s if neither ever happens.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  html[data-js="1"]:not([data-motion]) [data-reveal-pre] {
+    opacity: 0;
+    animation: pi-reveal-failsafe 0.01s linear 3.5s forwards;
+  }
+}
+
+@keyframes pi-reveal-failsafe {
+  to {
+    opacity: 1;
+  }
+}

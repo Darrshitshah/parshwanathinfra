@@ -1,0 +1,98 @@
+/*
+ * S8 cursor. Owner: motion-lead.
+ *
+ * `html[data-pi-cursor="on"]` is set by Cursor.tsx once the pointer has moved, so the native cursor is only hidden when
+ * the custom one is actually on screen. Text fields, selects and [data-cursor="native"] keep the native cursor.
+ * No transforms are set here: GSAP owns the transforms of the layers.
+ */
+
+html[data-pi-cursor="on"],
+html[data-pi-cursor="on"] * {
+  cursor: none !important;
+}
+
+/* keep in sync with NATIVE_SELECTOR in cursor-state.ts */
+html[data-pi-cursor="on"]
+  :is(
+    input:not([type="button"], [type="submit"], [type="reset"], [type="checkbox"], [type="radio"], [type="range"], [type="file"], [type="image"]),
+    textarea,
+    select,
+    [contenteditable=""],
+    [contenteditable="true"],
+    [data-cursor="native"],
+    [data-cursor="native"] *
+  ) {
+  cursor: auto !important;
+}
+
+.pi-cursor {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  z-index: var(--z-cursor, 100);
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+/* the dot blends against the page: it must not sit inside another stacking context, so it has no isolation */
+.pi-cursor--dot {
+  mix-blend-mode: difference;
+}
+
+.pi-cursor__shape {
+  position: absolute;
+  left: -7px;
+  top: -7px;
+  width: 14px;
+  height: 14px;
+}
+
+.pi-cursor__ring,
+.pi-cursor__fill {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+}
+
+.pi-cursor__ring {
+  border: 1.5px solid #fff;
+}
+
+.pi-cursor__fill {
+  background: #fff;
+}
+
+.pi-cursor__disc {
+  position: absolute;
+  left: -44px;
+  top: -44px;
+  display: grid;
+  place-items: center;
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: var(--brick);
+  color: var(--on-brick);
+}
+
+.pi-cursor__label {
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+@media (forced-colors: active) {
+  html[data-pi-cursor="on"],
+  html[data-pi-cursor="on"] * {
+    cursor: auto !important;
+  }
+
+  .pi-cursor {
+    display: none;
+  }
+}

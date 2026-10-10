@@ -1,0 +1,25 @@
+{
+  "_about": "Hand-read spec for the row-house district: which traced strip holds which plots, and in which order. Sources: the 2022 CAD sheet (plots 1 to 20 and 144 to 165, exact) and the phone photo of the newer printed sheet rotated 180 degrees (everything else, read at 4 to 7 times zoom). Numbers run in a serpentine: 1 to 11 up block 1, 12 to 20 down the left column of block 2, 21 to 28 up its right column, and so on; 53 to 108 are the tip cluster; 109 to 165 are the strips south of the spine (sheet orientation), ending with 165 beside the flats. 'near' is the end towards the spine road (30 ft). first and last are the plot numbers at the near end and at the far end of the column. In render orientation (the sheet turned 180 degrees) the 'north' blocks of the sheet sit below the spine (near = smallest y) and the 'south' blocks above it (near = largest y). Tip slabs: near = smallest y; in a double slab the column nearer the flats is the right-hand (larger x) one. Counts per column agree with the traced strip lengths at 26.1 px per plot (north blocks) and 23.4 px per plot (south blocks and CAD strips C and D), 1.1407 px per CAD point.",
+  "totals": { "north": 52, "tip": 56, "south": 57, "all": 165 },
+  "columns": [
+    { "id": "n1", "strip": "rh-strip-15", "row": 14, "kind": "rect", "block": "north block 1", "near": "yMin", "first": 1, "last": 11, "source": "cad" },
+    { "id": "n2l", "strip": "rh-strip-14", "row": 13, "kind": "rect", "block": "north block 2, column nearer the flats", "near": "yMin", "first": 20, "last": 12, "source": "cad" },
+    { "id": "n2r", "strip": "rh-strip-13", "row": 12, "kind": "rect", "block": "north block 2, outer column", "near": "yMin", "first": 21, "last": 28, "source": "photo" },
+    { "id": "n3l", "strip": "rh-strip-12", "row": 11, "kind": "rect", "block": "north block 3, column nearer the flats", "near": "yMin", "first": 35, "last": 29, "source": "photo" },
+    { "id": "n3r", "strip": "rh-strip-11", "row": 10, "kind": "rect", "block": "north block 3, outer column", "near": "yMin", "first": 36, "last": 41, "source": "photo" },
+    { "id": "n4l", "strip": "rh-strip-10", "row": 9, "kind": "rect", "block": "north block 4, column nearer the flats", "near": "yMin", "first": 47, "last": 42, "source": "photo" },
+    { "id": "n4r", "strip": "rh-strip-09", "row": 8, "kind": "rect", "block": "north block 4, outer column", "near": "yMin", "first": 48, "last": 52, "source": "photo" },
+    { "id": "s1", "strip": "rh-strip-08", "row": 7, "kind": "rect", "block": "south block 1", "near": "yMax", "first": 165, "last": 155, "source": "cad" },
+    { "id": "s2l", "strip": "rh-strip-07", "row": 6, "kind": "rect", "block": "south block 2, column nearer the flats", "near": "yMax", "first": 144, "last": 154, "source": "cad" },
+    { "id": "s2r", "strip": "rh-strip-06", "row": 5, "kind": "rect", "block": "south block 2, outer column", "near": "yMax", "first": 143, "last": 135, "weights": [1, 1, 1, 1, 1, 1, 1, 1, 1.7], "source": "photo" },
+    { "id": "s3l", "strip": "rh-strip-05", "row": 4, "kind": "rect", "block": "south block 3, column nearer the flats", "near": "yMax", "first": 128, "last": 134, "source": "photo" },
+    { "id": "s3r", "strip": "rh-strip-04", "row": 3, "kind": "rect", "block": "south block 3, outer column", "near": "yMax", "first": 127, "last": 123, "weights": [1, 1, 1, 1, 1.7], "source": "photo" },
+    { "id": "s4l", "strip": "rh-strip-03", "row": 2, "kind": "rect", "block": "south block 4, column nearer the flats", "near": "yMax", "first": 118, "last": 122, "source": "photo" },
+    { "id": "s4r", "strip": "rh-strip-02", "row": 1, "kind": "rect", "block": "south block 4, outer column", "near": "yMax", "first": 117, "last": 113, "source": "photo" },
+    { "id": "s5", "strip": "rh-strip-01", "row": 0, "kind": "rect", "block": "south block 5", "near": "yMax", "first": 109, "last": 112, "source": "photo" },
+    { "id": "tipD", "strip": "rh-tip-04", "row": 18, "kind": "slab", "columns": [{ "side": "single", "first": 53, "last": 59 }], "block": "tip strip 1", "source": "photo" },
+    { "id": "tipC", "strip": "rh-tip-03", "row": 17, "kind": "slab", "columns": [{ "side": "right", "first": 70, "last": 60 }, { "side": "left", "first": 71, "last": 81 }], "block": "tip strip 2", "source": "photo" },
+    { "id": "tipB", "strip": "rh-tip-02", "row": 16, "kind": "slab", "columns": [{ "side": "right", "first": 92, "last": 82 }, { "side": "left", "first": 93, "last": 103 }], "block": "tip strip 3", "source": "photo" },
+    { "id": "tipA", "strip": "rh-tip-01", "row": 15, "kind": "slab", "columns": [{ "side": "single", "first": 108, "last": 104 }], "block": "tip strip 4", "source": "photo" }
+  ]
+}

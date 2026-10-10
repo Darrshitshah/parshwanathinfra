@@ -1,0 +1,92 @@
+/**
+ * Location: the address, the pin, a schematic map (labelled "Not to scale") and the real Google Maps link.
+ * Landmarks and distances are TBD chips until confirmed. Used on Home and on the project page (id="location").
+ * Owner: pages-lead.
+ */
+import type { ReactNode } from "react";
+import { Eyebrow } from "@/components/ui/Section";
+import { TextLink } from "@/components/ui/TextLink";
+import { Tbd } from "@/components/ui/Tbd";
+import { rich, withTbd } from "@/components/ui/with-tbd";
+import { directionsUrl, formatCoordinates } from "@/components/ui/map-links";
+import { homeCopy } from "@/content/copy/home";
+import { en } from "@/content/i18n/en";
+import { shivShiva } from "@/content/projects";
+import { LocationMap } from "./LocationMap";
+
+interface LocationProps {
+  id?: string;
+  index?: string;
+}
+
+function FactRow({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div className="grid gap-1 border-b border-line py-4 sm:grid-cols-[9rem_1fr] sm:gap-4">
+      <dt className="t-mono-sm text-ink-muted">{label}</dt>
+      <dd className="m-0 text-ink">{children}</dd>
+    </div>
+  );
+}
+
+export function Location({ id = "location", index = "07" }: LocationProps) {
+  const location = shivShiva.location;
+  const labels = homeCopy.location.labels;
+  const landmarks = location.landmarks;
+  return (
+    <section id={id} aria-labelledby={`${id}-title`} className="section-pad border-y border-line bg-paper-sunk">
+      <div className="wrap">
+        <Eyebrow index={index}>{homeCopy.location.eyebrow}</Eyebrow>
+        <div className="mt-10 grid gap-12 md:mt-14 lg:grid-cols-12 lg:gap-x-(--gutter)">
+          <div className="lg:col-span-5">
+            <h2 id={`${id}-title`} className="t-display-2 text-ink">
+              {rich(homeCopy.location.heading)}
+            </h2>
+            <p className="t-lead mt-6 text-ink-muted">{rich(homeCopy.location.body)}</p>
+
+            <dl className="m-0 mt-10 grid gap-0 border-t border-line-strong">
+              <FactRow label={labels.address}>
+                <address className="not-italic">{rich(location.address)}</address>
+              </FactRow>
+              <FactRow label={labels.pin}>
+                <span className="t-mono">{formatCoordinates(location.geo)}</span>
+              </FactRow>
+              <FactRow label={labels.landmarks}>
+                {landmarks === "TBD" ? (
+                  <Tbd />
+                ) : (
+                  <ul className="m-0 grid list-none gap-1 p-0">
+                    {landmarks.map((landmark) => (
+                      <li key={landmark.name}>{landmark.name}</li>
+                    ))}
+                  </ul>
+                )}
+              </FactRow>
+              <FactRow label={labels.distances}>
+                {landmarks === "TBD" ? (
+                  <Tbd />
+                ) : (
+                  <ul className="m-0 grid list-none gap-1 p-0">
+                    {landmarks.map((landmark) => (
+                      <li key={landmark.name}>
+                        {landmark.name}: {withTbd(landmark.distance)}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </FactRow>
+            </dl>
+
+            <p className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-3">
+              <TextLink href={location.mapUrl}>{en.common.openInMaps}</TextLink>
+              <TextLink href={directionsUrl(location.geo)}>{en.common.getDirections}</TextLink>
+            </p>
+          </div>
+
+          <div className="lg:col-span-7">
+            <LocationMap />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

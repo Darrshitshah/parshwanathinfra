@@ -1,0 +1,8 @@
+{
+ "_about": "Hand decisions for cad_buildings.py: tags forced onto a traced footprint, footprints merged into another.",
+ "tagToTraced": {
+  "BLDG": "office-00",
+  "A": "shops-00"
+ },
+ "mergeInto": {}
+}

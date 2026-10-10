@@ -5,100 +5,41 @@
  * Keep these names and signatures; add options, never remove them.
  *
  * Rules: GSAP owns scroll, SVG and timelines (these primitives); Motion owns component state.
- * Animate transform and opacity only (SVG stroke-dashoffset via DrawSVG is the exception).
- * Every primitive must honour `reduced: true` by returning a timeline that only fades (or sets the end state).
+ * Animate transform and opacity only. The allowed exceptions, all paint-only (never layout): SVG stroke dashes via
+ * DrawSVG; clip-path for the iris, the wipe and the blinds; and the township-shaped hole of the page curtain, whose SVG
+ * path data is rewritten each frame (it has to cut a shape out of a sheet, which no transform can do). Visibility and
+ * pointer-events are toggled at the ends of a curtain. Every primitive honours `reduced: true` by returning a
+ * timeline that only fades (or sets the end state).
+ *
+ * IMPORTANT, bundle size: this barrel and everything under `primitives/` import GSAP statically (about 50 KB gzipped).
+ * Do NOT import it from a component or page that ships in the initial bundle. Use the thin layer instead:
+ *   `await loadMotion()` / `getMotion()` from `@/motion/load` (the runtime arrives in its own chunk after hydration),
+ *   the hooks and components below, or `useMotionEffect`. `bundle-boundary.test.ts` guards the thin layer.
+ * Constants are safe anywhere: `@/motion/constants`.
+ *
+ * React pieces live next to this barrel:
+ *   `@/motion/hooks`        useSplitReveal, useInkDraw, useDimensionCount, useStripBlinds, useBoulevardWipe, useParallax, ...
+ *   `@/motion/Reveal`       <Reveal kind="split|ink|blinds|wipe|fade">, <DimensionStat>, <Parallax>
+ *   `@/motion/MotionRoot`   mounted once by layout.tsx
+ *   `@/components/cursor`   <Magnetic>, useMagnetic, data-cursor attributes
+ *   `@/components/loader`   <BoundaryLoader>
+ *   `@/components/transition` useTransition, useTransitionRouter, data-transition attributes
  */
-import { gsap } from "gsap";
 
-export type Timeline = gsap.core.Timeline;
-export type Targets = gsap.TweenTarget;
+export type { PrimitiveOptions, Targets, Timeline } from "./types";
+export { DURATION, EASE } from "./constants";
+export { registerMotion } from "./setup";
 
-export interface PrimitiveOptions {
-  /** Reduced motion or Tier C: skip movement, fade or jump to the end state. */
-  reduced?: boolean;
-  duration?: number;
-  delay?: number;
-  ease?: string;
-  /** Start paused so a caller (ScrollTrigger, transition provider) can drive it. */
-  paused?: boolean;
-}
+export { inkDraw, type InkDrawOptions } from "./primitives/ink-draw";
+export { splitReveal, type SplitRevealOptions, type SplitUnit } from "./primitives/split-reveal";
+export { countTo, dimensionCount, type DimensionCountOptions, type DimensionElements } from "./primitives/dimension-count";
+export { boundaryCurtain, CURTAIN_TIMING, type BoundaryCurtainOptions } from "./primitives/boundary-curtain";
+export { roundaboutIris, type RoundaboutIrisOptions } from "./primitives/roundabout-iris";
+export { boulevardWipe, type BoulevardWipeOptions } from "./primitives/boulevard-wipe";
+export { stripBlinds, type StripBlindsOptions } from "./primitives/strip-blinds";
 
-/** Named eases shared by every primitive. "draft" is a CustomEase registered by `registerMotion()`. */
-export const EASE = {
-  draft: "draft",
-  out: "power3.out",
-  expo: "expo.out",
-  inOut: "power3.inOut",
-} as const;
-
-export const DURATION = {
-  quick: 0.35,
-  base: 0.7,
-  slow: 1.2,
-  draw: 1.6,
-} as const;
-
-/** Register GSAP plugins and the "draft" CustomEase once, on the client. Idempotent. */
-export function registerMotion(): void {
-  // TODO(motion-lead): register ScrollTrigger, SplitText, DrawSVGPlugin, MorphSVGPlugin, Flip, CustomEase, Observer.
-}
-
-/** Draw SVG strokes like ink on paper (DrawSVG). Used by the loader, the plan draw-in and dimension lines. */
-export function inkDraw(targets: Targets, options: PrimitiveOptions & { stagger?: number } = {}): Timeline {
-  void targets;
-  return gsap.timeline({ paused: options.paused });
-}
-
-/** Split text into lines or words and reveal them from a mask. Call `revert` on cleanup. */
-export function splitReveal(
-  target: Element,
-  options: PrimitiveOptions & { by?: "lines" | "words" | "chars"; stagger?: number } = {},
-): { timeline: Timeline; revert: () => void } {
-  void target;
-  return { timeline: gsap.timeline({ paused: options.paused }), revert: () => undefined };
-}
-
-/** A dimension line with end ticks draws, then the value counts up inside it. */
-export function dimensionCount(
-  elements: { line: SVGGeometryElement; ticks?: SVGGeometryElement[]; output: HTMLElement },
-  options: PrimitiveOptions & { value: number; format?: (value: number) => string },
-): Timeline {
-  void elements;
-  return gsap.timeline({ paused: options.paused });
-}
-
-/** Page curtain cut from the township boundary: "cover" wipes it over the page, "reveal" opens the next one. */
-export function boundaryCurtain(
-  curtain: SVGElement | HTMLElement,
-  options: PrimitiveOptions & { phase: "cover" | "reveal" },
-): Timeline {
-  void curtain;
-  return gsap.timeline({ paused: options.paused });
-}
-
-/** Iris cut from the roundabout circle, opening or closing around an origin (viewport px). */
-export function roundaboutIris(
-  target: HTMLElement,
-  options: PrimitiveOptions & { phase: "open" | "close"; origin?: { x: number; y: number } },
-): Timeline {
-  void target;
-  return gsap.timeline({ paused: options.paused });
-}
-
-/** Horizontal wipe line, the 40' boulevard, used between sections. */
-export function boulevardWipe(
-  target: HTMLElement,
-  options: PrimitiveOptions & { direction?: "ltr" | "rtl" } = {},
-): Timeline {
-  void target;
-  return gsap.timeline({ paused: options.paused });
-}
-
-/** Staggered "blinds" reveal cut from the row-house strips, for galleries. */
-export function stripBlinds(
-  targets: HTMLElement | HTMLElement[],
-  options: PrimitiveOptions & { strips?: number; stagger?: number; orientation?: "vertical" | "horizontal" } = {},
-): Timeline {
-  void targets;
-  return gsap.timeline({ paused: options.paused });
-}
+export { loadFlip, loadMorphSVG, loadObserver } from "./lazy";
+export { createNumberFormatter, formatCounter, formatIndian } from "./format";
+export { getLenis, lockSmoothScroll, scrollToTarget, scrollToTopOrHash, type ScrollTargetOptions } from "./scroll";
+export { createHole, type HoleController } from "./hole";
+export type { Bounds, Point, Rect, ViewBox } from "./geometry";
