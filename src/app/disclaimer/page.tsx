@@ -1,4 +1,4 @@
-/** Disclaimer: RERA, artist's impression, indicative plans (draft for review by Parshwanath Infra). Owner: pages-lead. */
+/** Disclaimer: artist's impression, indicative plans (draft for review by Parshwanath Infra). Owner: pages-lead. */
 import type { Metadata } from "next";
 import { LegalPage } from "@/components/legal/LegalPage";
 import { disclaimerDoc } from "@/content/copy/legal";

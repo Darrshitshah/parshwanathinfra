@@ -71,7 +71,7 @@ export default function ContactPage() {
                 <address className="not-italic">{rich(office.address)}</address>
               </DetailRow>
               {site.contact.phones.map((phone) => (
-                <DetailRow key={phone.label} label={`${details.phone}: ${phone.label}`}>
+                <DetailRow key={phone.number} label={`${details.phone}: ${phone.label}`}>
                   <TbdValue value={phone.number}>
                     {(number) => <TextLink href={`tel:+91${number}`}>{formatPhone(number)}</TextLink>}
                   </TbdValue>

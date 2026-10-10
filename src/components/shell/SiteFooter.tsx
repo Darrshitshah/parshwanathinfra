@@ -18,6 +18,8 @@ import { LEGAL_ITEMS, NAV_ITEMS } from "./nav";
 
 // Evaluated once when the site is built.
 const BUILD_YEAR = new Date().getFullYear();
+// The legal name already ends in a full stop ("Pvt. Ltd."), so do not add a second one.
+const COPYRIGHT_NAME = (isTbd(site.legalName) ? site.name : site.legalName).replace(/\.$/, "");
 
 function FooterNav({ label, items }: { label: string; items: ReadonlyArray<{ href: string; label: string }> }) {
   return (
@@ -59,6 +61,20 @@ export function SiteFooter() {
                   {en.common.openInMaps}
                 </TextLink>
               </p>
+              <ul className="mt-5 grid list-none gap-1 p-0" data-footer-phones="">
+                {site.contact.phones.map((phone) => (
+                  <li key={phone.number} className="t-small flex flex-wrap items-baseline gap-x-2 text-ink">
+                    <span className="text-ink-muted">{phone.label}:</span>
+                    <TbdValue value={phone.number}>
+                      {(number) => (
+                        <TextLink href={`tel:+91${number}`} className="t-small">
+                          {formatPhone(number)}
+                        </TextLink>
+                      )}
+                    </TbdValue>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>
@@ -84,6 +100,7 @@ export function SiteFooter() {
           </div>
         </dl>
 
+        {SHOW_RERA ? (
         <p className="t-mono mb-0 mt-6 flex flex-wrap items-center gap-x-2 gap-y-1 text-ink" data-rera-line="">
           <span>{en.legal.reraLabel}:</span>
           <TbdValue value={site.rera.number}>
@@ -101,16 +118,17 @@ export function SiteFooter() {
           <span>{en.legal.reraAuthority}:</span>
           <TbdValue value={site.rera.authority} />
         </p>
+        ) : null}
 
-        <div className="mt-8 grid gap-4 border-t border-line pt-8 md:grid-cols-3 md:gap-x-10">
-          <p className="t-small m-0 text-ink-muted">{site.disclaimers.rera}</p>
+        <div className="mt-8 grid gap-4 border-t border-line pt-8 md:grid-cols-2 md:gap-x-10">
+          {SHOW_RERA ? <p className="t-small m-0 text-ink-muted">{site.disclaimers.rera}</p> : null}
           <p className="t-small m-0 text-ink-muted">{site.disclaimers.artistImpression}</p>
           <p className="t-small m-0 text-ink-muted">{site.disclaimers.general}</p>
         </div>
 
         <div className="t-mono-sm mt-10 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-t border-line pt-6 text-ink-muted">
           <p className="m-0">
-            © {BUILD_YEAR} {site.name}. {en.legal.rights}
+            © {BUILD_YEAR} {COPYRIGHT_NAME}. {en.legal.rights}
           </p>
           <p className="m-0">{en.footer.sheetNote}</p>
         </div>

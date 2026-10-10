@@ -3,6 +3,7 @@
  * fact: facts (counts, address, status, years) are read from src/content/projects and composed in the components.
  * "TBD" renders as a chip, *starred* words as emphasis, ~tilded~ words never wrap. No em or en dashes.
  */
+import { SHOW_RERA } from "./flags";
 
 export const projectsIndexCopy = {
   eyebrow: "Projects",
@@ -80,14 +81,15 @@ export const projectCopy = {
     },
   },
   brochure: {
-    eyebrow: "Brochure and registration",
-    heading: "Brochure, price and *registration*.",
+    eyebrow: SHOW_RERA ? "Brochure and registration" : "Brochure and price",
+    heading: SHOW_RERA ? "Brochure, price and *registration*." : "Brochure, price and *approvals*.",
     brochureTitle: "Brochure",
     brochureNote: "The brochure download will sit behind the enquiry form once a brochure exists.",
     brochureButton: "Brochure",
     priceTitle: "Price",
     priceNote: "Starting price and current offers: confirm with the site office.",
     reraTitle: "RERA and approvals",
+    approvalsTitle: "Approvals",
     disclaimersTitle: "Disclaimers",
   },
   metaFallbackTitle: "Project",

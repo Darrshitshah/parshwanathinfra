@@ -208,7 +208,7 @@ describe("EnquiryForm: sending", () => {
     expect(await screen.findByText(en.enquiry.notConfiguredTitle)).toBeInTheDocument();
     expect(screen.getByText(en.enquiry.notConfiguredNoPhone)).toBeInTheDocument();
     expect(screen.queryByText(en.enquiry.success)).not.toBeInTheDocument();
-    expect(screen.getByText(config.office.address)).toBeInTheDocument();
+    expect(document.querySelector("[data-enquiry-state='not-configured'] address")).toHaveTextContent(config.office.address);
     expect(screen.getByRole("link", { name: /open in google maps/i })).toHaveAttribute("href", config.office.mapUrl);
     expect(screen.queryByRole("link", { name: /call/i })).not.toBeInTheDocument();
 

@@ -4,7 +4,10 @@
  * DRAFT for review by Parshwanath Infra. Written plainly, stating only what this website actually does, claiming no
  * legal compliance, and leaving every unknown as TBD (rendered as a chip). Nothing here is legal advice. The unknowns
  * are listed in the pages-lead report so they reach docs/QUESTIONS.md. No em or en dashes.
+ *
+ * The RERA section of the disclaimer is included only when SHOW_RERA is on (flags.ts; off by Darshit's decision).
  */
+import { SHOW_RERA } from "./flags";
 
 export interface LegalSection {
   heading: string;
@@ -163,17 +166,22 @@ export const termsDoc: LegalDoc = {
 export const disclaimerDoc: LegalDoc = {
   slug: "disclaimer",
   title: "Disclaimer",
-  metaDescription:
-    "RERA disclaimer, the artist's impression note and the limits of the plans on the Shiv Shiva Township website. Draft for review by Parshwanath Infra.",
+  metaDescription: SHOW_RERA
+    ? "RERA disclaimer, the artist's impression note and the limits of the plans on the Shiv Shiva Township website. Draft for review by Parshwanath Infra."
+    : "The artist's impression note and the limits of the plans on the Shiv Shiva Township website. Draft for review by Parshwanath Infra.",
   intro:
     "Read this alongside the project page. It is a draft for Parshwanath Infra to review, and it claims no compliance that cannot be checked.",
   sections: [
-    {
-      heading: "RERA",
-      paragraphs: [
-        "RERA registration details will be published here once available. RERA registration number: TBD. Registering authority: TBD.",
-      ],
-    },
+    ...(SHOW_RERA
+      ? [
+          {
+            heading: "RERA",
+            paragraphs: [
+              "RERA registration details will be published here once available. RERA registration number: TBD. Registering authority: TBD.",
+            ],
+          },
+        ]
+      : []),
     {
       heading: "Artist's impression",
       paragraphs: [

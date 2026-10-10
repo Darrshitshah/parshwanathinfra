@@ -2,6 +2,7 @@
 import { cleanup, render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 
+import { SHOW_RERA } from "@/content/copy/flags";
 import { site } from "@/content/site";
 import { SiteFooter } from "./SiteFooter";
 import { WhatsAppButton } from "./WhatsAppButton";
@@ -11,9 +12,16 @@ import { isCurrent } from "./is-current";
 afterEach(cleanup);
 
 describe("WhatsAppButton", () => {
+  it("renders the confirmed number with the prefilled text", () => {
+    expect(site.contact.whatsapp).toBe("7874305000");
+    render(<WhatsAppButton />);
+    const href = screen.getByRole("link", { name: /chat on whatsapp/i }).getAttribute("href") ?? "";
+    expect(href).toMatch(/^https:\/\/wa\.me\/917874305000\?text=/);
+    expect(decodeURIComponent(href)).toContain("Shiv Shiva Township");
+  });
+
   it("renders nothing while the WhatsApp number is TBD", () => {
-    expect(site.contact.whatsapp).toBe("TBD");
-    const { container } = render(<WhatsAppButton />);
+    const { container } = render(<WhatsAppButton number="TBD" />);
     expect(container).toBeEmptyDOMElement();
   });
 
@@ -27,26 +35,32 @@ describe("WhatsAppButton", () => {
 });
 
 describe("SiteFooter", () => {
-  it("shows the RERA line as TBD, never a made-up number", () => {
+  it("does not mention RERA anywhere while SHOW_RERA is off", () => {
+    expect(SHOW_RERA).toBe(false);
     const { container } = render(<SiteFooter />);
-    const line = container.querySelector("[data-rera-line]");
-    expect(line).not.toBeNull();
-    expect(line?.textContent).toMatch(/RERA registration:/i);
-    expect(line?.querySelectorAll("[data-tbd]").length).toBeGreaterThanOrEqual(1);
+    expect(container.querySelector("[data-rera-line]")).toBeNull();
+    expect(container.textContent).not.toMatch(/rera/i);
   });
 
-  it("shows the legal name as a TBD chip while it is unconfirmed", () => {
-    render(<SiteFooter />);
-    const label = screen.getByText("Legal name");
-    const cell = label.closest(".titleblock__cell");
-    expect(cell?.querySelector("[data-tbd]")).not.toBeNull();
+  it("shows the confirmed legal name in the title block and the copyright line", () => {
+    const { container } = render(<SiteFooter />);
+    const cell = screen.getByText("Legal name").closest(".titleblock__cell");
+    expect(cell).toHaveTextContent("Parshwanath Infra Pvt. Ltd.");
+    expect(cell?.querySelector("[data-tbd]")).toBeNull();
+    expect(container.textContent).toContain("Parshwanath Infra Pvt. Ltd. All rights reserved.");
   });
 
-  it("carries the three disclaimers from the content layer", () => {
+  it("lists both sales numbers as tel links", () => {
+    const { container } = render(<SiteFooter />);
+    const links = Array.from(container.querySelectorAll<HTMLAnchorElement>("a[href^='tel:']"));
+    expect(links.map((link) => link.getAttribute("href"))).toEqual(["tel:+917874305000", "tel:+917874306000"]);
+    expect(links.map((link) => link.textContent)).toEqual(["+91 78743 05000", "+91 78743 06000"]);
+  });
+
+  it("carries the artist's impression and general disclaimers from the content layer", () => {
     render(<SiteFooter />);
     expect(screen.getByText(site.disclaimers.artistImpression)).toBeInTheDocument();
     expect(screen.getByText(site.disclaimers.general)).toBeInTheDocument();
-    expect(screen.getByText(site.disclaimers.rera)).toBeInTheDocument();
   });
 
   it("links the site office to Google Maps and lists the navigation and legal links", () => {

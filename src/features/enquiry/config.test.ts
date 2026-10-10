@@ -15,9 +15,12 @@ describe("buildEnquiryConfig", () => {
     expect(config.office.mapUrl).toBe(site.contact.office.mapUrl);
   });
 
-  it("exposes no phone number or WhatsApp number while they are TBD", () => {
-    expect(config.phones).toEqual([]);
-    expect(config.whatsapp).toBeNull();
+  it("exposes both confirmed sales numbers and the WhatsApp number", () => {
+    expect(config.phones).toEqual([
+      { label: "Sales", number: "7874305000" },
+      { label: "Sales", number: "7874306000" },
+    ]);
+    expect(config.whatsapp).toBe("7874305000");
   });
 
   it("is plain JSON, so it can cross from the server to the client", () => {

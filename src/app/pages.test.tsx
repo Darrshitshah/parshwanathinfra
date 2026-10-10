@@ -212,11 +212,10 @@ describe("Project page", () => {
     expect(container.querySelector("#gallery")).toHaveAttribute("data-slot", "gallery");
   });
 
-  it("shows the RERA line as TBD, the price on request and a disabled brochure button", async () => {
+  it("shows no RERA text, the price on request and a disabled brochure button", async () => {
     const container = await renderProject();
-    const rera = container.querySelector("#brochure [data-rera-line]");
-    expect(rera?.textContent).toMatch(/RERA registration:/);
-    expect(rera?.querySelector("[data-tbd]")).not.toBeNull();
+    expect(container.querySelector("[data-rera-line]")).toBeNull();
+    expect(container.textContent).not.toMatch(/rera/i);
     expect(container.querySelector("#brochure")?.textContent).toContain("Price on request");
     const brochure = container.querySelector<HTMLButtonElement>("#brochure [data-brochure]");
     expect(brochure).toBeDisabled();
@@ -255,29 +254,30 @@ describe("About", () => {
     expect(aboutMetadata.title).toBe("About");
   });
 
-  it("marks the legal name as TBD", () => {
+  it("shows the confirmed legal name", () => {
     renderPage(<AboutPage />);
     const cell = screen.getByText("Legal name").closest(".titleblock__cell");
-    expect(cell?.querySelector("[data-tbd]")).not.toBeNull();
+    expect(cell).toHaveTextContent("Parshwanath Infra Pvt. Ltd.");
   });
 });
 
 describe("Contact", () => {
-  it("puts the enquiry form beside the office, with phone, WhatsApp, email and hours as TBD", () => {
+  it("puts the enquiry form beside the office, with email and hours as TBD", () => {
     const container = renderPage(<ContactPage />);
     expectSoundStructure(container);
     expect(container.querySelector("form[data-enquiry-form]")).not.toBeNull();
     const details = container.querySelector("aside");
     expect(details?.textContent).toContain("Opp. Haryana Hotel");
-    expect(details?.querySelectorAll("[data-tbd]").length).toBeGreaterThanOrEqual(4);
+    expect(details?.querySelectorAll("[data-tbd]")).toHaveLength(2);
     expect(screen.getAllByRole("link", { name: /get directions/i })[0]?.getAttribute("href")).toContain("google.com/maps/dir");
     expect(contactMetadata.title).toBe("Contact");
   });
 
-  it("does not link a phone number or WhatsApp number it does not have", () => {
+  it("links both sales numbers and the WhatsApp number, but not the unknown email", () => {
     const container = renderPage(<ContactPage />);
-    expect(container.querySelector("a[href^='tel:']")).toBeNull();
-    expect(container.querySelector("a[href*='wa.me']")).toBeNull();
+    const tel = Array.from(container.querySelectorAll("aside a[href^='tel:']")).map((link) => link.getAttribute("href"));
+    expect(tel).toEqual(["tel:+917874305000", "tel:+917874306000"]);
+    expect(container.querySelector("aside a[href='https://wa.me/917874305000']")).not.toBeNull();
     expect(container.querySelector("a[href^='mailto:']")).toBeNull();
   });
 });
@@ -299,11 +299,26 @@ describe.each([
   });
 });
 
+describe("No RERA anywhere", () => {
+  it.each([
+    ["Home", <Home key="h" />],
+    ["Projects", <ProjectsPage key="p" />],
+    ["About", <AboutPage key="a" />],
+    ["Contact", <ContactPage key="c" />],
+    ["Privacy", <PrivacyPage key="pr" />],
+    ["Terms", <TermsPage key="t" />],
+    ["Disclaimer", <DisclaimerPage key="d" />],
+    ["404", <NotFound key="n" />],
+  ])("%s mentions no RERA", (_name, page) => {
+    expect(renderPage(page).textContent).not.toMatch(/rera/i);
+  });
+});
+
 describe("Disclaimer content", () => {
-  it("carries the RERA disclaimer and the artist's impression note", () => {
+  it("carries the artist's impression note and no RERA section", () => {
     const container = renderPage(<DisclaimerPage />);
-    expect(container.textContent).toMatch(/RERA registration details will be published here once available/);
     expect(container.textContent).toMatch(/artist's impressions and are indicative only/);
+    expect(container.textContent).not.toMatch(/rera/i);
   });
 });
 

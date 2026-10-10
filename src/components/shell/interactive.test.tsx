@@ -143,7 +143,7 @@ describe("SiteHeader", () => {
     for (const item of nav) expect(within(dialog).getByRole("link", { name: new RegExp(item.label) })).toHaveAttribute("href", item.href);
     expect(within(dialog).getByRole("button", { name: en.nav.closeMenu })).toBeInTheDocument();
     expect(within(dialog).getByRole("button", { name: en.nav.themeToggle })).toBeInTheDocument();
-    expect(within(dialog).getByText(office.address, { exact: false })).toBeInTheDocument();
+    expect(dialog.querySelector("address")).toHaveTextContent(office.address);
 
     await user.keyboard("{Escape}");
     await waitFor(() => expect(screen.queryByRole("dialog", { name: en.nav.menu })).not.toBeInTheDocument(), { timeout: 5000 });

@@ -1,7 +1,7 @@
 /**
  * Brochure, price and registration. The brochure button is visible but disabled and reads "Brochure: TBD" while no
- * brochure PDF exists. The price reads "Price on request" until a price is confirmed. The RERA block always shows
- * the registration line (TBD until known) with its authority and the approvals, followed by the disclaimers.
+ * brochure PDF exists. The price reads "Price on request" until a price is confirmed. The approvals follow, then the
+ * disclaimers. The RERA line, its authority and the RERA disclaimer appear only when SHOW_RERA is on (flags.ts).
  * Owner: pages-lead.
  */
 import { LineButton } from "@/components/ui/Button";
@@ -9,6 +9,7 @@ import { Eyebrow } from "@/components/ui/Section";
 import { Tbd } from "@/components/ui/Tbd";
 import { TbdValue, rich } from "@/components/ui/with-tbd";
 import { TextLink } from "@/components/ui/TextLink";
+import { SHOW_RERA } from "@/content/copy/flags";
 import { projectCopy } from "@/content/copy/project";
 import { en } from "@/content/i18n/en";
 import type { Project } from "@/content/schema";
@@ -53,15 +54,17 @@ export function BrochureSection({ project }: { project: Project }) {
 
           <div className="grid content-start gap-8 lg:col-span-7">
             <div>
-              <h3 className="t-mono-sm m-0 mb-4 text-ink-muted">{copy.reraTitle}</h3>
-              <p className="t-mono m-0 mb-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-ink" data-rera-line="">
-                <span>{en.legal.reraLabel}:</span>
-                <TbdValue value={project.rera.number} />
-              </p>
+              <h3 className="t-mono-sm m-0 mb-4 text-ink-muted">{SHOW_RERA ? copy.reraTitle : copy.approvalsTitle}</h3>
+              {SHOW_RERA ? (
+                <p className="t-mono m-0 mb-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-ink" data-rera-line="">
+                  <span>{en.legal.reraLabel}:</span>
+                  <TbdValue value={project.rera.number} />
+                </p>
+              ) : null}
               <FactsBlock
                 columns={2}
                 facts={[
-                  { label: en.legal.reraAuthority, value: <TbdValue value={project.rera.authority} /> },
+                  ...(SHOW_RERA ? [{ label: en.legal.reraAuthority, value: <TbdValue value={project.rera.authority} /> }] : []),
                   {
                     label: projectCopy.overview.labels.approvals,
                     value:
@@ -82,7 +85,7 @@ export function BrochureSection({ project }: { project: Project }) {
             <div>
               <h3 className="t-mono-sm m-0 mb-4 text-ink-muted">{copy.disclaimersTitle}</h3>
               <div className="grid gap-3 border-t border-line pt-4">
-                <p className="t-small m-0 text-ink-muted">{site.disclaimers.rera}</p>
+                {SHOW_RERA ? <p className="t-small m-0 text-ink-muted">{site.disclaimers.rera}</p> : null}
                 <p className="t-small m-0 text-ink-muted">{site.disclaimers.artistImpression}</p>
                 <p className="t-small m-0 text-ink-muted">{site.disclaimers.general}</p>
               </div>
