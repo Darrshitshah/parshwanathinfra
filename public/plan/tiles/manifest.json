@@ -1,0 +1,49 @@
+{
+ "note": "Deep-zoom tiles of the photoreal top-down render (artist's impression). Grid point (gx, gy) is pixel (gx * gridToPx, gy * gridToPx) of a level.",
+ "tileSize": 256,
+ "format": "webp",
+ "template": "/plan/tiles/{z}/{x}_{y}.webp",
+ "grid": {
+  "width": 2000,
+  "height": 1342
+ },
+ "full": {
+  "width": 5056,
+  "height": 3392
+ },
+ "maxZ": 3,
+ "levels": [
+  {
+   "z": 0,
+   "width": 632,
+   "height": 424,
+   "cols": 3,
+   "rows": 2,
+   "gridToPx": 0.316
+  },
+  {
+   "z": 1,
+   "width": 1264,
+   "height": 848,
+   "cols": 5,
+   "rows": 4,
+   "gridToPx": 0.632
+  },
+  {
+   "z": 2,
+   "width": 2528,
+   "height": 1696,
+   "cols": 10,
+   "rows": 7,
+   "gridToPx": 1.264
+  },
+  {
+   "z": 3,
+   "width": 5056,
+   "height": 3392,
+   "cols": 20,
+   "rows": 14,
+   "gridToPx": 2.528
+  }
+ ]
+}

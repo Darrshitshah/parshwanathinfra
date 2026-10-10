@@ -5,7 +5,8 @@
  * so a bad edit fails at import time. Components never hold coordinates.
  *
  * Exports: `plan`, `planTransform` (CAD display points to the render grid), helpers (`buildingsByTypology`,
- * `buildingById`, `plotByNumber`, `roadById`, `cadToGrid`). `chapters` is added to this barrel when chapters.ts lands.
+ * `buildingById`, `plotByNumber`, `roadById`, `cadToGrid`). Chapters live in `./chapters` (import `chapters` from "@/content/plan/chapters": it is kept out of this barrel so
+ * that chapters.ts and refs.ts, which both import this file, cannot form an import cycle).
  */
 import {
   planSchema,

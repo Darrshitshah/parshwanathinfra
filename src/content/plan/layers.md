@@ -13,7 +13,7 @@ block and the colours marked "never publish" below are not used on the site.
 | Stroke colour | Paths | What it is | Use in the pipeline |
 |---|---|---|---|
 | `#000000` black | 40,869 | Walls and wall fill of every building, stair outlines, shops block A, the office, door-leaf lines, plus the sheet frame, the title block and the "LAYOUT PLAN" box (never publish) | Building outlines: segments shorter than 250 pt, title block and frame excluded, closed by buffering (+2.0 pt then -1.5 pt). See `tools/pdf/fit_transform.py` and `cad_buildings.py` |
-| `#003fff` blue | 32,030 | Doors, windows, door swings and bathroom fixtures inside flats (0.6 pt hairlines) | Room detail for the unit plans (`tools/pdf/unit_plans.py`) |
+| `#003fff` blue | 32,030 | Doors, windows, door swings and bathroom fixtures inside flats (0.6 pt hairlines) | Room detail for the unit plans (`tools/pdf/cut_units.py`) |
 | `#ff00ff` magenta | 7,475 | Dashed projection lines (balconies, chajjas, architectural projections), the long thin dimension lines that carry the metric values, and the compass rose in the title block | Dimension lines give the scale (`transform.json`, `metresPerCadPt`); dashes show where balconies project |
 | `#ff0000` red | 5,381 | Stair treads and lift shafts, the red tag circles (B1 to B21, C1 to C13, A), the ENTRY arrows (outline), the row-house plot outlines and ticks at the right edge of the sheet (plots 1 to 20 and 144 to 165) | Building tags, entries, the first plot outlines |
 | `#004d00` dark green | 2,345 | Micro hatch marks (0.12 to 0.36 pt) in one 24 x 13 pt patch near the first row-house strip | Ignore |
