@@ -54,3 +54,4 @@ Each line: `- [x] item · commit <hash> · preview <url> · <date>`.
 - 2026-10-10 04:52 IST · Limit reset; the three leads resumed with their context.
 - 2026-10-10 ~05:30 IST · Usage limit hit again mid-Phase 1 (pages-lead was building SiteShell, motion-lead wiring transitions, data-lead re-checking files).
 - 2026-10-10 11:17 IST · Limit reset; the three leads resumed with their context.
+- 2026-10-10 15:46 IST · Usage at 88% after ~11 min of three max-effort leads (~8%/min). Leads stopped, work checkpointed. Next window resets 19:50 IST.
