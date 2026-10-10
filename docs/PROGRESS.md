@@ -15,16 +15,16 @@ Each line: `- [x] item · commit <hash> · preview <url> · <date>`.
 - [ ] Vercel connected, first preview link · deferred until Darshit connects GitHub (Q1); preview = local `npm run dev`
 
 ## Phase 1 · data-lead, motion-lead, pages-lead (shell)
-- [ ] CAD layer map and transform.json (residuals logged)
-- [ ] plan.json (sectors 01 to 05, roads, row-house district, plots 1 to 165, amenities)
-- [ ] Web plan SVG and chapters.ts
-- [ ] Unit plan SVGs
-- [ ] Content files with facts and TBDs
-- [ ] Image pipeline and deep-zoom tiles
-- [ ] Motion setup, primitives, transitions
-- [ ] S1 loader, S8 cursor
-- [ ] Layout shell, nav, footer, enquiry drawer UI
-- [ ] All pages as static sections
+- [x] CAD layer map and transform.json (residuals logged) · commit d54f3a1 · 2026-10-10
+- [x] plan.json (sectors 01 to 05, roads, row-house district, plots 1 to 165, amenities) · commit d54f3a1 · 2026-10-10
+- [x] Web plan SVG and chapters.ts · commit d54f3a1 · 2026-10-10
+- [x] Unit plan SVGs · commit d54f3a1 · 2026-10-10
+- [x] Content files with facts and TBDs · commit d54f3a1 · 2026-10-10
+- [x] Image pipeline and deep-zoom tiles · commit d54f3a1 · 2026-10-10
+- [x] Motion setup, primitives, transitions · commit 8432ce4 · 2026-10-10
+- [x] S1 loader, S8 cursor · commit 8432ce4 · 2026-10-10
+- [x] Layout shell, nav, footer, enquiry drawer UI · commit b7f264b · 2026-10-10
+- [x] All pages as static sections · commit b7f264b · 2026-10-10
 
 ## Phase 2 · plan-lead, scene-lead, pages-lead, motion-lead
 - [ ] S3 Living Plan
@@ -34,7 +34,7 @@ Each line: `- [x] item · commit <hash> · preview <url> · <date>`.
 - [ ] Generated images (cloud plates, dusk pair, icons, OG)
 - [ ] S2 sky descent mounted and choreographed
 - [ ] S6 row-house street
-- [ ] Enquiry API, SEO, legal pages, 404
+- [ ] Enquiry API, SEO, legal pages, 404 (API route, legal pages, 404 done in b7f264b; SEO extras pending)
 
 ## Phase 3 · qa-lead and fixes
 - [ ] QA_REPORT.md written

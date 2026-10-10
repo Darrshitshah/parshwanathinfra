@@ -28,3 +28,11 @@ Every TBD on the site, with where it shows. The Director batches these into popu
 ## Story and people
 - Company history, years in business, other projects, leadership names and photos, milestones, testimonials.
 - Landmarks near the site and their distances.
+
+## From data-lead (2026-10-10)
+- Updated layout plan (PDF/DWG or straight daylight scan): 123 of 165 plot numbers are read from the low-res photo (low confidence).
+- Which flat plans are 1 BHK vs 2 BHK; is 473 carpet, built-up or super built-up (sq ft)? Shows: unit plans, explorer.
+- Where are the other 133 of the 150 shops (sheet draws 17 in block A)? Shows: plan.
+- Building on the plaza at the tip: clubhouse or temple? Shows: plan, chapters.
+- Four small blocks lower left of the render, outside the boundary: what are they? Left out of the plan for now.
+- Enquiry jurisdiction for terms/privacy (court/jurisdiction): TBD until legal review.
