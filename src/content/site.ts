@@ -6,14 +6,17 @@ import { siteSchema, TBD, type Site } from "./schema";
 
 export const site: Site = siteSchema.parse({
   name: "Parshwanath Infra",
-  // Portfolio says "Parshwanath Infra Pvt. Ltd."; to be confirmed against "Parshwanath Infrastructure Pvt. Ltd.".
-  legalName: TBD,
+  // Confirmed by Darshit 2026-10-10.
+  legalName: "Parshwanath Infra Pvt. Ltd.",
   url: TBD,
   tagline: "Planned neighbourhoods, drawn to life.",
   contact: {
-    // Past ads show 78743 05000 and 78743 06000; unconfirmed, so hidden until Darshit confirms.
-    phones: [{ label: "Sales", number: TBD, whatsapp: TBD }],
-    whatsapp: TBD,
+    // Confirmed by Darshit 2026-10-10: both are sales numbers, 78743 05000 is WhatsApp.
+    phones: [
+      { label: "Sales", number: "7874305000", whatsapp: true },
+      { label: "Sales", number: "7874306000", whatsapp: false },
+    ],
+    whatsapp: "7874305000",
     email: TBD,
     officeHours: TBD,
     office: {
@@ -23,6 +26,7 @@ export const site: Site = siteSchema.parse({
       mapUrl: "https://maps.app.goo.gl/DeFCbMwyrYEGZ5Gi9",
     },
   },
+  // Darshit 2026-10-10: do not mention RERA on the site yet (Gujarat RERA registration to follow).
   rera: { number: TBD, authority: TBD, url: TBD },
   social: [],
   disclaimers: {
