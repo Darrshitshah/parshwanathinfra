@@ -55,3 +55,4 @@ Each line: `- [x] item · commit <hash> · preview <url> · <date>`.
 - 2026-10-10 ~05:30 IST · Usage limit hit again mid-Phase 1 (pages-lead was building SiteShell, motion-lead wiring transitions, data-lead re-checking files).
 - 2026-10-10 11:17 IST · Limit reset; the three leads resumed with their context.
 - 2026-10-10 15:46 IST · Usage at 88% after ~11 min of three max-effort leads (~8%/min). Leads stopped, work checkpointed. Next window resets 19:50 IST.
+- NEXT (after 19:50 IST reset): spawn FRESH leads at effort "high" (resumed agents keep max effort and carry very large contexts), two at a time: first pages-lead + data-lead to finish their remaining Phase 1 items from the files on disk (checkpoint 159bc12), then motion-lead. Pending for pages-lead: remove all RERA mentions, legal name, both phones, WhatsApp button on. Poll usage every ~5 minutes; wrap up at ~90%, stop at 98%.
