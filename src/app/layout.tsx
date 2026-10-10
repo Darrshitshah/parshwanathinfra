@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Instrument_Serif, Inter_Tight, JetBrains_Mono } from "next/font/google";
 import { DeviceTierProvider } from "@/lib/device-tier-provider";
 import { MotionRoot } from "@/motion/MotionRoot";
+import { shapeFromPlan } from "@/motion/township";
+import { plan } from "@/content/plan";
 import { SiteShell } from "@/components/shell/SiteShell";
 import "./globals.css";
 
@@ -27,6 +29,9 @@ const mono = JetBrains_Mono({
   variable: "--font-jetbrains-mono",
   preload: false,
 });
+
+// Computed on the server so the page curtain is cut from the real boundary without shipping plan.json.
+const TOWNSHIP_SHAPE = shapeFromPlan(plan);
 
 const SITE_ORIGIN = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
@@ -65,7 +70,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       </head>
       <body>
         <DeviceTierProvider>
-          <MotionRoot>
+          <MotionRoot shape={TOWNSHIP_SHAPE}>
             <SiteShell>{children}</SiteShell>
           </MotionRoot>
         </DeviceTierProvider>

@@ -131,6 +131,8 @@ function play({ runtime, plan, parts, signals, points, origin, finish }: PlayInp
   const lines = present<SVGPathElement>(ink, arrow);
   const accents = present<SVGElement>(ink, guide, arrow, dot);
   let tick: (() => void) | null = null;
+  // Animations started from the ticker callback are also tracked by hand: whatever the context does, unmount kills them.
+  const started: Array<{ kill: () => unknown }> = [];
 
   const context = gsap.context(() => {
     gsap.set([...lines, dot], { opacity: 1 });
@@ -145,7 +147,7 @@ function play({ runtime, plan, parts, signals, points, origin, finish }: PlayInp
         if (tick) gsap.ticker.remove(tick);
         tick = null;
         context.add(() => {
-          gsap.to(root, { autoAlpha: 0, duration: timing.reducedFade, ease: "none", onComplete: finish });
+          started.push(gsap.to(root, { autoAlpha: 0, duration: timing.reducedFade, ease: "none", onComplete: finish }));
         });
       };
       gsap.ticker.add(tick);
@@ -189,7 +191,7 @@ function play({ runtime, plan, parts, signals, points, origin, finish }: PlayInp
 
       // Created through `context.add` so that it belongs to the context even though it starts from a ticker callback.
       context.add(() => {
-        gsap
+        const revealLine = gsap
           .timeline({ onComplete: finish })
           .timeScale(speed)
           .set(root, { pointerEvents: "none" }, 0)
@@ -198,6 +200,7 @@ function play({ runtime, plan, parts, signals, points, origin, finish }: PlayInp
           .to(group, { scale: full, svgOrigin: `${origin[0]} ${origin[1]}`, duration: timing.hole, ease: EASE.inOut }, grow)
           .to(accents, { opacity: 0, duration: 0.3, ease: "none" }, grow + timing.hole * 0.3)
           .to(root, { autoAlpha: 0, duration: timing.rootFade, ease: "none" }, grow + timing.hole);
+        started.push(revealLine);
       });
     };
 
@@ -215,6 +218,8 @@ function play({ runtime, plan, parts, signals, points, origin, finish }: PlayInp
   return () => {
     if (tick) gsap.ticker.remove(tick);
     tick = null;
+    started.forEach((animation) => animation.kill());
+    started.length = 0;
     context.revert();
   };
 }

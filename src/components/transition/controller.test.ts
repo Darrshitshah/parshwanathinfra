@@ -9,6 +9,9 @@ import type { MotionRuntime } from "@/motion/load";
 import {
   COVER_PUSH_LIMIT_MS,
   createTransitionController,
+  LOCATION_POLL_MS,
+  MANUAL_LIMIT_MS,
+  SAME_LOCATION_GRACE_MS,
   REVEAL_LIMIT_MS,
   ROUTE_WAIT_LIMIT_MS,
   TITLE_HOLD_MS,
@@ -300,5 +303,66 @@ describe("the manual cover and reveal", () => {
 
   it("cover() resolves immediately when it cannot start", async () => {
     await expect(setup({ runtime: () => null }).controller.cover("Title")).resolves.toBeUndefined();
+  });
+});
+
+describe("ending promptly on any navigation", () => {
+  it("opens soon after a query-only navigation, without a pathname change", () => {
+    const { controller, env, curtains } = setup();
+    controller.start("/?tab=2", { title: "Home" });
+    curtains[0].onCovered?.();
+    // Next updates the URL (same path, new query) but usePathname() never changes.
+    window.history.pushState({}, "", "/?tab=2");
+    vi.advanceTimersByTime(LOCATION_POLL_MS);
+    expect(env.arrived).toHaveBeenCalledTimes(1);
+    vi.advanceTimersByTime(700 + TITLE_HOLD_MS);
+    expect(curtains[1].phase).toBe("reveal");
+    expect(ROUTE_WAIT_LIMIT_MS).toBeGreaterThan(1000);
+  });
+
+  it("opens after a short grace when the push targets the very same location", () => {
+    const { controller, env, curtains } = setup();
+    controller.start("/", { title: "Home" });
+    curtains[0].onCovered?.();
+    vi.advanceTimersByTime(SAME_LOCATION_GRACE_MS);
+    expect(env.arrived).toHaveBeenCalledTimes(1);
+    vi.advanceTimersByTime(700 + TITLE_HOLD_MS);
+    expect(curtains[1].phase).toBe("reveal");
+  });
+
+  it("arrives once even when both the pathname and the location report the change", () => {
+    const { controller, env, curtains } = setup();
+    controller.start("/about", { title: "About" });
+    curtains[0].onCovered?.();
+    window.history.pushState({}, "", "/about");
+    controller.notifyPathname("/about");
+    vi.advanceTimersByTime(LOCATION_POLL_MS * 3);
+    expect(env.arrived).toHaveBeenCalledTimes(1);
+  });
+
+  it("a manual cover opens soon after the route changes under it", () => {
+    const { controller, env, curtains } = setup();
+    void controller.cover("Manual");
+    curtains[0].onCovered?.();
+    controller.notifyPathname("/elsewhere");
+    expect(env.arrived).toHaveBeenCalledTimes(1);
+    vi.advanceTimersByTime(700 + TITLE_HOLD_MS);
+    expect(curtains[1].phase).toBe("reveal");
+  });
+
+  it("a manual cover that is never revealed opens by itself within the cap", () => {
+    const { controller, curtains } = setup();
+    void controller.cover("Forgotten");
+    curtains[0].onCovered?.();
+    vi.advanceTimersByTime(MANUAL_LIMIT_MS);
+    expect(curtains[1].phase).toBe("reveal");
+    expect(MANUAL_LIMIT_MS).toBeLessThanOrEqual(6000);
+  });
+
+  it("ignores a pathname notification for the starting page while covering", () => {
+    const { controller } = setup();
+    controller.start("/about", { title: "About" });
+    controller.notifyPathname("/");
+    expect(controller.isBusy()).toBe(true);
   });
 });

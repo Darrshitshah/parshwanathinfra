@@ -84,3 +84,9 @@
   height: 1px;
   background: currentColor;
 }
+
+/* The panel is promoted to its own layer only while a transition runs (the provider sets html[data-transition]). */
+html[data-transition] .pi-curtain__panel,
+html[data-transition] .pi-curtain__label {
+  will-change: transform;
+}

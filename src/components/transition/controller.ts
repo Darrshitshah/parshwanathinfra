@@ -10,6 +10,9 @@
  *  - `router.push` is called as soon as the page is hidden, and never later than COVER_PUSH_LIMIT_MS after the
  *    click, even if the animation stalls. So a transition never delays navigation by more than 900 ms.
  *  - If the route does not arrive within ROUTE_WAIT_LIMIT_MS the curtain opens anyway.
+ *  - A run ends promptly on ANY navigation: a pathname change, a query-only change (the location is polled), or a push
+ *    to the very same location (a short grace, then the curtain opens). A manual `cover()` run ends the same way on a
+ *    route change, and is capped at MANUAL_LIMIT_MS so it can never hold clicks for long.
  *  - Every timer, timeline and DOM flag is cleaned up by `abort()` (Back/Forward, unmount, tier change).
  *  - While a run is active, further internal link clicks are ignored (no queued double navigation).
  */
@@ -26,7 +29,12 @@ export const REVEAL_LIMIT_MS = 2500;
 export const TITLE_HOLD_MS = 120;
 /** A run older than this is considered stuck and replaced by the next click. */
 const STALE_RUN_MS = 9000;
-const MANUAL_LIMIT_MS = 20000;
+/** A hand-played cover that nobody reveals is opened after this long, so it can never block clicks for long. */
+export const MANUAL_LIMIT_MS = 6000;
+/** How often the location is compared with where the run started (catches query-only navigation). */
+export const LOCATION_POLL_MS = 80;
+/** A push to the location we are already on cannot change anything: open the curtain after this grace. */
+export const SAME_LOCATION_GRACE_MS = 250;
 
 export type StartResult = "started" | "busy" | "unavailable";
 type RunMode = "navigate" | "manual";
@@ -71,6 +79,11 @@ interface Run {
   href: string;
   hash: string;
   fromPath: string;
+  /** Pathname plus query of the page the run started on. */
+  fromKey: string;
+  /** Pathname plus query the push is heading to (navigate runs). */
+  targetKey: string;
+  arrived: boolean;
   replace: boolean;
   startedAt: number;
   timeline: Timeline | null;
@@ -82,6 +95,22 @@ interface Run {
 function hashOf(href: string): string {
   try {
     return new URL(href, window.location.href).hash;
+  } catch {
+    return "";
+  }
+}
+
+function locationKey(url: URL): string {
+  return `${normalizePath(url.pathname)}${url.search}`;
+}
+
+function currentKey(): string {
+  return locationKey(new URL(window.location.href));
+}
+
+function keyOf(href: string): string {
+  try {
+    return locationKey(new URL(href, window.location.href));
   } catch {
     return "";
   }
@@ -157,6 +186,28 @@ export function createTransitionController(env: ControllerEnv): TransitionContro
     later(current, REVEAL_LIMIT_MS, () => finish(id));
   }
 
+  /** The new page is mounted behind the curtain: reset scroll, then open once the title has been readable. */
+  function arrive(current: Run): void {
+    if (run !== current || current.arrived || current.phase !== "covered") return;
+    current.arrived = true;
+    clearTimers(current);
+    env.arrived(current.hash);
+    later(current, remainingCoverMs(current) + TITLE_HOLD_MS, () => startReveal(current.id));
+  }
+
+  /** Query-only navigation never changes the pathname: compare the whole location until the run ends. */
+  function watchLocation(current: Run): void {
+    const poll = () => {
+      if (run !== current || current.arrived) return;
+      if (currentKey() !== current.fromKey) {
+        arrive(current);
+        return;
+      }
+      later(current, LOCATION_POLL_MS, poll);
+    };
+    later(current, LOCATION_POLL_MS, poll);
+  }
+
   function onCovered(id: number): void {
     if (!run || run.id !== id || run.phase !== "covering") return;
     const current = run;
@@ -165,11 +216,14 @@ export function createTransitionController(env: ControllerEnv): TransitionContro
     setFlag("covered");
     current.resolveCovered?.();
 
+    watchLocation(current);
     if (current.mode === "manual") {
       later(current, MANUAL_LIMIT_MS, () => startReveal(id));
       return;
     }
     later(current, ROUTE_WAIT_LIMIT_MS, () => startReveal(id));
+    // Pushing to the location we are already on changes nothing, so nothing would ever announce an arrival.
+    if (current.targetKey === current.fromKey) later(current, SAME_LOCATION_GRACE_MS, () => arrive(current));
     try {
       env.push(current.href, current.replace);
     } catch {
@@ -192,6 +246,9 @@ export function createTransitionController(env: ControllerEnv): TransitionContro
       href,
       hash: hashOf(href),
       fromPath: normalizePath(window.location.pathname),
+      fromKey: currentKey(),
+      targetKey: keyOf(href),
+      arrived: false,
       replace,
       startedAt: performance.now(),
       timeline: null,
@@ -264,21 +321,15 @@ export function createTransitionController(env: ControllerEnv): TransitionContro
     notifyPathname(rawPathname) {
       if (!run) return;
       const pathname = normalizePath(rawPathname);
-      if (run.mode === "manual") {
-        // A hand-played cover is not waiting for a route. If the route changes under it, get out of the way.
-        if (pathname !== run.fromPath) abort();
-        return;
-      }
+      if (pathname === run.fromPath) return;
       if (run.phase === "covering") {
         // Something other than this transition changed the route (Back, a redirect): do not fight it.
         abort();
         return;
       }
-      if (run.phase !== "covered" || pathname === run.fromPath) return;
-      const current = run;
-      clearTimers(current);
-      env.arrived(current.hash);
-      later(current, remainingCoverMs(current) + TITLE_HOLD_MS, () => startReveal(current.id));
+      // Navigate run: the page it waited for. Manual run: the route changed under a hand-played cover, so the
+      // page is there; open the curtain instead of holding clicks until the cap.
+      arrive(run);
     },
 
     abort,

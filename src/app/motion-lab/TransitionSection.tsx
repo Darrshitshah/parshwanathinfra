@@ -5,8 +5,6 @@ import { useEffect, useRef, useState } from "react";
 import { usePageTransition } from "@/components/transition";
 import { Chip, LabButton, LabSection, Row } from "./lab-ui";
 
-const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
-
 interface LinkCase {
   label: string;
   expected: "curtain" | "native";
@@ -74,17 +72,32 @@ export function TransitionSection() {
   const transition = usePageTransition();
   const [busy, setBusy] = useState(false);
   const mounted = useRef(false);
+  const holdTimer = useRef<{ id: number; release: () => void } | null>(null);
   useEffect(() => {
     mounted.current = true;
     return () => {
       mounted.current = false;
+      // Leaving the lab mid-hold: stop the timer and let the pending round trip finish.
+      const pending = holdTimer.current;
+      if (pending) window.clearTimeout(pending.id);
+      pending?.release();
+      holdTimer.current = null;
     };
   }, []);
+
+  const hold = (ms: number) =>
+    new Promise<void>((resolve) => {
+      const release = () => {
+        holdTimer.current = null;
+        resolve();
+      };
+      holdTimer.current = { id: window.setTimeout(release, ms), release };
+    });
 
   const roundTrip = async () => {
     setBusy(true);
     await transition.cover("Round trip");
-    await wait(700);
+    await hold(700);
     // Left the lab in the meantime (the route change already released the curtain): do nothing more.
     if (!mounted.current) return;
     await transition.reveal();
