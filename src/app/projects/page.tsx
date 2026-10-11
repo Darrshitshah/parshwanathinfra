@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Figure } from "@/components/media/Figure";
 import { FactsBlock } from "@/components/project/FactsBlock";
+import { pageMetadata } from "@/components/seo/page-metadata";
 import { Eyebrow } from "@/components/ui/Section";
 import { TextLink } from "@/components/ui/TextLink";
 import { TbdValue, rich } from "@/components/ui/with-tbd";
@@ -13,11 +14,11 @@ import { projectsIndexCopy } from "@/content/copy/project";
 import { getMedia } from "@/content/media";
 import { visibleProjects } from "@/content/projects";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: projectsIndexCopy.metaTitle,
   description: projectsIndexCopy.metaDescription,
-  alternates: { canonical: "/projects" },
-};
+  path: "/projects",
+});
 
 export default function ProjectsPage() {
   const projects = visibleProjects();

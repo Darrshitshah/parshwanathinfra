@@ -5,6 +5,9 @@
  */
 import type { Metadata } from "next";
 import { Figure } from "@/components/media/Figure";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { organizationJsonLd } from "@/components/seo/json-ld";
+import { pageMetadata } from "@/components/seo/page-metadata";
 import { FactsBlock } from "@/components/project/FactsBlock";
 import { Eyebrow } from "@/components/ui/Section";
 import { TextLink } from "@/components/ui/TextLink";
@@ -15,11 +18,11 @@ import { getMedia } from "@/content/media";
 import { shivShiva } from "@/content/projects";
 import { site } from "@/content/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: aboutCopy.metaTitle,
   description: aboutCopy.metaDescription,
-  alternates: { canonical: "/about" },
-};
+  path: "/about",
+});
 
 export default function AboutPage() {
   const image = getMedia("cover");
@@ -28,6 +31,7 @@ export default function AboutPage() {
 
   return (
     <>
+      <JsonLd data={organizationJsonLd()} />
       <section aria-labelledby="about-title" className="border-b border-line bg-grid">
         <div className="wrap pb-14 pt-10 md:pb-20 md:pt-16">
           <Eyebrow index="01">{aboutCopy.eyebrow}</Eyebrow>

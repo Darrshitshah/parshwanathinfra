@@ -17,18 +17,26 @@ import { Numbers } from "@/components/home/Numbers";
 import { PlanSection } from "@/components/home/PlanSection";
 import { RowHouseStreet } from "@/components/home/RowHouseStreet";
 import { BoundaryLoader } from "@/components/loader";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { organizationJsonLd } from "@/components/seo/json-ld";
+import { pageMetadata } from "@/components/seo/page-metadata";
+import { seoCopy } from "@/content/copy/seo";
 import { plan } from "@/content/plan";
 import { shivShiva } from "@/content/projects";
 import { shapeFromPlan } from "@/motion/township";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  title: seoCopy.homeTitle,
   description: shivShiva.seo.description,
-  alternates: { canonical: "/" },
-};
+  path: "/",
+  absoluteTitle: true,
+  useDefaultImage: false,
+});
 
 export default function Home() {
   return (
     <>
+      <JsonLd data={organizationJsonLd()} />
       <BoundaryLoader {...shapeFromPlan(plan)} />
       <Hero />
       <BrandStatement />

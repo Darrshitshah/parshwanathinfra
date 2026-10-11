@@ -5,6 +5,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ProjectView } from "@/components/project/ProjectView";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { projectJsonLd } from "@/components/seo/json-ld";
+import { pageMetadata } from "@/components/seo/page-metadata";
+import { projectPath } from "@/components/seo/routes";
 import { getProject, projectIndex } from "@/content/projects";
 
 export const dynamicParams = false;
@@ -20,22 +24,23 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
   const { slug } = await params;
   const project = getProject(slug);
   if (!project) return {};
-  return {
-    title: { absolute: project.seo.title },
+  return pageMetadata({
+    title: project.seo.title,
     description: project.seo.description,
-    alternates: { canonical: `/projects/${project.slug}` },
-    openGraph: {
-      title: project.seo.title,
-      description: project.seo.description,
-      type: "website",
-      locale: "en_IN",
-    },
-  };
+    path: projectPath(project.slug),
+    absoluteTitle: true,
+    useDefaultImage: false,
+  });
 }
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
   const { slug } = await params;
   const project = getProject(slug);
   if (!project) notFound();
-  return <ProjectView project={project} />;
+  return (
+    <>
+      <JsonLd data={projectJsonLd(project)} />
+      <ProjectView project={project} />
+    </>
+  );
 }

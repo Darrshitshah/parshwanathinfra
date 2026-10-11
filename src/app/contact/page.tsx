@@ -6,6 +6,9 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { LocationMap } from "@/components/home/LocationMap";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { organizationJsonLd } from "@/components/seo/json-ld";
+import { pageMetadata } from "@/components/seo/page-metadata";
 import { Eyebrow } from "@/components/ui/Section";
 import { TextLink } from "@/components/ui/TextLink";
 import { TbdValue, rich } from "@/components/ui/with-tbd";
@@ -17,11 +20,11 @@ import { buildEnquiryConfig } from "@/features/enquiry/config";
 import { EnquiryForm } from "@/features/enquiry/EnquiryForm";
 import { formatPhone } from "@/features/enquiry/phone";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: contactCopy.metaTitle,
   description: contactCopy.metaDescription,
-  alternates: { canonical: "/contact" },
-};
+  path: "/contact",
+});
 
 function DetailRow({ label, children }: { label: string; children: ReactNode }) {
   return (
@@ -39,6 +42,7 @@ export default function ContactPage() {
 
   return (
     <>
+      <JsonLd data={organizationJsonLd()} />
       <section aria-labelledby="contact-title" className="border-b border-line bg-grid">
         <div className="wrap pb-14 pt-10 md:pb-20 md:pt-16">
           <Eyebrow index="01">{contactCopy.eyebrow}</Eyebrow>
