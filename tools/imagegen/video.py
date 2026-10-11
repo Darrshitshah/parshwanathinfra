@@ -9,7 +9,7 @@ from _lib import GEN, PROJECT, VIDEO_MODEL, backoff, client, log_call
 
 KF = GEN / "keyframes"
 RESOLUTION = os.environ.get("VEO_RESOLUTION", "4k")  # highest first; a 400 on an unsupported value is free, fall back to 1080p
-QUALITY = os.environ.get("VEO_QUALITY", "LOSSLESS")  # LOSSLESS at 4k needs a GCS output bucket (the API refuses inline)
+QUALITY = os.environ.get("VEO_QUALITY", "OPTIMIZED")  # LOSSLESS at 4k is refused inline and errored (code 13) via GCS; OPTIMIZED (~32 Mbps) returns inline
 BUCKET = os.environ.get("VEO_BUCKET", "parshwanath-infra-veo")  # private, us-central1, uniform access, public access prevention
 DURATION = int(os.environ.get("VEO_DURATION", "8"))
 OUT = GEN / "video"
@@ -59,8 +59,9 @@ def run(clip, ver, suffix=""):
     (OUT / f"{name}.prompt.txt").write_text(
         f"model={VIDEO_MODEL} {RESOLUTION} 16:9 {DURATION}s no audio enhance_prompt=True quality={QUALITY}\nfirst={spec['first']} last={spec['last']}\nnegative={NEG}\n\n{spec['prompt']}\n")
     cfg = dict(aspect_ratio="16:9", resolution=RESOLUTION, duration_seconds=DURATION, number_of_videos=1, generate_audio=False, enhance_prompt=True, compression_quality=QUALITY,
-               output_gcs_uri=f"gs://{BUCKET}/{name}/",
                negative_prompt=NEG, person_generation="allow_adult")
+    if os.environ.get("VEO_GCS") == "1":
+        cfg["output_gcs_uri"] = f"gs://{BUCKET}/{name}/"
     if spec["last"]:
         cfg["last_frame"] = img(spec["last"])
     ins = f"{spec['first']}.png" + (f" + last {spec['last']}.png" if spec["last"] else "")
