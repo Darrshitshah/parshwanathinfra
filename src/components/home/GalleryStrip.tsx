@@ -41,6 +41,7 @@ export function GalleryStrip({ items, labels }: GalleryStripProps) {
           <li
             key={item.id}
             data-gallery-item={item.id}
+            data-blinds-item=""
             className="relative h-[clamp(14rem,34vw,31rem)] shrink-0 snap-start"
             style={{ aspectRatio: `${item.width} / ${item.height}` }}
           >

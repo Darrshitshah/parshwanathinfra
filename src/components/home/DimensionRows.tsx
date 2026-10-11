@@ -8,6 +8,7 @@
 import type { CSSProperties } from "react";
 import { en } from "@/content/i18n/en";
 import { shivShiva } from "@/content/projects";
+import { CountedItem } from "./CountedItem";
 
 interface DimensionRow {
   id: "flats" | "rowhouses" | "shops" | "total";
@@ -67,10 +68,9 @@ export function DimensionRows({ label, size = "lg" }: DimensionRowsProps) {
         const share = (row.value / total) * 100;
         const isTotal = row.id === "total";
         return (
-          <li
+          <CountedItem
             key={row.id}
-            data-dimension=""
-            data-value={row.value}
+            value={row.value}
             className={isTotal ? "border-t border-line-strong pt-7 md:pt-9" : undefined}
           >
             <div className="flex flex-wrap items-baseline gap-x-5 gap-y-1">
@@ -88,7 +88,7 @@ export function DimensionRows({ label, size = "lg" }: DimensionRowsProps) {
             <div className="mt-3" style={{ width: `${share}%`, minWidth: "2.5rem" }}>
               <DimensionLine color={row.color} />
             </div>
-          </li>
+          </CountedItem>
         );
       })}
     </ul>

@@ -8,6 +8,7 @@ import { homeCopy } from "@/content/copy/home";
 import { en } from "@/content/i18n/en";
 import { getMedia } from "@/content/media";
 import { shivShiva } from "@/content/projects";
+import { Reveal } from "@/motion/Reveal";
 import { GalleryStrip } from "./GalleryStrip";
 import type { GalleryItem, GalleryLabels } from "./gallery-types";
 
@@ -47,13 +48,15 @@ export function GalleryReel({ id = "gallery", index = "08" }: GalleryReelProps) 
       <div className="wrap">
         <Eyebrow index={index}>{homeCopy.gallery.eyebrow}</Eyebrow>
         <div className="mt-10 grid gap-8 md:mt-14 lg:grid-cols-12 lg:items-end lg:gap-x-(--gutter)">
-          <h2 id={`${id}-title`} className="t-display-2 text-ink lg:col-span-6">
+          <Reveal kind="split" as="h2" id={`${id}-title`} className="t-display-2 text-ink lg:col-span-6">
             {homeCopy.gallery.heading}
-          </h2>
+          </Reveal>
           <p className="t-lead m-0 text-ink-muted lg:col-span-4 lg:col-start-9">{homeCopy.gallery.body(items.length)}</p>
         </div>
       </div>
-      <GalleryStrip items={items} labels={LABELS} />
+      <Reveal kind="blinds">
+        <GalleryStrip items={items} labels={LABELS} />
+      </Reveal>
     </section>
   );
 }

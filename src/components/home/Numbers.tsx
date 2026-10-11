@@ -5,6 +5,7 @@
 import { homeCopy } from "@/content/copy/home";
 import { shivShiva } from "@/content/projects";
 import { Eyebrow } from "@/components/ui/Section";
+import { Reveal } from "@/motion/Reveal";
 import { DimensionRows, formatCount } from "./DimensionRows";
 
 export function Numbers() {
@@ -13,9 +14,9 @@ export function Numbers() {
       <div className="wrap grid gap-14 lg:grid-cols-12 lg:gap-x-(--gutter)">
         <div className="lg:col-span-5">
           <Eyebrow index="02">{homeCopy.numbers.eyebrow}</Eyebrow>
-          <h2 id="numbers-title" className="t-display-2 mt-8 max-w-[14ch] text-ink md:mt-10">
+          <Reveal kind="split" as="h2" id="numbers-title" className="t-display-2 mt-8 max-w-[14ch] text-ink md:mt-10">
             {homeCopy.numbers.headline(formatCount(shivShiva.counts.total))}
-          </h2>
+          </Reveal>
           <p className="t-lead mt-6 max-w-[28rem] text-ink-muted">{homeCopy.numbers.body}</p>
         </div>
         <div className="lg:col-span-7 lg:col-start-6">

@@ -2,6 +2,7 @@
  * The closing call to action: a big statement, the filled enquiry button (opens the drawer) and the site office.
  * Used on Home (id="visit") and on the project page (id="enquire"). Owner: pages-lead.
  */
+import { Magnetic } from "@/components/cursor";
 import { EnquireButton } from "@/components/ui/EnquireButton";
 import { Eyebrow } from "@/components/ui/Section";
 import { TextLink } from "@/components/ui/TextLink";
@@ -9,6 +10,7 @@ import { rich } from "@/components/ui/with-tbd";
 import { homeCopy } from "@/content/copy/home";
 import { en } from "@/content/i18n/en";
 import { site } from "@/content/site";
+import { Reveal } from "@/motion/Reveal";
 
 interface EnquiryCtaProps {
   id?: string;
@@ -21,14 +23,16 @@ export function EnquiryCta({ id = "visit", index = "09" }: EnquiryCtaProps) {
     <section id={id} aria-labelledby={`${id}-title`} className="section-pad border-t border-line bg-grid">
       <div className="wrap">
         <Eyebrow index={index}>{homeCopy.visit.eyebrow}</Eyebrow>
-        <h2 id={`${id}-title`} className="t-display-2 mt-10 max-w-[16ch] text-ink md:mt-14">
+        <Reveal kind="split" as="h2" id={`${id}-title`} className="t-display-2 mt-10 max-w-[16ch] text-ink md:mt-14">
           {homeCopy.visit.heading}
-        </h2>
+        </Reveal>
         <div className="mt-12 grid gap-10 md:mt-16 lg:grid-cols-12 lg:items-end lg:gap-x-(--gutter)">
           <div className="lg:col-span-6">
             <p className="t-lead m-0 max-w-[30rem] text-ink-muted">{homeCopy.visit.body}</p>
             <div className="mt-8">
-              <EnquireButton size="lg">{homeCopy.visit.cta}</EnquireButton>
+              <Magnetic>
+                <EnquireButton size="lg">{homeCopy.visit.cta}</EnquireButton>
+              </Magnetic>
             </div>
           </div>
           <div className="grid gap-1.5 border-t border-line-strong pt-4 lg:col-span-4 lg:col-start-9">

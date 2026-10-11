@@ -16,7 +16,10 @@ import { Location } from "@/components/home/Location";
 import { Numbers } from "@/components/home/Numbers";
 import { PlanSection } from "@/components/home/PlanSection";
 import { RowHouseStreet } from "@/components/home/RowHouseStreet";
+import { BoundaryLoader } from "@/components/loader";
+import { plan } from "@/content/plan";
 import { shivShiva } from "@/content/projects";
+import { shapeFromPlan } from "@/motion/township";
 
 export const metadata: Metadata = {
   description: shivShiva.seo.description,
@@ -26,6 +29,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <>
+      <BoundaryLoader {...shapeFromPlan(plan)} />
       <Hero />
       <BrandStatement />
       <Numbers />

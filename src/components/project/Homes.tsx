@@ -14,6 +14,8 @@ import { projectCopy } from "@/content/copy/project";
 import { en } from "@/content/i18n/en";
 import { getMedia } from "@/content/media";
 import type { Project } from "@/content/schema";
+import { ExplorerSlot } from "@/features/explorer";
+import { Reveal } from "@/motion/Reveal";
 
 const TYPOLOGY_COLOUR: Record<string, string> = {
   flats: "var(--type-flats)",
@@ -43,9 +45,9 @@ export function Homes({ project }: { project: Project }) {
       <div className="wrap">
         <Eyebrow index="03">{copy.eyebrow}</Eyebrow>
         <div className="mt-10 grid gap-8 md:mt-14 lg:grid-cols-12 lg:gap-x-(--gutter)">
-          <h2 id="homes-title" className="t-display-2 text-ink lg:col-span-6">
+          <Reveal kind="split" as="h2" id="homes-title" className="t-display-2 text-ink lg:col-span-6">
             {copy.heading}
-          </h2>
+          </Reveal>
           <p className="t-lead m-0 text-ink-muted lg:col-span-5 lg:col-start-8">{rich(copy.body)}</p>
         </div>
 
@@ -86,31 +88,35 @@ export function Homes({ project }: { project: Project }) {
           <p className="t-small mt-4 max-w-[40rem] text-ink-muted">{copy.units.note}</p>
         </div>
 
-        <div data-slot="explorer" data-fallback="static" className="mt-14 grid gap-10 md:mt-20 lg:grid-cols-12 lg:gap-x-(--gutter)">
-          <div className="lg:col-span-5">
-            <h3 className="t-mono-sm m-0 mb-4 text-ink-muted">{copy.explorer.title}</h3>
-            <p className="t-lead m-0 text-ink">{rich(copy.explorer.note)}</p>
-            <p className="t-mono-sm mb-3 mt-8 text-ink-muted">{copy.explorer.legendTitle}</p>
-            <ul className="m-0 grid list-none gap-0 border-t border-line-strong p-0">
-              {copy.explorer.legend.map((status) => (
-                <li key={status.id} className="flex items-center gap-3 border-b border-line py-3 text-ink">
-                  <span aria-hidden="true" className="inline-block size-3 shrink-0" style={{ background: STATUS_COLOUR[status.id] }} />
-                  {rich(status.label)}
-                </li>
-              ))}
-            </ul>
-            <p className="t-small mt-4 text-ink-muted">{en.common.availabilityOnRequest}.</p>
-          </div>
-          <div className="lg:col-span-7">
-            <Figure
-              media={towers}
-              sizes="(min-width: 1408px) 760px, (min-width: 1024px) 56vw, calc(100vw - 2rem)"
-              aspect={null}
-              frameClassName="aspect-[4/3] lg:aspect-[3/2]"
-              marks
-              caption={copy.explorer.caption}
-            />
-          </div>
+        <div data-slot="explorer" className="mt-14 md:mt-20 [&_.ex-picker]:grid-cols-[minmax(0,1fr)] [&_.ex-picker__select]:max-w-[min(22rem,100%)]">
+          <ExplorerSlot>
+            <div data-fallback="static" className="grid grid-cols-[minmax(0,1fr)] gap-10 lg:grid-cols-12 lg:gap-x-(--gutter)">
+              <div className="lg:col-span-5">
+                <h3 className="t-mono-sm m-0 mb-4 text-ink-muted">{copy.explorer.title}</h3>
+                <p className="t-lead m-0 text-ink">{rich(copy.explorer.note)}</p>
+                <p className="t-mono-sm mb-3 mt-8 text-ink-muted">{copy.explorer.legendTitle}</p>
+                <ul className="m-0 grid list-none gap-0 border-t border-line-strong p-0">
+                  {copy.explorer.legend.map((status) => (
+                    <li key={status.id} className="flex items-center gap-3 border-b border-line py-3 text-ink">
+                      <span aria-hidden="true" className="inline-block size-3 shrink-0" style={{ background: STATUS_COLOUR[status.id] }} />
+                      {rich(status.label)}
+                    </li>
+                  ))}
+                </ul>
+                <p className="t-small mt-4 text-ink-muted">{en.common.availabilityOnRequest}.</p>
+              </div>
+              <div className="lg:col-span-7">
+                <Figure
+                  media={towers}
+                  sizes="(min-width: 1408px) 760px, (min-width: 1024px) 56vw, calc(100vw - 2rem)"
+                  aspect={null}
+                  frameClassName="aspect-[4/3] lg:aspect-[3/2]"
+                  marks
+                  caption={copy.explorer.caption}
+                />
+              </div>
+            </div>
+          </ExplorerSlot>
         </div>
       </div>
     </section>

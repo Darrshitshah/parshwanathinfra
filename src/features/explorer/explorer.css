@@ -343,6 +343,7 @@
 /* picker */
 .ex-picker {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 1.25rem;
 }
 .ex-picker__label {
@@ -353,7 +354,7 @@
   color: var(--ink-muted);
 }
 .ex-picker__select {
-  max-width: 22rem;
+  max-width: min(22rem, 100%);
   min-height: 2.75rem;
   padding: 0 0.8rem;
   border: 1px solid var(--line-strong);

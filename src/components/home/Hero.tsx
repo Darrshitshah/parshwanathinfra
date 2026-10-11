@@ -6,6 +6,7 @@
  * Hooks for the Phase 2 sky descent: [data-hero-poster] wraps the image, [data-hero-wordmark] is the h1,
  * [data-hero-statement] the statement. Owner: pages-lead.
  */
+import { Magnetic } from "@/components/cursor";
 import { Figure } from "@/components/media/Figure";
 import { EnquireButton } from "@/components/ui/EnquireButton";
 import { formatCoordinates } from "@/components/ui/map-links";
@@ -61,7 +62,9 @@ export function Hero() {
               <p className="t-mono mt-4 text-ink-muted">{homeCopy.hero.by}</p>
             </div>
             <div className="flex flex-wrap items-center gap-x-8 gap-y-4 md:col-span-5 md:justify-end">
-              <EnquireButton size="lg">{en.enquiry.open}</EnquireButton>
+              <Magnetic>
+                <EnquireButton size="lg">{en.enquiry.open}</EnquireButton>
+              </Magnetic>
               <TextLink href="/projects/shiv-shiva#plan" arrow="right">
                 {en.common.explorePlan}
               </TextLink>
