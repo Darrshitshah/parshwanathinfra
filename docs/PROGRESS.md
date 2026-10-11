@@ -27,8 +27,8 @@ Each line: `- [x] item · commit <hash> · preview <url> · <date>`.
 - [x] All pages as static sections · commit b7f264b · 2026-10-10
 
 ## Phase 2 · plan-lead, scene-lead, pages-lead, motion-lead
-- [ ] S3 Living Plan
-- [ ] S5 Building explorer
+- [x] S3 Living Plan · built 613d1d4, mounted 0d7d0f9 · 2026-10-11
+- [x] S5 Building explorer · built 613d1d4, mounted 0d7d0f9 · 2026-10-11
 - [ ] Blender module installed, scene built, stills, sequence, GLB
 - [ ] S4 Diorama (WebGL, sequence, still)
 - [ ] Generated images (cloud plates, dusk pair, icons, OG)
