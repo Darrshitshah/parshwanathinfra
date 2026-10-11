@@ -9,7 +9,7 @@ Every TBD on the site, with where it shows. The Director batches these into popu
 
 ## Plan
 - Updated layout plan with the row houses, as PDF or DWG (or a straight daylight scan of the printed sheet).
-- Floors per building type (flat blocks, shops block A, mixed-use building). Shows: diorama, explorer.
+- Floors: answered 2026-10-11, ground + 5 with roof terrace (flats, mixed use, shops A); row houses ground + 1 with roof terrace.
 - Which drawn flat plans are 1 BHK and which are 2 BHK; whether the sheet's area numbers (473, 439, 512, 543 …) are carpet or built-up.
 - Where the 150 shops are (the 2022 sheet draws 17 in block A).
 - Which row-house plots are 2 BHK and which are 3 BHK; row-house floor plans.
