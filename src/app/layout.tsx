@@ -4,6 +4,7 @@ import { DeviceTierProvider } from "@/lib/device-tier-provider";
 import { MotionRoot } from "@/motion/MotionRoot";
 import { shapeFromPlan } from "@/motion/township";
 import { plan } from "@/content/plan";
+import { siteOrigin } from "@/components/seo/site-origin";
 import { SiteShell } from "@/components/shell/SiteShell";
 import "./globals.css";
 
@@ -33,7 +34,7 @@ const mono = JetBrains_Mono({
 // Computed on the server so the page curtain is cut from the real boundary without shipping plan.json.
 const TOWNSHIP_SHAPE = shapeFromPlan(plan);
 
-const SITE_ORIGIN = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+const SITE_ORIGIN = siteOrigin();
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_ORIGIN),
@@ -52,6 +53,7 @@ export const viewport: Viewport = {
     { media: "(prefers-color-scheme: dark)", color: "#121413" },
   ],
   colorScheme: "light dark",
+  viewportFit: "cover",
 };
 
 // Runs before first paint: sets data-theme (stored choice, else system preference) and marks html with

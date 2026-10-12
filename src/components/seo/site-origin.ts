@@ -5,9 +5,12 @@
  */
 const FALLBACK_ORIGIN = "http://localhost:3000";
 
+/** NEXT_PUBLIC_SITE_URL wins; on Vercel without it, the project's production URL (then the deployment URL). */
 export function siteOrigin(): string {
   const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim();
-  return (raw && raw.length > 0 ? raw : FALLBACK_ORIGIN).replace(/\/+$/, "");
+  if (raw) return raw.replace(/\/+$/, "");
+  const vercelHost = process.env.VERCEL_PROJECT_PRODUCTION_URL?.trim() || process.env.VERCEL_URL?.trim();
+  return vercelHost ? `https://${vercelHost.replace(/\/+$/, "")}` : FALLBACK_ORIGIN;
 }
 
 /** `/projects` becomes `https://example.com/projects`; `/` becomes `https://example.com` (as Next writes the home canonical). */
