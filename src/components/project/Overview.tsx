@@ -1,5 +1,5 @@
 /**
- * Overview: the unit counts as dimension lines, what is offered (with the typology colours) and the facts that
+ * Overview: the unit counts as big numerals with share bars on a maroon colour block, what is offered (with the typology colours) and the facts that
  * belong to the project: address, status, start year, possession, land area, approvals and price. Anything
  * unconfirmed is a TBD chip. Owner: pages-lead.
  */
@@ -23,7 +23,7 @@ export function Overview({ project }: { project: Project }) {
   const approvals = project.approvals;
 
   return (
-    <section id="overview" aria-labelledby="overview-title" className="section-pad">
+    <section id="overview" aria-labelledby="overview-title" className="tone-jewel sheet mt-0! pt-(--section-space)!">
       <div className="wrap">
         <Eyebrow index="01">{copy.eyebrow}</Eyebrow>
         <div className="mt-10 grid gap-14 md:mt-14 lg:grid-cols-12 lg:gap-x-(--gutter)">
@@ -33,11 +33,11 @@ export function Overview({ project }: { project: Project }) {
             </h2>
             <p className="t-lead mt-6 max-w-[30rem] text-ink-muted">{rich(project.summary)}</p>
 
-            <p className="t-mono-sm mb-4 mt-10 text-ink-muted">{copy.offeringLabel}</p>
-            <ul className="m-0 grid list-none gap-0 border-t border-line-strong p-0">
+            <p className="t-mono-sm mb-5 mt-10 text-ink-muted">{copy.offeringLabel}</p>
+            <ul className="m-0 flex list-none flex-wrap gap-3 p-0">
               {project.offering.map((item) => (
-                <li key={item.typology} className="flex items-center gap-3 border-b border-line py-3.5 text-ink">
-                  <span aria-hidden="true" className="inline-block size-3 shrink-0 border border-line-strong" style={{ background: SWATCH[item.typology] }} />
+                <li key={item.typology} className="flex items-center gap-3 rounded-full bg-paper-raised py-2.5 pl-4 pr-5 text-ink">
+                  <span aria-hidden="true" className="inline-block size-2.5 shrink-0 rounded-full" style={{ background: SWATCH[item.typology] }} />
                   {item.label}
                 </li>
               ))}
@@ -75,7 +75,7 @@ export function Overview({ project }: { project: Project }) {
             { label: labels.developer, value: project.developer },
           ]}
         />
-        <p className="t-small mt-4 text-ink-muted">{copy.indicativeNote}</p>
+        <p className="t-small mt-6 text-ink-muted">{copy.indicativeNote}</p>
       </div>
     </section>
   );

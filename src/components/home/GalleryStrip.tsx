@@ -2,7 +2,7 @@
 
 /**
  * Gallery reel: a horizontal strip of frames (fixed height, width from each image's own ratio, so nothing shifts)
- * with mono frame numbers and the "Artist's impression" label on every frame. Each frame opens a lightbox that is
+ * with frame numbers and the "Artist's impression" label on every frame. Each frame opens a lightbox that is
  * loaded only on the first click. The strip scrolls with touch, trackpad, shift-wheel and keyboard (it is a focusable
  * scroll region). Hooks for motion: [data-gallery-strip] and [data-gallery-item]. Owner: pages-lead.
  */
@@ -51,7 +51,7 @@ export function GalleryStrip({ items, labels }: GalleryStripProps) {
               aria-label={`${labels.open}: ${item.caption ?? item.alt}`}
               aria-haspopup="dialog"
               data-cursor-label="View"
-              className="group relative block size-full cursor-zoom-in overflow-hidden bg-paper-sunk"
+              className="group relative block size-full cursor-zoom-in overflow-hidden rounded-(--radius-card) bg-paper-sunk"
             >
               <Image
                 src={item.src}
@@ -63,7 +63,7 @@ export function GalleryStrip({ items, labels }: GalleryStripProps) {
                 blurDataURL={item.blurDataURL}
                 className="object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.03]"
               />
-              <span className="t-mono-sm absolute left-2 top-2 z-[3] bg-paper px-2 py-1 text-ink">
+              <span className="t-mono-sm absolute left-3 top-3 z-[3] rounded-full bg-paper/85 px-3 py-1 text-ink">
                 {String(index + 1).padStart(2, "0")} / {total}
               </span>
               {item.artistImpression ? <span className="tag-impression">{labels.artistsImpression}</span> : null}

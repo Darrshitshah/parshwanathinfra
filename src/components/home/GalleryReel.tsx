@@ -4,6 +4,7 @@
  * Used on Home and on the project page (id="gallery"). Owner: pages-lead.
  */
 import { Eyebrow } from "@/components/ui/Section";
+import { rich } from "@/components/ui/with-tbd";
 import { homeCopy } from "@/content/copy/home";
 import { en } from "@/content/i18n/en";
 import { getMedia } from "@/content/media";
@@ -44,13 +45,13 @@ export function GalleryReel({ id = "gallery", index = "08" }: GalleryReelProps) 
   });
 
   return (
-    <section id={id} data-slot="gallery" aria-labelledby={`${id}-title`} className="section-pad overflow-x-clip">
+    <section id={id} data-slot="gallery" aria-labelledby={`${id}-title`} className="tone-ink sheet overflow-x-clip">
       <div className="wrap">
         <Eyebrow index={index}>{homeCopy.gallery.eyebrow}</Eyebrow>
         <div className="mt-10 grid gap-8 md:mt-14 lg:grid-cols-12 lg:items-end lg:gap-x-(--gutter)">
-          <Reveal kind="split" as="h2" id={`${id}-title`} className="t-display-2 text-ink lg:col-span-6">
-            {homeCopy.gallery.heading}
-          </Reveal>
+          <h2 id={`${id}-title`} className="t-display-2 text-ink lg:col-span-6">
+            {rich(homeCopy.gallery.heading)}
+          </h2>
           <p className="t-lead m-0 text-ink-muted lg:col-span-4 lg:col-start-9">{homeCopy.gallery.body(items.length)}</p>
         </div>
       </div>

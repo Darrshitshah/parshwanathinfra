@@ -6,7 +6,7 @@
  *   --curtain-sheen   the lighter red of the soft highlight (falls back to --curtain)
  *   --curtain-deep    the darker red of the far corner     (falls back to --curtain)
  *   --on-curtain      the title colour                     (falls back to --on-brick)
- * The sheet is one diagonal gradient (sheen, base, deep): luxurious and quiet, with no lines.
+ * The sheet is one diagonal gradient (sheen, base, deep) in the deep maroon: luxurious and quiet, with no lines.
  * No transforms are set here on purpose: GSAP owns the transforms of the title, the rule and the panel, and would
  * otherwise read a CSS transform as an extra offset.
  */
@@ -78,10 +78,10 @@
 }
 
 .pi-curtain__eyebrow {
-  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
-  font-size: 0.75rem;
-  font-weight: 400;
-  letter-spacing: 0.2em;
+  font-family: var(--font-zalando), system-ui, sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   opacity: 0;
 }
@@ -97,7 +97,9 @@
 
 .pi-curtain__label {
   display: block;
-  font-family: var(--font-instrument-serif), "Times New Roman", serif;
+  font-family: var(--font-playfair), "Didot", "Times New Roman", serif;
+  font-weight: 500;
+  text-transform: uppercase;
   font-size: clamp(2.75rem, 9vw, 8rem);
   line-height: 1;
   letter-spacing: -0.01em;

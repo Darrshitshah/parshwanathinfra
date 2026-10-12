@@ -334,7 +334,7 @@ export function EnquiryForm({
       ) : (
         <div className="grid content-start gap-1.5">
           <span className="t-mono-sm text-ink">{en.enquiry.fields.project}</span>
-          <p className="m-0 border-b border-line-strong py-3 text-ink">{projectOptions[0]?.label}</p>
+          <p className="m-0 py-2 text-ink">{projectOptions[0]?.label}</p>
         </div>
       )}
       <div className={span}>
@@ -395,17 +395,17 @@ export function EnquiryForm({
 
       <div className={cn("grid gap-4", span)}>
         {showErrors && hasErrors ? (
-          <p role="alert" className="t-small border-l-2 border-brick pl-3 text-brick-ink">
+          <p role="alert" className="t-small rounded-(--radius-field) bg-[color-mix(in_srgb,var(--brick-ink)_10%,transparent)] px-4 py-3 text-brick-ink">
             {en.enquiry.fixFields}
           </p>
         ) : null}
         {problem ? (
-          <p role="alert" className="t-small border-l-2 border-brick pl-3 text-brick-ink">
+          <p role="alert" className="t-small rounded-(--radius-field) bg-[color-mix(in_srgb,var(--brick-ink)_10%,transparent)] px-4 py-3 text-brick-ink">
             <strong>{en.enquiry.errorTitle}.</strong> {problemMessage(problem)}
           </p>
         ) : null}
         <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
-          <FilledButton type="submit" disabled={sending} aria-busy={sending} arrow={!sending}>
+          <FilledButton type="submit" size="wide" disabled={sending} aria-busy={sending} arrow={!sending}>
             {sending ? en.enquiry.sending : en.enquiry.submit}
           </FilledButton>
           <p className="t-small m-0 text-ink-muted">

@@ -13,7 +13,7 @@ import { FilledButton } from "./Button";
 interface EnquireButtonProps {
   children: ReactNode;
   prefill?: EnquiryPrefill;
-  size?: "md" | "lg";
+  size?: "md" | "lg" | "wide";
   arrow?: boolean;
   className?: string;
   /** Runs before the drawer opens (the mobile menu uses it to close itself). */

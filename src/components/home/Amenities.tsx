@@ -28,31 +28,20 @@ function LinearGardenSchematic() {
         </pattern>
       </defs>
       <rect width="400" height="300" fill="var(--paper-sunk)" />
-      <g stroke="var(--line-strong)" strokeWidth="1" fill="none">
-        <line x1="0" y1="70" x2="400" y2="70" />
-        <line x1="0" y1="92" x2="400" y2="92" />
-        <line x1="0" y1="208" x2="400" y2="208" />
-        <line x1="0" y1="230" x2="400" y2="230" />
-      </g>
+      <rect x="0" y="70" width="400" height="22" fill="var(--ink)" opacity="0.1" />
+      <rect x="0" y="208" width="400" height="22" fill="var(--ink)" opacity="0.1" />
       <rect x="0" y="92" width="400" height="116" fill="url(#amenity-hatch)" />
-      <g stroke="var(--type-amenity)" strokeWidth="1.5" fill="none">
-        <rect x="24" y="108" width="352" height="84" />
-        <circle cx="200" cy="150" r="27" />
-        <circle cx="200" cy="150" r="14" />
-        <circle cx="200" cy="150" r="3" fill="var(--type-amenity)" />
+      <rect x="24" y="108" width="352" height="84" rx="14" fill="var(--type-amenity)" opacity="0.22" />
+      <g fill="var(--type-amenity)">
+        <circle cx="200" cy="150" r="27" opacity="0.4" />
+        <circle cx="200" cy="150" r="14" opacity="0.6" />
+        <circle cx="200" cy="150" r="3.5" />
         {trees.map((x) => (
           <g key={x}>
-            <circle cx={x} cy="124" r="6" />
-            <circle cx={x} cy="176" r="6" />
+            <circle cx={x} cy="124" r="7" opacity="0.85" />
+            <circle cx={x} cy="176" r="7" opacity="0.85" />
           </g>
         ))}
-      </g>
-      <g stroke="var(--ink)" strokeWidth="1" fill="none">
-        <line x1="24" y1="262" x2="376" y2="262" />
-        <line x1="24" y1="256" x2="24" y2="268" />
-        <line x1="376" y1="256" x2="376" y2="268" />
-        <line x1="19" y1="267" x2="29" y2="257" />
-        <line x1="371" y1="267" x2="381" y2="257" />
       </g>
     </svg>
   );
@@ -64,6 +53,7 @@ function AmenityCard({ amenity, index, total }: { amenity: ProjectAmenity; index
   const evidence = en.evidence[amenity.evidence];
   const number = String(index + 1).padStart(2, "0");
   const frame = cn(tall ? "aspect-[4/3] md:aspect-[4/5]" : "aspect-[4/3]");
+  const shape = tall ? "arch" : "card";
 
   return (
     <li
@@ -72,16 +62,16 @@ function AmenityCard({ amenity, index, total }: { amenity: ProjectAmenity; index
     >
       <article>
         {media ? (
-          <Figure media={media} sizes="(min-width: 768px) 400px, calc(100vw - 2rem)" aspect={null} frameClassName={frame} />
+          <Figure media={media} sizes="(min-width: 768px) 400px, calc(100vw - 2rem)" aspect={null} shape={shape} frameClassName={frame} />
         ) : (
-          <div className={cn("relative overflow-hidden", frame)}>
+          <div className={cn("relative overflow-hidden", tall ? "arch" : "rounded-(--radius-card)", frame)}>
             <LinearGardenSchematic />
             <span className="tag-impression">{homeCopy.amenities.schematicLabel}</span>
           </div>
         )}
         <div className="mt-4 flex items-baseline justify-between gap-4">
-          <span className="t-mono-sm text-ink-muted">
-            {number} / {String(total).padStart(2, "0")}
+          <span className="font-display text-[1.75rem] font-medium leading-none text-brick-ink [font-variant-numeric:lining-nums]">
+            {number}<span className="text-ink-faint"> / {String(total).padStart(2, "0")}</span>
           </span>
           <span className="chip">{evidence}</span>
         </div>
@@ -102,12 +92,12 @@ export function Amenities({ id = "amenities", index = "05" }: AmenitiesProps) {
   const trackId = `${id}-track`;
 
   return (
-    <section id={id} data-slot="amenities" aria-labelledby={`${id}-title`} className="section-pad overflow-x-clip">
+    <section id={id} data-slot="amenities" aria-labelledby={`${id}-title`} className="tone-paper sheet overflow-x-clip">
       <div className="wrap">
         <Eyebrow index={index}>{homeCopy.amenities.eyebrow}</Eyebrow>
         <div className="mt-10 grid gap-8 md:mt-14 lg:grid-cols-12 lg:items-end lg:gap-x-(--gutter)">
           <h2 id={`${id}-title`} className="t-display-2 text-ink lg:col-span-6">
-            {homeCopy.amenities.heading}
+            {rich(homeCopy.amenities.heading)}
           </h2>
           <div className="flex items-end justify-between gap-8 lg:col-span-5 lg:col-start-8">
             <p className="t-lead m-0 max-w-[26rem] text-ink-muted">{rich(homeCopy.amenities.body)}</p>

@@ -1,7 +1,15 @@
 /*
- * Design tokens · Look A "Drafting table" (kickoff decision 2026-10-10).
- * Owner: Director. Components use these variables or the Tailwind utilities mapped in @theme below,
- * never raw hex values. Light = day renders; dark = dusk renders where a dusk version exists.
+ * Design tokens · "Residence" theme (2026-10-13, replaces the first "Drafting table" theme).
+ * Owner: Director (values by design lead). Components use these variables or the Tailwind utilities mapped in @theme
+ * below, never raw hex values. Light = ivory day; dark = plum night.
+ *
+ * Palette (the same system as a luxury residence brand, in Shiv Shiva's own colours):
+ *   forest ink #13251d, ivory #f3f2ea, ONE jewel (deep maroon #4c0f27) for feature sections, the loader and the
+ *   page curtain, and ONE calm band (sky-sage mist #c9d9d6). Dark theme keeps the same roles in plum, wine and teal.
+ *
+ * Colour blocking: a section gets `tone-paper | tone-mist | tone-jewel | tone-ink` (globals.css). A tone re-points
+ * the semantic tokens below (ink, paper, brick ...) for everything inside it, so `text-ink` and `bg-paper-raised`
+ * stay correct on every block without per-component dark-mode code.
  *
  * Theme selection: `data-theme="light|dark"` on <html> (set before paint by the script in layout.tsx);
  * without JavaScript the system preference applies.
@@ -10,42 +18,67 @@
 :root {
   color-scheme: light;
 
-  /* Paper and ink */
-  --paper: #f3efe7;
-  --paper-raised: #faf7f1;
-  --paper-sunk: #e9e3d7;
-  --ink: #1a1c1b;
-  --ink-muted: #5b5e5a;
-  --ink-faint: #8a8b85;
-  --line: rgb(26 28 27 / 0.18);
-  --line-strong: rgb(26 28 27 / 0.42);
-  --grid: rgb(26 28 27 / 0.06);
+  /* Ivory, forest ink */
+  --paper: #f3f2ea;
+  --paper-raised: #fbfbf5;
+  --paper-sunk: #e9e9df;
+  --ink: #13251d;
+  --ink-muted: #46564e;
+  --ink-faint: #5a675f;
+  --line: rgb(19 37 29 / 0.14);
+  --line-strong: rgb(19 37 29 / 0.34);
+  --grid: rgb(19 37 29 / 0.05);
 
-  /* Brand */
-  --clay: #fbf9f4;
-  --brick: #b5412f;
-  --brick-ink: #9c3424;
-  --on-brick: #fbf9f4;
-  --forest: #24402f;
-  --sand: #d8c6a3;
+  /* Colour blocks: whole sections change colour as you scroll. mist = the calm band (sky-sage), jewel = the
+     feature colour (deep maroon), ink = forest, for the cinematic and closing sections. */
+  --block-mist: #c9d9d6;
+  --block-jewel: #4c0f27;
+  --block-ink: #11231b;
+  --on-mist: #13251d;
+  --on-jewel: #f6f0e6;
+  --on-ink: #f3f2ea;
 
-  /* Typology (tuned from the portfolio: rows orange, flats blue, shops green, mixed = hatch of both) */
-  --type-rowhouses: #c9601f;
-  --type-flats: #2f6db0;
-  --type-shops: #1d8460;
-  --type-mixed: #6a5fa8;
-  --type-office: #1a1c1b;
-  --type-amenity: #24402f;
+  /* Accent: the jewel itself on ivory. Names kept from the first theme (brick) so every component keeps working. */
+  --clay: #fbfbf5;
+  --brick: #5e1431;
+  --brick-ink: #5e1431;
+  --on-brick: #f6f0e6;
+  --forest: #2f6b4a;
+  --sand: #d9cfb8;
 
-  /* Availability (S5): every status is TBD for now */
-  --status-available: #1d8460;
-  --status-booked: #b5412f;
-  --status-sold: #5b5e5a;
-  --status-tbd: #8a8b85;
+  /* Page curtain and loader: deep red-maroon, soft sheen, dark far corner */
+  --curtain: #5c1029;
+  --curtain-sheen: #7c1b3d;
+  --curtain-deep: #36081a;
+  --on-curtain: #f6f0e6;
 
-  /* Surfaces for overlays */
-  --scrim: rgb(26 28 27 / 0.55);
-  --focus: #b5412f;
+  /* Typology: place-rooted (terracotta rows, teal-blue flats, marigold shops, wine mixed) */
+  --type-rowhouses: #bf5b2c;
+  --type-flats: #2e6a8e;
+  --type-shops: #b8860b;
+  --type-mixed: #8e2b57;
+  --type-office: #13251d;
+  --type-amenity: #2f6b4a;
+
+  /* Availability (every status is TBD for now) */
+  --status-available: #2f7d5b;
+  --status-booked: #a63a4f;
+  --status-sold: #46564e;
+  --status-tbd: #5a675f;
+
+
+  /* The same typology colours as they read on the dark colour blocks (jewel and forest) */
+  --on-dark-rowhouses: #e8895a;
+  --on-dark-flats: #7fb2d4;
+  --on-dark-shops: #e6b94a;
+  --on-dark-mixed: #d68ab0;
+  --on-dark-amenity: #7dc29a;
+  --script-night: #f1d3c0;
+
+  --scrim: rgb(19 37 29 / 0.5);
+  --focus: #5e1431;
+  --glass: rgb(243 242 234 / 0.7);
+  --glass-edge: rgb(19 37 29 / 0.1);
 
   /* Motion (CSS side; GSAP eases live in src/motion) */
   --ease-draft: cubic-bezier(0.65, 0, 0.15, 1);
@@ -55,13 +88,19 @@
   --duration-slow: 700ms;
 
   /* Layout */
-  --gutter: clamp(1rem, 0.6rem + 2vw, 2.5rem);
-  --section-space: clamp(5rem, 3rem + 8vw, 11rem);
+  --gutter: clamp(1.25rem, 0.7rem + 2.4vw, 3rem);
+  --section-space: clamp(5.5rem, 3.5rem + 9vw, 12rem);
   --content-max: 88rem;
   --measure: 38rem;
-  --header-h: 4.25rem;
-  --radius-xs: 2px;
-  --radius-sm: 4px;
+  --header-h: 4.75rem;
+  --sheet-r: clamp(1.75rem, 1rem + 3.2vw, 3.5rem);
+
+  /* One shape rule: images sit in arches or large-radius frames, interactive things are pills and circles,
+     fields are soft rounded rectangles. */
+  --radius-xs: 0.5rem;
+  --radius-sm: 0.875rem;
+  --radius-card: 1.75rem;
+  --radius-field: 1.125rem;
   --hairline: 1px;
 
   /* Layers */
@@ -77,68 +116,124 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
-    --paper: #121413;
-    --paper-raised: #1a1d1b;
-    --paper-sunk: #0c0e0d;
-    --ink: #ece6da;
-    --ink-muted: #aaa498;
-    --ink-faint: #7b776f;
-    --line: rgb(236 230 218 / 0.16);
-    --line-strong: rgb(236 230 218 / 0.38);
-    --grid: rgb(236 230 218 / 0.05);
-    --clay: #e8e2d6;
-    --brick: #da5e47;
-    --brick-ink: #e8775f;
-    --on-brick: #121413;
-    --forest: #6fa784;
+    --paper: #170c14;
+    --paper-raised: #231320;
+    --paper-sunk: #0f070d;
+    --ink: #f2eee4;
+    --ink-muted: #bfb3b8;
+    --ink-faint: #9a8d93;
+    --line: rgb(242 238 228 / 0.14);
+    --line-strong: rgb(242 238 228 / 0.34);
+    --grid: rgb(242 238 228 / 0.05);
+
+    /* Colour blocks, night: plum-black page, deep teal band, wine feature, forest-black close */
+    --block-mist: #0f2a29;
+    --block-jewel: #4b1330;
+    --block-ink: #0b1a15;
+    --on-mist: #f2eee4;
+    --on-jewel: #f2eee4;
+    --on-ink: #f2eee4;
+
+    /* Accent: blush on plum */
+    --clay: #e9e2d6;
+    --brick: #e8b4c0;
+    --brick-ink: #f0c2cc;
+    --on-brick: #2b0a1a;
+    --forest: #7dc29a;
     --sand: #cdb88f;
-    --type-rowhouses: #f0843f;
-    --type-flats: #5d9be0;
-    --type-shops: #3fbf8c;
-    --type-mixed: #a497e6;
-    --type-office: #ece6da;
-    --type-amenity: #6fa784;
-    --status-available: #3fbf8c;
-    --status-booked: #da5e47;
-    --status-sold: #aaa498;
-    --status-tbd: #7b776f;
-    --scrim: rgb(0 0 0 / 0.6);
-    --focus: #e8775f;
+
+    /* Page curtain and loader: the deep wine, a touch deeper at night */
+    --curtain: #4a1230;
+    --curtain-sheen: #6a1d44;
+    --curtain-deep: #28071a;
+    --on-curtain: #f2eee4;
+
+    --type-rowhouses: #e8895a;
+    --type-flats: #7fb2d4;
+    --type-shops: #e6b94a;
+    --type-mixed: #d68ab0;
+    --type-office: #f2eee4;
+    --type-amenity: #7dc29a;
+
+    --status-available: #6fcf9c;
+    --status-booked: #e8899c;
+    --status-sold: #bfb3b8;
+    --status-tbd: #9a8d93;
+
+    --on-dark-rowhouses: #e8895a;
+    --on-dark-flats: #7fb2d4;
+    --on-dark-shops: #e6b94a;
+    --on-dark-mixed: #d68ab0;
+    --on-dark-amenity: #7dc29a;
+    --script-night: #f1d3c0;
+
+    --scrim: rgb(8 3 8 / 0.62);
+    --focus: #f0c2cc;
+    --glass: rgb(23 12 20 / 0.62);
+    --glass-edge: rgb(242 238 228 / 0.16);
   }
 }
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --paper: #121413;
-  --paper-raised: #1a1d1b;
-  --paper-sunk: #0c0e0d;
-  --ink: #ece6da;
-  --ink-muted: #aaa498;
-  --ink-faint: #7b776f;
-  --line: rgb(236 230 218 / 0.16);
-  --line-strong: rgb(236 230 218 / 0.38);
-  --grid: rgb(236 230 218 / 0.05);
-  --clay: #e8e2d6;
-  --brick: #da5e47;
-  --brick-ink: #e8775f;
-  --on-brick: #121413;
-  --forest: #6fa784;
+  --paper: #170c14;
+  --paper-raised: #231320;
+  --paper-sunk: #0f070d;
+  --ink: #f2eee4;
+  --ink-muted: #bfb3b8;
+  --ink-faint: #9a8d93;
+  --line: rgb(242 238 228 / 0.14);
+  --line-strong: rgb(242 238 228 / 0.34);
+  --grid: rgb(242 238 228 / 0.05);
+
+  /* Colour blocks, night: plum-black page, deep teal band, wine feature, forest-black close */
+  --block-mist: #0f2a29;
+  --block-jewel: #4b1330;
+  --block-ink: #0b1a15;
+  --on-mist: #f2eee4;
+  --on-jewel: #f2eee4;
+  --on-ink: #f2eee4;
+
+  /* Accent: blush on plum */
+  --clay: #e9e2d6;
+  --brick: #e8b4c0;
+  --brick-ink: #f0c2cc;
+  --on-brick: #2b0a1a;
+  --forest: #7dc29a;
   --sand: #cdb88f;
-  --type-rowhouses: #f0843f;
-  --type-flats: #5d9be0;
-  --type-shops: #3fbf8c;
-  --type-mixed: #a497e6;
-  --type-office: #ece6da;
-  --type-amenity: #6fa784;
-  --status-available: #3fbf8c;
-  --status-booked: #da5e47;
-  --status-sold: #aaa498;
-  --status-tbd: #7b776f;
-  --scrim: rgb(0 0 0 / 0.6);
-  --focus: #e8775f;
+
+  /* Page curtain and loader: the deep wine, a touch deeper at night */
+  --curtain: #4a1230;
+  --curtain-sheen: #6a1d44;
+  --curtain-deep: #28071a;
+  --on-curtain: #f2eee4;
+
+  --type-rowhouses: #e8895a;
+  --type-flats: #7fb2d4;
+  --type-shops: #e6b94a;
+  --type-mixed: #d68ab0;
+  --type-office: #f2eee4;
+  --type-amenity: #7dc29a;
+
+  --status-available: #6fcf9c;
+  --status-booked: #e8899c;
+  --status-sold: #bfb3b8;
+  --status-tbd: #9a8d93;
+
+  --on-dark-rowhouses: #e8895a;
+  --on-dark-flats: #7fb2d4;
+  --on-dark-shops: #e6b94a;
+  --on-dark-mixed: #d68ab0;
+  --on-dark-amenity: #7dc29a;
+  --script-night: #f1d3c0;
+
+  --scrim: rgb(8 3 8 / 0.62);
+  --focus: #f0c2cc;
+  --glass: rgb(23 12 20 / 0.62);
+  --glass-edge: rgb(242 238 228 / 0.16);
 }
 
-/* Tailwind v4 utilities: bg-paper, text-ink, border-line, text-brick, font-display, ease-draft ... */
+/* Tailwind v4 utilities: bg-paper, text-ink, text-brick, font-display, font-script, ease-draft ... */
 @theme inline {
   --color-paper: var(--paper);
   --color-paper-raised: var(--paper-raised);
@@ -154,6 +249,8 @@
   --color-on-brick: var(--on-brick);
   --color-forest: var(--forest);
   --color-sand: var(--sand);
+  --color-mist: var(--block-mist);
+  --color-jewel: var(--block-jewel);
   --color-rowhouses: var(--type-rowhouses);
   --color-flats: var(--type-flats);
   --color-shops: var(--type-shops);
@@ -162,15 +259,19 @@
   --color-amenity: var(--type-amenity);
   --color-focus: var(--focus);
 
-  --font-display: var(--font-instrument-serif), "Times New Roman", serif;
-  --font-sans: var(--font-inter-tight), system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+  /* Display: condensed high-contrast serif (uppercase). Script: one accent word. Sans: extended grotesk for text and labels. */
+  --font-display: var(--font-playfair), "Didot", "Bodoni 72", "Times New Roman", serif;
+  --font-script: var(--font-pinyon), "Snell Roundhand", cursive;
+  --font-sans: var(--font-zalando), system-ui, sans-serif;
+  /* The old "mono" voice is now the tracked uppercase label voice, set in the sans. */
+  --font-mono: var(--font-zalando), system-ui, sans-serif;
 
   --ease-draft: var(--ease-draft);
   --ease-out: var(--ease-out);
 
   --radius-xs: var(--radius-xs);
   --radius-sm: var(--radius-sm);
+  --radius-card: var(--radius-card);
 }
 
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));

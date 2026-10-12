@@ -12,6 +12,7 @@ import { useRef } from "react";
 import { createPortal } from "react-dom";
 import { EnquireButton } from "@/components/ui/EnquireButton";
 import { Icon } from "@/components/ui/Icon";
+import { Seal } from "@/components/ui/Seal";
 import { keepTogether } from "@/components/ui/nowrap";
 import { TextLink } from "@/components/ui/TextLink";
 import { useDialog } from "@/components/ui/use-dialog";
@@ -52,25 +53,27 @@ function MenuPanel({ onClose, pathname, nav, labels, office, fadesOnly }: PanelP
       tabIndex={-1}
       data-lenis-prevent=""
       data-mobile-menu=""
-      className="fixed inset-0 z-(--z-drawer) flex flex-col overflow-y-auto bg-paper outline-none"
+      className="tone-jewel fixed inset-0 z-(--z-drawer) flex flex-col overflow-y-auto outline-none"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.25 }}
     >
-      <div className="wrap flex h-(--header-h) shrink-0 items-center justify-between border-b border-line">
-        <span className="font-display text-[1.5rem] leading-none tracking-[-0.01em] text-ink">{labels.wordmark}</span>
+      <div className="wrap flex h-(--header-h) shrink-0 items-center justify-between">
+        <span className="flex items-center gap-3 text-ink">
+          <Seal size={44} spin />
+          <span className="t-mono-sm">{labels.wordmark}</span>
+        </span>
         <button type="button" className="btn-icon btn-icon--outlined" onClick={onClose} aria-label={labels.closeMenu}>
           <Icon name="close" />
         </button>
       </div>
 
-      <nav aria-label={labels.primary} className="wrap pt-8">
+      <nav aria-label={labels.primary} className="wrap pt-6">
         <ul className="m-0 grid list-none p-0">
           {nav.map((item, index) => (
             <m.li
               key={item.href}
-              className="border-b border-line"
               initial={{ opacity: 0, ...rise }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, ease: EASE_OUT, delay: 0.06 + index * 0.05 }}
@@ -79,12 +82,12 @@ function MenuPanel({ onClose, pathname, nav, labels, office, fadesOnly }: PanelP
                 href={item.href}
                 onClick={onClose}
                 aria-current={isCurrent(item.href, pathname) ? "page" : undefined}
-                className="flex min-h-16 items-baseline gap-4 py-3 text-ink"
+                className="flex min-h-16 items-baseline gap-5 py-3 text-ink"
               >
                 <span className="t-mono-sm w-6 text-ink-muted" aria-hidden="true">
                   {String(index + 1).padStart(2, "0")}
                 </span>
-                <span className="t-display-3">{item.label}</span>
+                <span className="t-display-2">{item.label}</span>
               </Link>
             </m.li>
           ))}
@@ -100,7 +103,7 @@ function MenuPanel({ onClose, pathname, nav, labels, office, fadesOnly }: PanelP
             <ThemeToggle label={labels.themeToggle} className="btn-icon--outlined" />
           </div>
         </div>
-        <div className="grid gap-1.5 border-t border-line pt-5">
+        <div className="grid gap-1.5 pt-2">
           <p className="t-mono-sm m-0 text-ink-muted">{office.heading}</p>
           <address className="t-small not-italic text-ink">{keepTogether(office.address)}</address>
           <TextLink href={office.mapUrl} className="t-small">

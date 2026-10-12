@@ -1,8 +1,8 @@
 /**
- * The unit counts as CAD dimension lines. Each line's length is its share of the total, so the drawing carries the
+ * The unit counts as big numerals, each with a bar whose length is its share of the total, so the section carries the
  * proportions as well as the figures. Static: final values are in the markup. Hooks for the S7 dimensionCount
- * primitive: every <li data-dimension data-value> holds one <svg> with [data-dim-line], two [data-dim-tick] and
- * [data-dim-ext] lines, and the value in <span data-dim-output>. Only confirmed counts are shown (project content).
+ * primitive: every <li data-dimension data-value> holds one <svg> with [data-dim-line] and two [data-dim-tick]
+ * beads, and the value in <span data-dim-output>. Only confirmed counts are shown (project content).
  * Used by the Home "numbers" section and the project overview. Owner: pages-lead.
  */
 import type { CSSProperties } from "react";
@@ -14,7 +14,7 @@ interface DimensionRow {
   id: "flats" | "rowhouses" | "shops" | "total";
   label: string;
   value: number;
-  /** CSS colour of the dimension line. */
+  /** CSS colour of the share bar. */
   color: string;
 }
 
@@ -22,20 +22,20 @@ export function formatCount(value: number): string {
   return value.toLocaleString("en-IN");
 }
 
+/**
+ * The share bar: a round-capped line in the typology colour with a bead at each end. The hooks (line and the two
+ * ticks) are the ones the count-up animates: the line draws, the beads land as it reaches them.
+ */
 function DimensionLine({ color }: { color: string }) {
   return (
-    <svg className="block h-4 w-full overflow-visible" aria-hidden="true" focusable="false" style={{ color }}>
-      <g stroke="currentColor" strokeWidth={1} fill="none" shapeRendering="crispEdges">
-        <line data-dim-ext="" x1="0.5" y1="0" x2="0.5" y2="16" opacity="0.55" />
-        <svg x="100%" y="0" overflow="visible">
-          <line data-dim-ext="" x1="-0.5" y1="0" x2="-0.5" y2="16" opacity="0.55" />
-        </svg>
-        <line data-dim-line="" x1="0" y1="8.5" x2="100%" y2="8.5" strokeWidth={1.5} />
+    <svg className="block h-3 w-full overflow-visible" aria-hidden="true" focusable="false" style={{ color }}>
+      <g stroke="currentColor" fill="none">
+        <line data-dim-line="" x1="6" y1="6" x2="100%" y2="6" strokeWidth={5} strokeLinecap="round" />
       </g>
-      <g stroke="var(--ink)" strokeWidth={1.5} fill="none">
-        <line data-dim-tick="" x1="-4.5" y1="12.5" x2="5.5" y2="2.5" />
+      <g stroke="currentColor" fill="none" strokeLinecap="round">
+        <line data-dim-tick="" x1="6" y1="6" x2="6" y2="6" strokeWidth={12} />
         <svg x="100%" y="0" overflow="visible">
-          <line data-dim-tick="" x1="-5.5" y1="12.5" x2="4.5" y2="2.5" />
+          <line data-dim-tick="" x1="-6" y1="6" x2="-6" y2="6" strokeWidth={12} />
         </svg>
       </g>
     </svg>
@@ -59,33 +59,28 @@ export function DimensionRows({ label, size = "lg" }: DimensionRowsProps) {
   ];
   const numeral =
     size === "lg"
-      ? "text-[clamp(3.5rem,2rem+6.2vw,7rem)]"
-      : "text-[clamp(3rem,2rem+4vw,5rem)]";
+      ? "text-[clamp(4.25rem,2.4rem+8vw,9rem)]"
+      : "text-[clamp(3.5rem,2.2rem+5vw,6rem)]";
 
   return (
-    <ul className="m-0 grid list-none gap-9 p-0 md:gap-11" aria-label={label}>
+    <ul className="m-0 grid list-none gap-10 p-0 md:gap-14" aria-label={label}>
       {rows.map((row) => {
         const share = (row.value / total) * 100;
-        const isTotal = row.id === "total";
         return (
-          <CountedItem
-            key={row.id}
-            value={row.value}
-            className={isTotal ? "border-t border-line-strong pt-7 md:pt-9" : undefined}
-          >
-            <div className="flex flex-wrap items-baseline gap-x-5 gap-y-1">
+          <CountedItem key={row.id} value={row.value}>
+            <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
               <span
                 data-dim-output=""
-                className={`font-display ${numeral} leading-[0.9] tracking-[-0.03em] text-ink [font-variant-numeric:lining-nums_tabular-nums]`}
+                className={`font-display font-medium ${numeral} leading-[0.88] tracking-[-0.02em] text-ink [font-variant-numeric:lining-nums_tabular-nums]`}
               >
                 {formatCount(row.value)}
               </span>
-              <span className="t-mono flex items-center gap-2.5 text-ink">
-                <span aria-hidden="true" className="inline-block size-3 border border-line-strong" style={{ background: row.color } as CSSProperties} />
+              <span className="t-mono flex items-center gap-3 text-ink">
+                <span aria-hidden="true" className="inline-block size-2.5 rounded-full" style={{ background: row.color } as CSSProperties} />
                 {row.label}
               </span>
             </div>
-            <div className="mt-3" style={{ width: `${share}%`, minWidth: "2.5rem" }}>
+            <div className="mt-5" style={{ width: `${share}%`, minWidth: "3rem" }}>
               <DimensionLine color={row.color} />
             </div>
           </CountedItem>

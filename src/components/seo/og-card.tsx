@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element -- next/og renders plain <img>; next/image does not exist inside ImageResponse. */
 /**
- * Open Graph card, look A "Drafting table". Owner: pages-lead. Paper ground, the display serif wordmark, a mono
- * annotation line, and one visual: the masterplan render (labelled "Artist's impression") or the township boundary
- * drawn as a single ink line with the roundabout in brick. Used by `app/opengraph-image.tsx` (render) and
+ * Open Graph card, "Residence" theme. Owner: pages-lead. Ivory ground, the uppercase display serif wordmark, a tracked
+ * label line, and one visual: the masterplan render (labelled "Artist's impression") or the township boundary
+ * drawn as a single forest line with the roundabout in maroon. Used by `app/opengraph-image.tsx` (render) and
  * `app/projects/[slug]/opengraph-image.tsx` (plan outline); both are generated once at build time.
  */
 import { readFile } from "node:fs/promises";
@@ -19,13 +19,13 @@ export const OG_SIZE = { width: 1200, height: 630 } as const;
 export const OG_CONTENT_TYPE = "image/jpeg";
 const OG_JPEG_QUALITY = 82;
 
-// Look A tokens (src/styles/tokens.css, light theme). Satori has no CSS variables, so the values are repeated here.
-const PAPER = "#f3efe7";
-const PAPER_SUNK = "#e9e3d7";
-const INK = "#1a1c1b";
-const INK_MUTED = "#55595a";
-const LINE = "rgba(26, 28, 27, 0.28)";
-const BRICK = "#b5412f";
+// Residence tokens (src/styles/tokens.css, light theme). Satori has no CSS variables, so the values are repeated here.
+const PAPER = "#f3f2ea";
+const PAPER_SUNK = "#c9d9d6";
+const INK = "#13251d";
+const INK_MUTED = "#46564e";
+const LINE = "rgba(19, 37, 29, 0.28)";
+const BRICK = "#5e1431";
 
 const PADDING = 56;
 const TEXT_WIDTH = 560;
@@ -40,17 +40,17 @@ type OgFonts = NonNullable<ConstructorParameters<typeof ImageResponse>[1]>["font
 
 let fontsPromise: Promise<OgFonts> | undefined;
 
-/** Instrument Serif (display) and JetBrains Mono (annotation), latin subsets converted to TTF for Satori. */
+/** Playfair (display, cut condensed) and Zalando Sans Expanded (labels), as TTF for Satori. */
 function loadFonts(): Promise<OgFonts> {
   fontsPromise ??= (async () => {
     const dir = join(process.cwd(), "src/components/seo/fonts");
-    const [serif, mono] = await Promise.all([
-      readFile(join(dir, "InstrumentSerif-Regular.ttf")),
-      readFile(join(dir, "JetBrainsMono-Regular.ttf")),
+    const [serif, sans] = await Promise.all([
+      readFile(join(dir, "PlayfairCondensed-500.ttf")),
+      readFile(join(dir, "ZalandoSansExpanded-600.ttf")),
     ]);
     return [
-      { name: "Instrument Serif", data: serif, style: "normal", weight: 400 },
-      { name: "JetBrains Mono", data: mono, style: "normal", weight: 400 },
+      { name: "Playfair", data: serif, style: "normal", weight: 500 },
+      { name: "Zalando Sans Expanded", data: sans, style: "normal", weight: 600 },
     ];
   })();
   return fontsPromise;
@@ -127,8 +127,8 @@ function Tag({ children }: { children: string }) {
         background: PAPER,
         color: INK,
         border: `1px solid ${LINE}`,
-        fontFamily: "JetBrains Mono",
-        fontSize: 17,
+        fontFamily: "Zalando Sans Expanded",
+        fontSize: 14,
         letterSpacing: 0.4,
       }}
     >
@@ -161,12 +161,12 @@ function OgCard({ project, visual, renderSrc }: OgCardProps) {
       <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", width: TEXT_WIDTH }}>
         <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
           <RoundaboutMark size={34} />
-          <div style={{ display: "flex", fontFamily: "JetBrains Mono", fontSize: 21, letterSpacing: 2.4, textTransform: "uppercase" }}>
+          <div style={{ display: "flex", fontFamily: "Zalando Sans Expanded", fontSize: 17, letterSpacing: 2.4, textTransform: "uppercase" }}>
             {og.eyebrow}
           </div>
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column", fontFamily: "Instrument Serif", fontSize: 128, lineHeight: 0.98, letterSpacing: -2 }}>
+        <div style={{ display: "flex", flexDirection: "column", fontFamily: "Playfair", fontWeight: 500, textTransform: "uppercase", fontSize: 112, lineHeight: 0.98, letterSpacing: -2 }}>
           {lines.map((line) => (
             <div key={line} style={{ display: "flex" }}>
               {line}
@@ -174,7 +174,7 @@ function OgCard({ project, visual, renderSrc }: OgCardProps) {
           ))}
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 10, borderTop: `1px solid ${LINE}`, paddingTop: 20, fontFamily: "JetBrains Mono", fontSize: 21 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 10, borderTop: `1px solid ${LINE}`, paddingTop: 20, fontFamily: "Zalando Sans Expanded", fontSize: 17 }}>
           <div style={{ display: "flex" }}>{countsLine}</div>
           <div style={{ display: "flex", color: INK_MUTED }}>{location.road}</div>
         </div>

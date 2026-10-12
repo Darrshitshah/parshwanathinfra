@@ -1,9 +1,10 @@
 /**
- * Project page hero: the name in the display serif, the one-line summary, the three facts that are always known
- * (developer, status, start year) and a tall plate of the main-road corner render. The name reveals in Phase 2
+ * Project page hero: the name in the uppercase display serif with one script word, the one-line summary, the three
+ * facts that are always known (developer, status, start year) and the main-road corner render standing in an arch. The name reveals in Phase 2
  * (hook: [data-hero-wordmark]). The image is the LCP element: preloaded and marked data-hero-image. Owner: pages-lead.
  */
 import Link from "next/link";
+import { Magnetic } from "@/components/cursor";
 import { Figure } from "@/components/media/Figure";
 import { EnquireButton } from "@/components/ui/EnquireButton";
 import { TextLink } from "@/components/ui/TextLink";
@@ -30,11 +31,11 @@ export function ProjectHero({ project }: { project: Project }) {
   const facts = projectCopy.hero.facts;
 
   return (
-    <section id="top" aria-labelledby="project-title" className="border-b border-line">
-      <div className="wrap grid gap-10 pb-12 pt-8 md:pt-12 lg:grid-cols-12 lg:gap-x-(--gutter) lg:pb-16">
+    <section id="top" aria-labelledby="project-title" className="tone-paper relative">
+      <div className="wrap grid gap-12 pb-[calc(var(--sheet-r)+3rem)] pt-[calc(var(--header-h)+2.5rem)] lg:grid-cols-12 lg:gap-x-(--gutter) lg:pt-[calc(var(--header-h)+3.5rem)]">
         <div className="flex flex-col lg:col-span-6">
           <nav aria-label={projectCopy.breadcrumbLabel}>
-            <ol className="t-mono m-0 flex list-none flex-wrap items-center gap-x-3 gap-y-1 p-0 text-ink-muted">
+            <ol className="t-mono-sm m-0 flex list-none flex-wrap items-center gap-x-3 gap-y-1 p-0 text-ink-muted">
               <li>
                 <Link href="/projects" className="link-draw link-draw--quiet">
                   {projectCopy.breadcrumbProjects}
@@ -47,26 +48,21 @@ export function ProjectHero({ project }: { project: Project }) {
             </ol>
           </nav>
 
-          <h1 id="project-title" data-hero-wordmark="" className="mt-8 md:mt-10">
-            <span className="t-display-1 text-ink md:text-[clamp(6rem,9.5vw,10rem)]">
-              {words.map((word, index) => (
-                <span key={word} className="block md:inline">
+          <h1 id="project-title" data-hero-wordmark="" className="mt-10 md:mt-12">
+            <span className="t-display-1 block text-ink md:text-[clamp(6rem,10.5vw,11.5rem)]">
+              {words.map((word) => (
+                <span key={word} className="block">
                   {word}
-                  {index < words.length - 1 ? <span className="hidden md:inline"> </span> : null}
                 </span>
               ))}
             </span>
-            {suffix ? (
-              <span className="mt-3 block font-display text-[clamp(1.75rem,1.2rem+1.6vw,2.75rem)] italic leading-none text-brick-ink md:ml-4 md:inline-block">
-                {suffix}
-              </span>
-            ) : null}
+            {suffix ? <span className="hero-script hero-script--plain">{suffix}</span> : null}
           </h1>
 
-          <p className="t-lead mt-8 max-w-[32rem] text-ink-muted">{rich(project.summary)}</p>
+          <p className="t-lead mt-10 max-w-[30rem] text-ink-muted">{rich(project.summary)}</p>
 
           <FactsBlock
-            className="mt-10 lg:mt-auto"
+            className="mt-12 lg:mt-auto lg:pt-12"
             columns={3}
             facts={[
               { label: facts.developer, value: project.developer },
@@ -75,9 +71,11 @@ export function ProjectHero({ project }: { project: Project }) {
             ]}
           />
 
-          <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
-            <EnquireButton size="lg">{en.enquiry.open}</EnquireButton>
-            <TextLink href="#plan" arrow="right">
+          <div className="mt-12 flex flex-wrap items-center gap-x-10 gap-y-5">
+            <Magnetic>
+              <EnquireButton size="lg">{en.enquiry.open}</EnquireButton>
+            </Magnetic>
+            <TextLink href="#plan" arrow="right" className="t-mono-sm">
               {en.common.explorePlan}
             </TextLink>
           </div>
@@ -88,10 +86,10 @@ export function ProjectHero({ project }: { project: Project }) {
             media={poster}
             sizes={POSTER_SIZES}
             aspect={null}
-            frameClassName="aspect-[3/2] lg:aspect-[4/5]"
+            shape="arch"
+            frameClassName="aspect-[4/5]"
             objectPosition="62% 50%"
             preload
-            marks
             caption={projectCopy.hero.posterCaption}
             imageData={{ "data-hero-image": "" }}
           />

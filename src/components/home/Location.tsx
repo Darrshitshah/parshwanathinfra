@@ -4,6 +4,7 @@
  * Owner: pages-lead.
  */
 import type { ReactNode } from "react";
+import { cn } from "@/components/ui/cn";
 import { Eyebrow } from "@/components/ui/Section";
 import { TextLink } from "@/components/ui/TextLink";
 import { Tbd } from "@/components/ui/Tbd";
@@ -17,23 +18,25 @@ import { LocationMap } from "./LocationMap";
 interface LocationProps {
   id?: string;
   index?: string;
+  /** Colour block: plain ivory (default) or the calm mist band. */
+  tone?: "paper" | "mist";
 }
 
 function FactRow({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <div className="grid gap-1 border-b border-line py-4 sm:grid-cols-[9rem_1fr] sm:gap-4">
+    <div className="grid gap-1 py-3 sm:grid-cols-[9rem_1fr] sm:gap-4">
       <dt className="t-mono-sm text-ink-muted">{label}</dt>
       <dd className="m-0 text-ink">{children}</dd>
     </div>
   );
 }
 
-export function Location({ id = "location", index = "07" }: LocationProps) {
+export function Location({ id = "location", index = "07", tone = "paper" }: LocationProps) {
   const location = shivShiva.location;
   const labels = homeCopy.location.labels;
   const landmarks = location.landmarks;
   return (
-    <section id={id} aria-labelledby={`${id}-title`} className="section-pad border-y border-line bg-paper-sunk">
+    <section id={id} aria-labelledby={`${id}-title`} className={cn("sheet", tone === "mist" ? "tone-mist" : "tone-paper")}>
       <div className="wrap">
         <Eyebrow index={index}>{homeCopy.location.eyebrow}</Eyebrow>
         <h2 id={`${id}-title`} className="t-display-2 mt-10 text-ink md:mt-14">
@@ -43,7 +46,7 @@ export function Location({ id = "location", index = "07" }: LocationProps) {
           <div className="lg:col-span-5">
             <p className="t-lead m-0 text-ink-muted">{rich(homeCopy.location.body)}</p>
 
-            <dl className="m-0 mt-10 grid gap-0 border-t border-line-strong">
+            <dl className="m-0 mt-10 grid gap-0">
               <FactRow label={labels.address}>
                 <address className="not-italic">{rich(location.address)}</address>
               </FactRow>

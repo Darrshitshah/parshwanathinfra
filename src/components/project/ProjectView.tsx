@@ -24,11 +24,11 @@ export function ProjectView({ project }: { project: Project }) {
       <ProjectHero project={project} />
       <SubNav items={projectCopy.subnav} label={projectCopy.subnavLabel} />
       <Overview project={project} />
-      <PlanSection id="plan" index="02" layout="wide" showLink={false} />
+      <PlanSection id="plan" index="02" layout="wide" showLink={false} tone="mist" />
       <Homes project={project} />
-      <RowHouseStreet id="row-houses" index="04" />
+      <RowHouseStreet id="row-houses" index="04" tone="ink" />
       <Amenities id="amenities" index="05" />
-      <Location id="location" index="06" />
+      <Location id="location" index="06" tone="mist" />
       <GalleryReel id="gallery" index="07" />
       <BrochureSection project={project} />
       <EnquiryCta id="enquire" index="09" />

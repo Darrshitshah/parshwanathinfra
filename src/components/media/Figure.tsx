@@ -1,7 +1,7 @@
 /**
  * Figure: next/image with the media library's blur placeholder, a fixed aspect ratio (no layout shift), the
- * "Artist's impression" corner label for renders, optional registration marks and mono callouts, and an optional
- * mono caption. Width and height always come from the media record, never from the caller.
+ * "Artist's impression" corner label for renders, optional on-image pins and an optional caption. The frame is a
+ * large-radius card by default, an arch on request, or full-bleed. Width and height always come from the media record, never from the caller.
  */
 import Image from "next/image";
 import type { ReactNode } from "react";
@@ -31,8 +31,8 @@ export interface FigureProps {
   caption?: ReactNode | true;
   /** Corner label. Defaults to the media's artistImpression flag. */
   showLabel?: boolean;
-  /** Registration marks around the frame. */
-  marks?: boolean;
+  /** Frame shape: "card" (large radius, default), "arch" (half-circle top) or "bleed" (square, edge to edge). */
+  shape?: "card" | "arch" | "bleed";
   callouts?: readonly CalloutSpec[];
   /** Show the callouts only from the lg breakpoint (for a lone pin with no legend). */
   calloutsDesktopOnly?: boolean;
@@ -60,7 +60,7 @@ export function Figure({
   quality = 75,
   caption,
   showLabel,
-  marks = false,
+  shape = "card",
   callouts,
   calloutsDesktopOnly = false,
   fillParent = false,
@@ -76,9 +76,15 @@ export function Figure({
   const captionContent = caption === true ? media.caption : caption;
   return (
     <figure className={cn("m-0", fillParent && "flex h-full flex-col", className)}>
-      <div className={cn(marks && "marks", fillParent && "min-h-0 flex-1")}>
+      <div className={cn(fillParent && "min-h-0 flex-1")}>
         <div
-          className={cn("relative overflow-hidden bg-paper-sunk", fillParent && "h-full", frameClassName)}
+          className={cn(
+            "relative overflow-hidden bg-paper-sunk",
+            shape === "card" && "rounded-(--radius-card)",
+            shape === "arch" && "arch",
+            fillParent && "h-full",
+            frameClassName,
+          )}
           style={aspect === null ? undefined : { aspectRatio: aspect ?? `${media.width} / ${media.height}` }}
         >
           <Image
@@ -102,7 +108,7 @@ export function Figure({
         </div>
       </div>
       {captionContent ? (
-        <figcaption className={cn("t-mono-sm mt-3 text-ink-muted", captionClassName)}>{captionContent}</figcaption>
+        <figcaption className={cn("t-small mt-4 text-ink-muted", captionClassName)}>{captionContent}</figcaption>
       ) : null}
     </figure>
   );
