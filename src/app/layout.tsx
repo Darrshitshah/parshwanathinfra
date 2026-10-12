@@ -19,12 +19,14 @@ const display = Instrument_Serif({
 });
 
 const sans = Inter_Tight({
+  weight: "400",
   subsets: ["latin"],
   display: "swap",
   variable: "--font-inter-tight",
 });
 
 const mono = JetBrains_Mono({
+  weight: "400",
   subsets: ["latin"],
   display: "swap",
   variable: "--font-jetbrains-mono",

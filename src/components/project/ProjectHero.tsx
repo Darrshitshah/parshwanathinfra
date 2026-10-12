@@ -21,6 +21,9 @@ function splitName(name: string): { words: string[]; suffix: string } {
   return { words: base.split(/\s+/), suffix: match?.[2] ?? "" };
 }
 
+/** Phones get the 640 px file (about 1.95x at 2x density), not the 960 px one: fewer bytes on the LCP path. */
+const POSTER_SIZES = "(min-width: 1408px) 664px, (min-width: 1024px) 46vw, (min-width: 640px) calc(100vw - 2rem), 320px";
+
 export function ProjectHero({ project }: { project: Project }) {
   const poster = getMedia("cover");
   const { words, suffix } = splitName(project.name);
@@ -83,7 +86,7 @@ export function ProjectHero({ project }: { project: Project }) {
         <div className="lg:col-span-6" data-hero-poster="">
           <Figure
             media={poster}
-            sizes="(min-width: 1408px) 664px, (min-width: 1024px) 46vw, calc(100vw - 2rem)"
+            sizes={POSTER_SIZES}
             aspect={null}
             frameClassName="aspect-[3/2] lg:aspect-[4/5]"
             objectPosition="62% 50%"

@@ -21,7 +21,7 @@ export function CalloutLegend({
             {String(index + 1).padStart(2, "0")}
           </span>
           <span className="t-small text-ink-muted">
-            <strong className="font-medium text-ink">{item.label}.</strong> {withTbd(item.detail)}
+            <strong className="text-ink">{item.label}.</strong> {withTbd(item.detail)}
           </span>
         </li>
       ))}

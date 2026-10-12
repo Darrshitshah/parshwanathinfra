@@ -22,7 +22,10 @@ function Cell({ value }: { value: string }) {
 }
 
 export const PlanTwin = forwardRef<HTMLDivElement, PlanTwinProps>(function PlanTwin({ shown, onOpenBuilding, onOpenPlot }, ref) {
+  // Shown: the scroll regions and buttons are tabbable (a scrollable region must be keyboard focusable). Hidden: the
+  // regions do not scroll (see .lp-twin.sr-only in plan.css), so they need no tab stop, and the buttons are skipped.
   const tab = shown ? 0 : -1;
+  const regionTab = shown ? 0 : undefined;
   const t = planStrings.twin;
   return (
     <div ref={ref} id="lp-twin" tabIndex={-1} className={cn("lp-twin", !shown && "sr-only")} aria-labelledby="lp-twin-title">
@@ -53,7 +56,7 @@ export const PlanTwin = forwardRef<HTMLDivElement, PlanTwinProps>(function PlanT
         </tbody>
       </table>
 
-      <div className="lp-table-wrap" tabIndex={tab} role="region" aria-label={t.buildings}>
+      <div className="lp-table-wrap" tabIndex={regionTab} role="region" aria-label={t.buildings}>
         <table className="lp-table">
           <caption>{t.buildings}</caption>
           <thead>
@@ -95,7 +98,7 @@ export const PlanTwin = forwardRef<HTMLDivElement, PlanTwinProps>(function PlanT
         </table>
       </div>
 
-      <div className="lp-table-wrap" tabIndex={tab} role="region" aria-label={t.plots}>
+      <div className="lp-table-wrap" tabIndex={regionTab} role="region" aria-label={t.plots}>
         <table className="lp-table">
           <caption>{t.plots}</caption>
           <thead>

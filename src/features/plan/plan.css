@@ -196,8 +196,10 @@
 .lp-plot.is-low {
   stroke-dasharray: 2 2;
 }
-.lp-plot:hover {
-  fill: color-mix(in srgb, var(--type-rowhouses) 32%, transparent);
+@media (hover: hover) and (pointer: fine) {
+  .lp-plot:hover {
+    fill: color-mix(in srgb, var(--type-rowhouses) 32%, transparent);
+  }
 }
 .lp-amenity {
   fill: color-mix(in srgb, var(--forest) 18%, transparent);
@@ -773,8 +775,10 @@ circle.lp-amenity {
     letter-spacing: 0.08em;
   }
 }
-.lp-tool:hover {
-  border-color: var(--ink);
+@media (hover: hover) and (pointer: fine) {
+  .lp-tool:hover {
+    border-color: var(--ink);
+  }
 }
 .lp-tool[aria-pressed="true"] {
   background: var(--ink);
@@ -955,6 +959,11 @@ circle.lp-amenity {
   overflow: auto;
   margin-block: 1.25rem;
 }
+/* Hidden (screen-reader only) twin: nothing scrolls, so axe's scrollable-region-focusable has nothing to flag. */
+.lp-twin.sr-only .lp-table-wrap {
+  max-height: none;
+  overflow: visible;
+}
 .lp-table {
   width: 100%;
   border-collapse: collapse;
@@ -987,7 +996,7 @@ circle.lp-amenity {
   color: var(--ink-muted);
 }
 .lp-table tbody th {
-  font-weight: 500;
+  font-weight: 400;
 }
 
 /* ---- reduced motion ---- */

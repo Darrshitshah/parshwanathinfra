@@ -15,7 +15,9 @@ import { plan } from "@/content/plan";
 import type { Project } from "@/content/schema";
 
 export const OG_SIZE = { width: 1200, height: 630 } as const;
-export const OG_CONTENT_TYPE = "image/png";
+/** JPEG, not PNG: the card carries a photographic render, and a PNG of it was 639 KB (WhatsApp drops previews near 300 KB). */
+export const OG_CONTENT_TYPE = "image/jpeg";
+const OG_JPEG_QUALITY = 82;
 
 // Look A tokens (src/styles/tokens.css, light theme). Satori has no CSS variables, so the values are repeated here.
 const PAPER = "#f3efe7";
@@ -206,11 +208,18 @@ function OgCard({ project, visual, renderSrc }: OgCardProps) {
   );
 }
 
-/** Builds the PNG response. Static: it reads only local files and content, so Next renders it once at build time. */
-export async function renderOgImage(project: Project, visual: OgVisual): Promise<ImageResponse> {
+/** Builds the JPEG response. Static: it reads only local files and content, so Next renders it once at build time. */
+export async function renderOgImage(project: Project, visual: OgVisual): Promise<Response> {
   const [fonts, renderSrc] = await Promise.all([
     loadFonts(),
     visual.kind === "render" ? renderDataUri(visual.mediaId) : Promise.resolve(undefined),
   ]);
-  return new ImageResponse(<OgCard project={project} visual={visual} renderSrc={renderSrc} />, { ...OG_SIZE, fonts });
+  const card = new ImageResponse(<OgCard project={project} visual={visual} renderSrc={renderSrc} />, { ...OG_SIZE, fonts });
+  const jpeg = await sharp(Buffer.from(await card.arrayBuffer()))
+    .flatten({ background: PAPER })
+    .jpeg({ quality: OG_JPEG_QUALITY, mozjpeg: true })
+    .toBuffer();
+  return new Response(new Uint8Array(jpeg), {
+    headers: { "Content-Type": OG_CONTENT_TYPE, "Cache-Control": "public, immutable, no-transform, max-age=31536000" },
+  });
 }

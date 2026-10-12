@@ -26,6 +26,13 @@ function splitName(name: string): { words: string[]; suffix: string } {
   return { words: base.split(/\s+/), suffix: match?.[2] ?? "" };
 }
 
+/**
+ * Phones (under 640 px) get the 640 px file even at 2x density: the poster is 328 css px wide there, so 640 px is
+ * about 1.95x, and it is roughly half the bytes of the 960 px file the full-width `calc(100vw - 2rem)` would pick.
+ * Those bytes are on the LCP path; larger screens are unchanged.
+ */
+const HERO_SIZES = "(min-width: 1408px) 1328px, (min-width: 640px) calc(100vw - 2rem), 320px";
+
 export function Hero() {
   const poster = getMedia(shivShiva.heroMediaId);
   const { words, suffix } = splitName(shivShiva.name);
@@ -76,7 +83,7 @@ export function Hero() {
       <div className="wrap pb-8 pt-2 md:pb-12" data-hero-poster="">
         <Figure
           media={poster}
-          sizes="(min-width: 1408px) 1328px, calc(100vw - 2rem)"
+          sizes={HERO_SIZES}
           aspect={null}
           frameClassName="aspect-[3/2] md:aspect-[16/9] lg:aspect-[2/1]"
           objectPosition="50% 60%"

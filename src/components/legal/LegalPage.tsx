@@ -19,7 +19,7 @@ export function LegalPage({ doc }: { doc: LegalDoc }) {
       <section aria-labelledby="legal-title" className="border-b border-line bg-grid">
         <div className="wrap pb-12 pt-10 md:pb-16 md:pt-16">
           <Eyebrow index="01">{en.footer.legalLabel}</Eyebrow>
-          <h1 id="legal-title" className="t-display-1 mt-8 text-ink md:mt-12 md:text-[clamp(6rem,11vw,11rem)]">
+          <h1 id="legal-title" className="t-display-1 mt-8 text-[clamp(3.5rem,1rem+20vw,9rem)] text-ink md:mt-12 md:text-[clamp(6rem,11vw,11rem)]">
             {doc.title}
           </h1>
           <p className="t-lead mt-6 max-w-[34rem] text-ink-muted">{doc.intro}</p>

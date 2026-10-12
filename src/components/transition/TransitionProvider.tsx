@@ -58,6 +58,7 @@ export function TransitionProvider({ children, shape }: TransitionProviderProps)
   const holeRef = useRef<HoleController | null>(null);
   const controllerRef = useRef<TransitionController | null>(null);
   const initialPathRef = useRef(pathname);
+  const previousPathRef = useRef(pathname);
   // The controller outlives renders; it reads the newest values through this ref.
   const latest = useRef({ router, variant, reduced, enabled });
   useEffect(() => {
@@ -120,6 +121,12 @@ export function TransitionProvider({ children, shape }: TransitionProviderProps)
   useEffect(() => {
     if (pathname !== initialPathRef.current) noteClientNavigation();
     controllerRef.current?.notifyPathname(pathname);
+    // A new page: keyboard and screen-reader focus starts at its content, not on the link that was clicked.
+    // A URL with a #hash is left to the hash scroll, which focuses its own target.
+    if (previousPathRef.current !== pathname) {
+      previousPathRef.current = pathname;
+      if (!window.location.hash) document.getElementById("main")?.focus({ preventScroll: true });
+    }
   }, [pathname]);
 
   // Back and Forward always work and never get a curtain: drop whatever is running and get out of the way.

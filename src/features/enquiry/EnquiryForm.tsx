@@ -401,7 +401,7 @@ export function EnquiryForm({
         ) : null}
         {problem ? (
           <p role="alert" className="t-small border-l-2 border-brick pl-3 text-brick-ink">
-            <strong className="font-medium">{en.enquiry.errorTitle}.</strong> {problemMessage(problem)}
+            <strong>{en.enquiry.errorTitle}.</strong> {problemMessage(problem)}
           </p>
         ) : null}
         <div className="flex flex-wrap items-center gap-x-5 gap-y-3">

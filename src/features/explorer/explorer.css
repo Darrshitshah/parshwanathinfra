@@ -85,10 +85,14 @@
   opacity: 0;
   transition: opacity var(--duration-quick) linear;
 }
-.ex-band:hover .ex-band__fill,
 .ex-band:focus-visible .ex-band__fill,
 .ex-band.is-selected .ex-band__fill {
   opacity: 1;
+}
+@media (hover: hover) and (pointer: fine) {
+  .ex-band:hover .ex-band__fill {
+    opacity: 1;
+  }
 }
 .ex-band.is-available .ex-band__fill {
   fill: color-mix(in srgb, var(--status-available) 38%, transparent);
@@ -196,8 +200,10 @@
   text-align: left;
   cursor: pointer;
 }
-.ex-unit:hover {
-  border-color: var(--ink);
+@media (hover: hover) and (pointer: fine) {
+  .ex-unit:hover {
+    border-color: var(--ink);
+  }
 }
 .ex-unit[aria-pressed="true"] {
   background: var(--ink);

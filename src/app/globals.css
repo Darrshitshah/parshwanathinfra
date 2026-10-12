@@ -30,6 +30,17 @@
     overflow-x: clip;
   }
 
+  /*
+   * One weight per text face: Inter Tight and JetBrains Mono each ship a single 400 file (about 40 KB less on the
+   * first paint than the variable files). A bolder request would be faked by the browser, so emphasis comes from
+   * colour, size and case, never weight. Keep font-weight at 400 everywhere.
+   */
+  b,
+  strong,
+  th {
+    font-weight: 400;
+  }
+
   :focus-visible {
     outline: 2px solid var(--focus);
     outline-offset: 3px;
@@ -109,6 +120,8 @@
   font-size: clamp(5.5rem, 1.5rem + 24vw, 9rem);
   line-height: 0.86;
   letter-spacing: -0.03em;
+  /* a long single word wraps inside a narrow column instead of pushing the page sideways (no change for short words) */
+  overflow-wrap: break-word;
 }
 
 @utility t-display-2 {
@@ -193,12 +206,19 @@
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
   }
-  .link-draw:hover,
   .link-draw:focus-visible,
   .link-draw[aria-current="page"] {
     background-size:
       100% 1px,
       100% 1px;
+  }
+  /* Hover styles only where hover exists: on touch they would stick after a tap. */
+  @media (hover: hover) and (pointer: fine) {
+    .link-draw:hover {
+      background-size:
+        100% 1px,
+        100% 1px;
+    }
   }
   .link-draw[aria-current="page"] {
     background-image: linear-gradient(var(--brick), var(--brick)), linear-gradient(var(--brick), var(--brick));
@@ -213,11 +233,17 @@
       0% 1px,
       0% 1px;
   }
-  .link-draw--quiet:hover,
   .link-draw--quiet:focus-visible {
     background-size:
       0% 1px,
       100% 1px;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .link-draw--quiet:hover {
+      background-size:
+        0% 1px,
+        100% 1px;
+    }
   }
   .link-draw--quiet[aria-current="page"] {
     background-size:
@@ -247,9 +273,11 @@
       background-color var(--duration-quick) linear,
       border-color var(--duration-quick) linear;
   }
-  .btn-enquire:hover {
-    background: var(--brick-ink);
-    border-color: var(--brick-ink);
+  @media (hover: hover) and (pointer: fine) {
+    .btn-enquire:hover {
+      background: var(--brick-ink);
+      border-color: var(--brick-ink);
+    }
   }
   .btn-enquire:disabled {
     cursor: progress;
@@ -258,8 +286,10 @@
   .btn-enquire__arrow {
     transition: transform var(--duration-base) var(--ease-out);
   }
-  .btn-enquire:hover .btn-enquire__arrow {
-    transform: translateX(0.25rem);
+  @media (hover: hover) and (pointer: fine) {
+    .btn-enquire:hover .btn-enquire__arrow {
+      transform: translateX(0.25rem);
+    }
   }
   .btn-enquire--lg {
     min-height: 3.5rem;
@@ -289,9 +319,11 @@
       border-color var(--duration-quick) linear,
       background-color var(--duration-quick) linear;
   }
-  .btn-line:hover:not(:disabled) {
-    border-color: var(--ink);
-    background: var(--paper-raised);
+  @media (hover: hover) and (pointer: fine) {
+    .btn-line:hover:not(:disabled) {
+      border-color: var(--ink);
+      background: var(--paper-raised);
+    }
   }
   .btn-line:disabled,
   .btn-line[aria-disabled="true"] {
@@ -315,9 +347,11 @@
       border-color var(--duration-quick) linear,
       background-color var(--duration-quick) linear;
   }
-  .btn-icon:hover {
-    border-color: var(--line-strong);
-    background: var(--paper-raised);
+  @media (hover: hover) and (pointer: fine) {
+    .btn-icon:hover {
+      border-color: var(--line-strong);
+      background: var(--paper-raised);
+    }
   }
   .btn-icon--outlined {
     border-color: var(--line-strong);
@@ -468,7 +502,7 @@
     color: var(--on-brick);
     font-family: var(--font-mono);
     font-size: 0.625rem;
-    font-weight: 600;
+    font-weight: 400;
     line-height: 1;
     box-shadow:
       0 0 0 2px color-mix(in srgb, var(--paper) 88%, transparent),
@@ -508,7 +542,7 @@
     .callout__label b {
       margin-right: 0.45rem;
       color: var(--brick-ink);
-      font-weight: 600;
+      font-weight: 400;
     }
     .callout[data-dir="up"] .callout__leader {
       left: -0.5px;
@@ -702,8 +736,10 @@
     color: var(--ink-muted);
     opacity: 0.8;
   }
-  .field-input:hover {
-    border-color: var(--ink-muted);
+  @media (hover: hover) and (pointer: fine) {
+    .field-input:hover {
+      border-color: var(--ink-muted);
+    }
   }
   .field-input:focus-visible {
     border-color: var(--ink);
@@ -728,7 +764,7 @@
   .radio-chip span {
     display: inline-flex;
     align-items: center;
-    min-height: 2.5rem;
+    min-height: 2.75rem; /* 44 px touch target */
     padding: 0.4rem 0.8rem;
     border: 1px solid var(--line-strong);
     border-radius: var(--radius-xs);
@@ -739,8 +775,10 @@
       background-color var(--duration-quick) linear,
       color var(--duration-quick) linear;
   }
-  .radio-chip:hover span {
-    border-color: var(--ink);
+  @media (hover: hover) and (pointer: fine) {
+    .radio-chip:hover span {
+      border-color: var(--ink);
+    }
   }
   .radio-chip input:checked + span {
     background: var(--ink);
