@@ -123,6 +123,25 @@ TRIM4B = (
     "not crop, reframe or change the camera."
 )
 
+FL5 = (
+    " FLOORS (follow IMAGE 1 exactly): every apartment block in IMAGE 1 is built as an open stilt-parking ground storey on square "
+    "stilt columns, plus FIVE floors of windows above it (five clearly countable window rows, 1st to 5th floor), then a roof "
+    "terrace with a low parapet and small stair and lift headroom blocks. The recessed window bays, slab bands and headroom "
+    "blocks drawn in IMAGE 1 become real windows with white box-frames, charcoal horizontal balcony railings and parapets, in "
+    "the same positions. Do not add or remove a floor. The stilt level has parked Indian-market cars between the columns. "
+    "Walls are warm khaki sand-olive paint. The row houses are two storeys plus a roof terrace with white portal frames, red "
+    "exposed-brick pillars and olive walls. Look: like the premium architectural render of the project at golden hour, lush "
+    "dense greenery (tree canopies, flowering trees, palms, deep green lawns and courtyards), grey interlocking pavers, soft "
+    "warm light. Keep the same camera, horizon, footprints and heights as IMAGE 1."
+)
+FL4 = (
+    " FLOORS (follow IMAGE 1 exactly): the frames in IMAGE 1 are at stilt ground storey plus up to five floors; build exactly "
+    "the levels IMAGE 1 shows, each block rising as raw reinforced-concrete columns, beams and slabs (open stilt ground "
+    "storey, then slabs above), no block taller than IMAGE 1 shows (never more than six levels in total). Keep the floors "
+    "easy to count: bare concrete, scaffolding only as thin bamboo poles along a few bays and green netting only as short "
+    "strips on the top level. Brick infill only on some lower floors. Keep the same camera and footprints as IMAGE 1."
+)
+
 if __name__ == "__main__":
     n = int(sys.argv[1])
     suffix = sys.argv[2] if len(sys.argv) > 2 else ""
@@ -133,6 +152,12 @@ if __name__ == "__main__":
         prompt = LEAD + STAGES[4] + SIX4 + CL + TAIL
     if n == 5 and "six" in suffix:
         prompt = LEAD + STAGES[5] + SIX5 + CL + TAIL
+    if n == 5 and "fl" in suffix:
+        src = CLAY / ("stage-5-floors-warm.png" if "flw" in suffix else "stage-5-floors.png")
+        prompt = LEAD + STAGES[5].split(" Add ")[0] + " Add only landscaping" + FL5 + TAIL.replace("Beyond the site edge", "Beyond the site edge")
+    if n == 4 and "fl" in suffix:
+        src = CLAY / "stage-4-floors.png"
+        prompt = LEAD + STAGES[4] + FL4 + TAIL
     if n == 4 and "trim" in suffix:
         src = GEN / "hero-keyframes" / "stage-4-v2.png"
         prompt = TRIM4
