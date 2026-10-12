@@ -9,7 +9,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 vi.mock("../setup", () => ({ registerMotion: vi.fn(), isMotionRegistered: () => true }));
 
 import { boulevardWipe } from "./boulevard-wipe";
-import { boundaryCurtain } from "./boundary-curtain";
+import { boundaryCurtain, CURTAIN_TIMING } from "./boundary-curtain";
 import { countTo, dimensionCount } from "./dimension-count";
 import { inkDraw } from "./ink-draw";
 import { roundaboutIris } from "./roundabout-iris";
@@ -150,6 +150,19 @@ describe("boundaryCurtain", () => {
     boundaryCurtain(root, { phase: "reveal", variant: "panel", paused: true }).progress(1);
     expect(root.style.visibility).toBe("hidden");
     expect(root.style.pointerEvents).toBe("none");
+  });
+
+  it("keeps cover, title and reveal quick: the panel round trip stays under 0.95 s", () => {
+    const root = curtain();
+    const cover = boundaryCurtain(root, { phase: "cover", variant: "panel", paused: true });
+    const reveal = boundaryCurtain(root, { phase: "reveal", variant: "panel", paused: true });
+    expect(cover.duration() + reveal.duration()).toBeLessThanOrEqual(0.95);
+  });
+
+  it("hole timings are quick too, and the title is readable before the page is revealed", () => {
+    expect(CURTAIN_TIMING.hole.cover + CURTAIN_TIMING.hole.reveal + CURTAIN_TIMING.revealDelay).toBeLessThanOrEqual(0.9);
+    const titleEnd = CURTAIN_TIMING.hole.cover * CURTAIN_TIMING.titleStart + CURTAIN_TIMING.titleIn;
+    expect(titleEnd).toBeLessThanOrEqual(0.5);
   });
 
   it("falls back to the panel when no hole is given", () => {

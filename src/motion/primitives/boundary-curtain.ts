@@ -3,14 +3,14 @@
  *
  * Markup contract (rendered by `src/components/transition/Curtain.tsx`, any root element works):
  *   root                      fixed full-screen layer, hidden by default (visibility hidden, opacity 0)
- *   [data-curtain-panel]      full-screen brand-colour panel (the simple variant slides it)
+ *   [data-curtain-panel]      full-screen curtain-colour panel (the simple variant slides it)
  *   [data-curtain-label]      the next page's title, inside an overflow-clipped mask
  *   [data-curtain-eyebrow]    small mono line above the title
  *   [data-curtain-rule]       thin line under the title
  * The township-shaped variant needs a `HoleController` (see `src/motion/hole.ts`) for the SVG sheet path.
  */
 import { gsap } from "gsap";
-import { DURATION, EASE } from "../constants";
+import { EASE } from "../constants";
 import type { HoleController } from "../hole";
 import { lerpLog } from "../math";
 import { registerMotion } from "../setup";
@@ -29,12 +29,17 @@ export interface BoundaryCurtainOptions extends PrimitiveOptions {
   onCovered?: () => void;
 }
 
-/** Seconds. Chosen so the whole round trip stays under about 1.5 s on desktop. */
+/**
+ * Seconds. Chosen so the whole round trip (cover, title, reveal) stays around 0.9 s on desktop, with the next page
+ * already there. `titleStart` is where the title begins sliding in, as a share of the cover time.
+ */
 export const CURTAIN_TIMING = {
-  hole: { cover: 0.5, reveal: 0.7 },
-  panel: { cover: 0.42, reveal: 0.5 },
-  titleIn: 0.55,
-  titleOut: 0.3,
+  hole: { cover: 0.32, reveal: 0.4 },
+  panel: { cover: 0.3, reveal: 0.4 },
+  titleIn: 0.3,
+  titleStart: 0.3,
+  titleOut: 0.22,
+  revealDelay: 0.05,
 } as const;
 
 /** Where the hole stops shrinking before it snaps shut (a few pixels wide, so the snap is invisible). */
@@ -62,7 +67,7 @@ function findParts(root: Element): CurtainParts {
 
 /**
  * Page curtain cut from the township boundary. "cover" closes the township-shaped window over the old page and
- * slides the next page's title through the brand-colour sheet; "reveal" slides the title out and opens the window
+ * slides the next page's title through the curtain-colour sheet; "reveal" slides the title out and opens the window
  * onto the new page. Reduced: the curtain fades in and out, no shape, no movement.
  */
 export function boundaryCurtain(curtain: SVGElement | HTMLElement, options: BoundaryCurtainOptions): Timeline {
@@ -114,7 +119,7 @@ function buildHoleCurtain(
       },
       0,
     );
-    addTitleIn(timeline, parts, timing.cover * 0.55);
+    addTitleIn(timeline, parts, timing.cover * CURTAIN_TIMING.titleStart);
     timeline.call(() => options.onCovered?.(), undefined, timing.cover);
     return timeline;
   }
@@ -131,7 +136,7 @@ function buildHoleCurtain(
         ease: EASE.inOut,
         onUpdate: () => hole.setScale(lerpLog(HOLE_REST_SCALE, full, progress.t)),
       },
-      0.12,
+      CURTAIN_TIMING.revealDelay,
     )
     .set(curtain, HIDE);
   return timeline;
@@ -150,14 +155,14 @@ function buildPanelCurtain(
       .set(curtain, SHOW, 0)
       .fromTo(parts.panel, { yPercent: 100 }, { yPercent: 0, duration: timing.cover, ease: EASE.draft }, 0)
       .call(() => onCovered?.(), undefined, timing.cover);
-    addTitleIn(timeline, parts, timing.cover * 0.5);
+    addTitleIn(timeline, parts, timing.cover * CURTAIN_TIMING.titleStart);
     return timeline;
   }
 
   timeline.set(curtain, SHOW, 0);
   addTitleOut(timeline, parts);
   timeline
-    .fromTo(parts.panel, { yPercent: 0 }, { yPercent: -100, duration: timing.reveal, ease: EASE.draft }, 0.1)
+    .fromTo(parts.panel, { yPercent: 0 }, { yPercent: -100, duration: timing.reveal, ease: EASE.draft }, CURTAIN_TIMING.revealDelay)
     .set(curtain, HIDE);
   return timeline;
 }
@@ -168,19 +173,19 @@ function addTitleIn(timeline: Timeline, parts: CurtainParts, at: number): void {
     .fromTo(
       parts.eyebrow,
       { opacity: 0, y: 10 },
-      { opacity: 0.85, y: 0, duration: DURATION.base, ease: EASE.out },
-      at + 0.05,
+      { opacity: 0.85, y: 0, duration: 0.25, ease: EASE.out },
+      at + 0.04,
     )
     .fromTo(
       parts.rule,
       { scaleX: 0, transformOrigin: "0% 50%" },
-      { scaleX: 1, transformOrigin: "0% 50%", duration: DURATION.base, ease: EASE.draft },
-      at + 0.1,
+      { scaleX: 1, transformOrigin: "0% 50%", duration: 0.25, ease: EASE.draft },
+      at + 0.08,
     );
 }
 
 function addTitleOut(timeline: Timeline, parts: CurtainParts): void {
   timeline
     .to(parts.label, { yPercent: -115, duration: CURTAIN_TIMING.titleOut, ease: "power3.in" }, 0)
-    .to(present(parts.eyebrow, parts.rule), { opacity: 0, duration: 0.25, ease: "none" }, 0);
+    .to(present(parts.eyebrow, parts.rule), { opacity: 0, duration: 0.18, ease: "none" }, 0);
 }
