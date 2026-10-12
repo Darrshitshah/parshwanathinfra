@@ -12,7 +12,7 @@ Each line: `- [x] item · commit <hash> · preview <url> · <date>`.
 - [x] git init on develop, remote added, first push · local only (Q1: GitHub later) · commit b6894e7 · 2026-10-10
 - [x] Next.js scaffolded, all packages installed · commit b6894e7 · 2026-10-10
 - [x] Contracts: schema.ts, device-tier.ts, motion/index.ts stubs, tokens.css, OWNERSHIP.md · commit b6894e7 · 2026-10-10
-- [ ] Vercel connected, first preview link · deferred until Darshit connects GitHub (Q1); preview = local `npm run dev`
+- [x] Vercel connected, first preview link · https://parshwanathinfra.vercel.app (main + develop) · 2026-10-12
 
 ## Phase 1 · data-lead, motion-lead, pages-lead (shell)
 - [x] CAD layer map and transform.json (residuals logged) · commit d54f3a1 · 2026-10-10
@@ -66,3 +66,5 @@ Each line: `- [x] item · commit <hash> · preview <url> · <date>`.
 
 - 2026-10-12 · GitHub connected and pushed; skills installed (a6dfea4); floors + diorama on Home (c8554b3); Phase 3 QA lead started. Waiting for Darshit's Vercel preview link.
 - 2026-10-12 ~12:00 IST · Window closed ~88%. QA verdict SHIP AFTER FIXES (docs/QA_REPORT.md). NEXT WINDOW (after 15:20 IST): (1) fixes: LCP (JS-gated reveal/loader, render-blocking CSS) and home initial JS (motion-lead + pages-lead), PlanTwin tabindex (plan-lead), /disclaimer h1 overflow, Home OG image under 300 KB (pages-lead); re-run QA; (2) hero: diorama-lead re-renders the stage-5 clay with visible floor lines/window bands (six levels) → scene-lead redoes stage 5 → video segments 1→2 and 2→3 can start now with approved stages; (3) Darshit's Vercel link, then production.
+
+- 2026-10-12 · LIVE at https://parshwanathinfra.vercel.app (Vercel builds main; develop is the working branch). Canonical/sitemap use the Vercel URL, 0 RERA mentions, WhatsApp wa.me/917874305000.
