@@ -30,7 +30,7 @@ Each line: `- [x] item · commit <hash> · preview <url> · <date>`.
 - [x] S3 Living Plan · built 613d1d4, mounted 0d7d0f9 · 2026-10-11
 - [x] S5 Building explorer · built 613d1d4, mounted 0d7d0f9 · 2026-10-11
 - [ ] Blender module installed, scene built, stills, sequence, GLB
-- [ ] S4 Diorama (WebGL, sequence, still)
+- [x] S4 Diorama (WebGL, sequence, still) · built 2782e2d, mounted c8554b3 · 2026-10-12
 - [ ] Generated images (cloud plates, dusk pair, icons, OG)
 - [ ] S2 sky descent mounted and choreographed
 - [ ] S6 row-house street
@@ -63,3 +63,5 @@ Each line: `- [x] item · commit <hash> · preview <url> · <date>`.
 - 2026-10-11 ~16:00 IST · Window at 86%. Done this window: pages mounted Living Plan + explorer + loader (0d7d0f9), SEO (4eacc87), diorama S4 built (2782e2d, not yet mounted), Omni study + A/B decision (cc50481). Hero = Blender-first "township builds itself" (see DECISIONS).
 - NEXT WINDOW: (1) diorama-lead: hero_camera.py + render_stages.py (5 construction stages from the SS-01 camera); (2) pages-lead: mount DioramaSlot on Home (client wrapper, onBuildingSelect → explorer deep link); (3) scene-lead: Nano Banana photoreal keyframes from the clay stages → Darshit approval → Veo + Omni A/B stage-to-stage segments; (4) motion-lead: S2 hero mount of the build shot + S6 row-house clip; then Phase 3 QA. Open questions: shops block A height (6 floors indicative), entry piers, tip building clubhouse/temple.
 - 2026-10-11 ~16:15 IST · Usage 94%, window closed. FIRST NEXT WINDOW: review and install Darshit's three design skills (cloned to scratchpad/skills-src: Leonxlnx/taste-skill, emilkowalski/skills, pbakaus/impeccable): read every SKILL.md and script before installing (no hooks or scripts that run automatically without review), install into the project's `.claude/skills/`, write docs/SKILLS.md (what each skill does for this project, which lead uses it). Then: scroll-driven film decision (Darshit's idea: play the film as people scroll from section 2/3), Blender hero stages, floors update, diorama mount.
+
+- 2026-10-12 · GitHub connected and pushed; skills installed (a6dfea4); floors + diorama on Home (c8554b3); Phase 3 QA lead started. Waiting for Darshit's Vercel preview link.
