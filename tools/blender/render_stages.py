@@ -9,6 +9,7 @@ white images, same camera and same low late-afternoon sun as the aerial, then a 
   3 plinths of every footprint
   4 flat blocks about half risen (2 to 4 of 6 levels), row houses 1 or 2 of 2 storeys, no terraces yet
   5 full massing: terraces, parapets, stair/lift blocks, trees, cars, gate piers, amenities
+--detail [--warm]: stages 4 and 5 again with storey detail (hero_detail.py) as stage-4-floors / stage-5-floors (/ -warm).
 The vertical field of view of the aerial is kept, so the whole aerial frame sits in the middle with extra land at both sides.
 """
 from __future__ import annotations
@@ -26,6 +27,7 @@ import numpy as np
 from mathutils import Vector
 
 import build_ground
+import hero_detail
 from build_ground import LAWN_TOP, RECT_PX, SITE_TOP, rect_ring
 from build_town import floors_for
 from common import BLEND_PATH, FLOOR_HEIGHT_M, ROOT, Frame, clip_line_to_rect, hex_rgba, load_plan, merge_bms, new_object, prism_bm, ribbon_ring
@@ -35,6 +37,8 @@ CAMERA_JSON = Path(__file__).resolve().parent / "hero_camera.json"
 OUT_DEFAULT = ROOT / "_source/generated/hero-stages"
 WIDTH, HEIGHT = 2560, 1440
 SUN_AZIMUTH_DEG, SUN_ELEVATION_DEG = 235.0, 32.0  # low sun in the south-west: it lights the faces the camera sees, as in the aerial
+WARM_SUN_ELEVATION_DEG = 25.0  # --warm variant: lower, golden-hour sun from the same side
+WARM_SKY = "#f3e3c8"
 PLINTH_M = 1.0
 SURVEY_LINE_M, PEG_SPACING_M = 0.7, 28.0
 PAPER = "#ebe7dc"  # land colour; the sky is a touch lighter
@@ -78,7 +82,7 @@ def setup_camera(scene) -> None:
     scene.camera = obj
 
 
-def setup_light(scene) -> None:
+def setup_light(scene, warm: bool = False) -> None:
     for o in [o for o in scene.objects if o.type in ("CAMERA", "LIGHT")]:
         bpy.data.objects.remove(o, do_unlink=True)
     world = scene.world or bpy.data.worlds.new("w")
@@ -88,11 +92,11 @@ def setup_light(scene) -> None:
     nodes.clear()
     out = nodes.new("ShaderNodeOutputWorld")
     visible = nodes.new("ShaderNodeBackground")  # what the camera sees: sky and haze at full strength
-    visible.inputs["Color"].default_value = hex_rgba(SKY)
+    visible.inputs["Color"].default_value = hex_rgba(WARM_SKY if warm else SKY)
     visible.inputs["Strength"].default_value = 1.0
     ambient = nodes.new("ShaderNodeBackground")  # what lights the clay: a softer sky
-    ambient.inputs["Color"].default_value = hex_rgba("#f3f0ea")
-    ambient.inputs["Strength"].default_value = 0.55
+    ambient.inputs["Color"].default_value = hex_rgba("#d9dfeb" if warm else "#f3f0ea")  # warm: cooler fill against the golden sun
+    ambient.inputs["Strength"].default_value = 0.42 if warm else 0.55
     path = nodes.new("ShaderNodeLightPath")
     mix = nodes.new("ShaderNodeMixShader")
     links.new(path.outputs["Is Camera Ray"], mix.inputs["Fac"])
@@ -100,11 +104,11 @@ def setup_light(scene) -> None:
     links.new(visible.outputs["Background"], mix.inputs[2])
     links.new(mix.outputs["Shader"], out.inputs["Surface"])
     sun = bpy.data.lights.new("sun", "SUN")
-    sun.energy = 2.2
+    sun.energy = 3.2 if warm else 2.2
     sun.angle = math.radians(7)  # soft shadow edges
-    sun.color = (1.0, 0.97, 0.91)  # slightly warm, late afternoon
+    sun.color = (1.0, 0.77, 0.52) if warm else (1.0, 0.97, 0.91)  # warm: golden hour; default: slightly warm, late afternoon
     obj = bpy.data.objects.new("sun", sun)
-    az, el = math.radians(SUN_AZIMUTH_DEG), math.radians(SUN_ELEVATION_DEG)
+    az, el = math.radians(SUN_AZIMUTH_DEG), math.radians(WARM_SUN_ELEVATION_DEG if warm else SUN_ELEVATION_DEG)
     to_sun = Vector((math.sin(az) * math.cos(el), math.cos(az) * math.cos(el), math.sin(el)))
     obj.rotation_euler = (-to_sun).to_track_quat("-Z", "Y").to_euler()
     scene.collection.objects.link(obj)
@@ -222,6 +226,29 @@ def half_built(plan, frame: Frame, mats, col) -> None:
     new_object("half-built", merge_bms(parts), col, [mats["clay"]])
 
 
+def detail_objects(plan, frame: Frame, mats, col):
+    """--detail: storey structure for the hero stages. Returns the b-<id> names it replaces. Stage 5 gets hd5-* (finished facades),
+    stage 4 gets hd4-* (RC frames at the stage_levels() height). Footprints, heights, camera and light stay as in the plain stages."""
+    levels = stage_levels(plan)
+    full, frames, replaced = hero_detail.Meshes(), hero_detail.Meshes(), set()
+    for b in plan["buildings"]:
+        if b["typology"] == "office":
+            frames_m = None
+            continue
+        ring = frame.pts(b["polygon"])
+        hero_detail.detailed_building(b, ring, full)
+        hero_detail.frame_building(b, ring, levels[b["id"]], frames)
+        replaced.add(f"b-{b['id']}")
+    hero_detail.flush(full, col, mats, "5")
+    hero_detail.flush(frames, col, mats, "4")
+    # office stays a plain block in both (floors are TBD in the plan)
+    office = [b for b in plan["buildings"] if b["typology"] == "office"]
+    if office:
+        parts = [prism_bm(frame.pts(b["polygon"]), SITE_TOP - 0.02, SITE_TOP + levels[b["id"]] * FLOOR_HEIGHT_M, top_mat=0, side_mat=0) for b in office]
+        new_object("hd4-office", merge_bms(parts), col, [mats["clay"]])
+    return replaced
+
+
 def set_visibility(keep) -> None:
     for o in bpy.data.objects:
         if o.type == "MESH":
@@ -291,6 +318,8 @@ def main() -> None:
     ap.add_argument("--samples", type=int, default=64)
     ap.add_argument("--only", type=int, default=0)
     ap.add_argument("--engine", default="EEVEE")
+    ap.add_argument("--detail", action="store_true", help="stages 4 and 5 with storey detail -> stage-4-floors.png, stage-5-floors.png")
+    ap.add_argument("--warm", action="store_true", help="with --detail: also stage-5-floors-warm.png (golden light, nothing else changes)")
     args = ap.parse_args()
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
@@ -307,10 +336,26 @@ def main() -> None:
     flat_ground(plan, frame, mats, col)
     plinths(plan, frame, mats, col)
     half_built(plan, frame, mats, col)
+    replaced = detail_objects(plan, frame, mats, col) if args.detail else set()
     setup_light(scene)
     setup_camera(scene)
     configure(WIDTH, args.engine, args.samples)
     scene.render.resolution_y = HEIGHT
+    if args.detail:
+        detail_stages = [(4, "stage-4-floors", False), (5, "stage-5-floors", False)] + ([(5, "stage-5-floors-warm", True)] if args.warm else [])
+        for n, stem, warm in detail_stages:
+            if args.only and args.only != n:
+                continue
+            setup_light(scene, warm=warm)
+            setup_camera(scene)
+            if n == 4:
+                set_visibility(lambda nm: nm in ("land", *GROUND, *ISLAND) or nm.startswith("hd4-"))
+            else:
+                set_visibility(lambda nm: STAGES[5](nm) and not nm.startswith("hd4-") and nm not in replaced)
+            scene.render.filepath = str(out / f"{stem}.png")
+            bpy.ops.render.render(write_still=True)
+            print(stem, flush=True)
+        return
     done = []
     for n in range(1, 6):
         path = out / f"stage-{n}.png"
