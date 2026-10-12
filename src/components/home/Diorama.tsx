@@ -1,7 +1,8 @@
 /**
  * "Walk the township": the still image and the route (S4 diorama mounts at data-slot="diorama"). The still is a
  * full-bleed aerial; below it the route is a numbered line of stations that mirrors the Living Plan chapters. It
- * is complete on its own for visitors who never get the 3D model. Owner: pages-lead.
+ * is complete on its own for visitors who never get the 3D model. The figure is the fallback of `DioramaMount`, which
+ * swaps in the diorama near the viewport. Owner: pages-lead.
  */
 import { Figure } from "@/components/media/Figure";
 import { Eyebrow } from "@/components/ui/Section";
@@ -10,6 +11,7 @@ import { rich } from "@/components/ui/with-tbd";
 import { homeCopy } from "@/content/copy/home";
 import { en } from "@/content/i18n/en";
 import { getMedia } from "@/content/media";
+import { DioramaMount } from "./DioramaMount";
 
 export function Diorama() {
   const still = getMedia("masterplan-full");
@@ -36,15 +38,19 @@ export function Diorama() {
         </div>
       </div>
 
-      <div className="mt-12 md:mt-16" data-fallback="static">
-        <Figure
-          media={still}
-          sizes="100vw"
-          aspect={null}
-          frameClassName="aspect-[4/3] md:aspect-[16/8] lg:aspect-[21/9]"
-          objectPosition="50% 55%"
-          caption={<span className="wrap block">{homeCopy.walk.stillCaption}</span>}
-        />
+      <div className="mt-12 md:mt-16">
+        <DioramaMount>
+          <div data-fallback="static">
+            <Figure
+              media={still}
+              sizes="100vw"
+              aspect={null}
+              frameClassName="aspect-[4/3] md:aspect-[16/8] lg:aspect-[21/9]"
+              objectPosition="50% 55%"
+              caption={<span className="wrap block">{homeCopy.walk.stillCaption}</span>}
+            />
+          </div>
+        </DioramaMount>
       </div>
 
       <div className="wrap mt-14 md:mt-20">

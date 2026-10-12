@@ -18,6 +18,9 @@ import ProjectPage, { generateMetadata, generateStaticParams } from "./projects/
 import ProjectsPage, { metadata as projectsMetadata } from "./projects/page";
 import TermsPage from "./terms/page";
 
+// DioramaMount (client) reads the app router; the tests render the pages without one.
+vi.mock("next/navigation", () => ({ useRouter: () => ({ push: vi.fn(), replace: vi.fn(), prefetch: vi.fn() }) }));
+
 const DASHES = new RegExp(`[${String.fromCharCode(0x2013)}${String.fromCharCode(0x2014)}]`);
 const KNOWN_ROUTES = new Set(["/", "/projects", "/projects/shiv-shiva", "/about", "/contact", "/privacy", "/terms", "/disclaimer"]);
 

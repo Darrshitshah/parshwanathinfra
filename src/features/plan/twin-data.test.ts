@@ -10,10 +10,12 @@ describe("accessible twin data", () => {
     expect(plotRows().map((p) => p.number)).toEqual(Array.from({ length: 165 }, (_, i) => i + 1));
   });
 
-  it("keeps floors TBD and marks the indicative estimate as such", () => {
+  it("lists the confirmed floors (6 levels, 2 storeys for row houses) and keeps the office TBD", () => {
     const rows = buildingRows();
     const block = rows.find((row) => row.id === "b18");
-    expect(block).toMatchObject({ floors: "TBD", floorsIndicative: true, explorable: true });
+    expect(block).toMatchObject({ floors: "6", floorsIndicative: false, explorable: true });
+    expect(rows.find((row) => row.id === "shops-a")).toMatchObject({ floors: "6", floorsIndicative: false });
+    expect(rows.find((row) => row.id === "rh-strip-01")).toMatchObject({ floors: "2", floorsIndicative: false, indicative: true });
     expect(rows.find((row) => row.id === "office")).toMatchObject({ floors: "TBD", floorsIndicative: false, explorable: false });
     expect(rows.find((row) => row.id === "shops-a")?.explorable).toBe(false);
   });

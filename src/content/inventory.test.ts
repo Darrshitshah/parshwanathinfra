@@ -4,11 +4,11 @@ import { plan } from "./plan";
 import { isTbd } from "./schema";
 
 describe("inventory", () => {
-  it("has one entry per flat block and the mixed-use building, all floors and units TBD", () => {
+  it("has one entry per flat block and the mixed-use building, floors confirmed (6 levels) and units TBD", () => {
     const blocks = plan.buildings.filter((b) => b.typology === "flats" || b.typology === "mixed").map((b) => b.id);
     expect(inventory.buildings.map((b) => b.buildingId)).toEqual(blocks);
     for (const building of inventory.buildings) {
-      expect(isTbd(building.floors)).toBe(true);
+      expect(building.floors).toBe(6);
       expect(isTbd(building.units)).toBe(true);
     }
   });

@@ -43,7 +43,7 @@ TOPDOWN_4K --build-tiles.mjs--> public/plan/tiles/{z}/{x}_{y}.webp + manifest.js
 3. **New flat plans:** add a rectangle (sheet display points, centre of the shared walls) to `UNITS` in `cut_units.py`, run it,
    and add `src/content/units/<id>.ts` (copy `flat-473.ts`). `units.test.ts` checks the rooms against `unit-rooms.json`.
 4. **Floors, areas, BHK, plot types and status:** edit `plan.json` through `build-plan.mjs` (floors) and `inventory.ts`
-   (status). Floors stay `"TBD"` with `floorsIndicative` until Darshit confirms; the 3D diorama uses the indicative value.
+   (status). Floors are confirmed (Darshit, 2026-10-11): `floors: 6` for flats, the mixed-use building and shops A, `floors: 2` for row houses (roof terrace above both); the office stays `"TBD"`. `floorsIndicative` is no longer written.
 5. Run `npm run typecheck`, `npm run lint`, `npm test`. The tests in `src/content/**` fail loudly if ids, plots, chapters,
    the SVG, the tiles or the media files fall out of step.
 

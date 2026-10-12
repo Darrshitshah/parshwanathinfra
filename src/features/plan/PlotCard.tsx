@@ -8,7 +8,7 @@ import { useEffect, useRef } from "react";
 import { Figure } from "@/components/media/Figure";
 import { Tbd } from "@/components/ui/Tbd";
 import { getMedia } from "@/content/media";
-import { plotByNumber } from "@/content/plan";
+import { buildingsByTypology, plotByNumber } from "@/content/plan";
 import { shivShiva } from "@/content/projects";
 import { EnquireButton } from "@/components/ui/EnquireButton";
 import { interestForPlotType } from "@/features/enquiry";
@@ -18,8 +18,15 @@ import { planStrings } from "./strings";
 const TYPE_LABEL: Record<string, string> = { "2BHK": "2 BHK", "3BHK": "3 BHK" };
 const STATUS_LABEL: Record<string, string> = { available: "Available", booked: "Booked", sold: "Sold" };
 
+/** Row-house storeys (ground + 1 = 2, roof terrace above), from the plan; null while TBD. */
+function rowhouseStoreys(): number | null {
+  const floors = buildingsByTypology("rowhouses")[0]?.floors;
+  return typeof floors === "number" ? floors : null;
+}
+
 export interface PlotCardContent {
   number: number;
+  storeys: number | null;
   typeLabel: string | null;
   statusLabel: string | null;
   indicative: boolean;
@@ -33,6 +40,7 @@ export function plotCardContent(number: number): PlotCardContent | null {
   const status = plotStatus(number);
   return {
     number,
+    storeys: rowhouseStoreys(),
     typeLabel: TYPE_LABEL[plot.type] ?? null,
     statusLabel: STATUS_LABEL[status] ?? null,
     indicative: plot.numberConfidence === "low",
@@ -69,6 +77,10 @@ export function PlotCard({ number, onClose, inline = false }: { number: number; 
         <div>
           <dt>{planStrings.plotCard.status}</dt>
           <dd>{content.statusLabel ?? <Tbd />}</dd>
+        </div>
+        <div>
+          <dt>{planStrings.plotCard.floors}</dt>
+          <dd>{content.storeys !== null ? planStrings.plotCard.storeys(content.storeys) : <Tbd />}</dd>
         </div>
       </dl>
       {content.indicative ? <p className="lp-card__note">{planStrings.plotCard.indicative}</p> : null}

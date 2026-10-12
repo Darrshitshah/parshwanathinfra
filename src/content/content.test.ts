@@ -51,4 +51,12 @@ describe("inventory", () => {
     expect(inventory.plots).toHaveLength(165);
     expect(inventory.plots.every((plot) => plot.status === "TBD")).toBe(true);
   });
+
+  it("gives every explorable block the confirmed 6 levels and leaves units TBD", () => {
+    expect(inventory.buildings.length).toBeGreaterThan(0);
+    for (const record of inventory.buildings) {
+      expect(record.floors, record.buildingId).toBe(6);
+      expect(record.units, record.buildingId).toBe("TBD");
+    }
+  });
 });

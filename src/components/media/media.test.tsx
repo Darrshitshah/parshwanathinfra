@@ -97,9 +97,10 @@ describe("callout data", () => {
 
 describe("CalloutLegend", () => {
   it("lists each callout in the same order as the pins, with TBD as a chip", () => {
-    const { container } = render(<CalloutLegend items={planCallouts} label="Marked on the plan" />);
+    const withTbd = [...planCallouts, { ...planCallouts[0], id: "tbd-sample", label: "Sample", detail: "Upper floors: TBD." }];
+    const { container } = render(<CalloutLegend items={withTbd} label="Marked on the plan" />);
     const items = screen.getAllByRole("listitem");
-    expect(items).toHaveLength(planCallouts.length);
+    expect(items).toHaveLength(withTbd.length);
     expect(items[0]).toHaveTextContent("Main entry.");
     expect(screen.getByRole("list", { name: "Marked on the plan" })).toBeInTheDocument();
     expect(container.querySelector("[data-tbd]")).not.toBeNull();

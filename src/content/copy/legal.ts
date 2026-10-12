@@ -191,7 +191,7 @@ export const disclaimerDoc: LegalDoc = {
     {
       heading: "Plans, counts and amenities",
       paragraphs: [
-        "Plans, areas, counts and specifications shown are indicative and subject to change and approvals. The row-house district on the plan is traced from the current layout plan and is marked indicative. Floors per building, unit areas and availability: TBD.",
+        "Plans, areas, counts and specifications shown are indicative and subject to change and approvals. The row-house district on the plan is traced from the current layout plan and is marked indicative. Units per floor, unit areas and availability: TBD.",
       ],
     },
     {

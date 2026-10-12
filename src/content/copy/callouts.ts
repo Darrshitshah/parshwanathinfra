@@ -73,7 +73,7 @@ export const planCallouts: readonly CalloutSpec[] = [
   {
     id: "shops-block-a",
     label: "Shops block A",
-    detail: "A triangular block of shops at the gate. Upper floors: TBD.",
+    detail: "A triangular block of shops at the gate: ground + 5, with a roof terrace above.",
     ...gridToPercent(SHOPS_BLOCK_A),
     dir: "down",
     len: "4.5rem",
@@ -155,7 +155,7 @@ export const rowHouseCallouts: readonly CalloutSpec[] = [
   {
     id: "two-storeys",
     label: "Two storeys",
-    detail: "Two storeys: a ground floor and one upper floor.",
+    detail: "Two storeys: a ground floor and one upper floor, with a roof terrace above.",
     x: 69.5,
     y: 59.5,
     dir: "down",
@@ -164,7 +164,7 @@ export const rowHouseCallouts: readonly CalloutSpec[] = [
   {
     id: "flat-roof",
     label: "Flat roof",
-    detail: "A flat roof with a plain parapet.",
+    detail: "A flat roof with a plain parapet, used as a roof terrace.",
     x: 70.5,
     y: 32.2,
     dir: "up",

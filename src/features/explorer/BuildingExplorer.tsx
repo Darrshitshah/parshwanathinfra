@@ -6,7 +6,7 @@
  *  - a click lists the floor's homes (TBD today: the plans we can show are offered as samples);
  *  - choosing a plan draws its CAD floor plan room by room, with room names and sizes in mono;
  *  - "Enquire about this home" opens the enquiry drawer with the block, floor and plan filled in.
- * Floors are "TBD" in the plan: the count drawn is the render-based estimate and is marked indicative.
+ * Floors are confirmed (Ground, 1st to 5th floor, roof terrace above); units per floor are still TBD.
  */
 import "./explorer.css";
 import { useMemo, useState } from "react";
@@ -140,7 +140,10 @@ export function BuildingExplorer({ buildingId, headingLevel = 3, className }: Bu
               {model.floorCount !== null ? <span className="ex-muted"> {explorerStrings.floorsIndicative(model.floorCount)}</span> : null}
             </>
           ) : (
-            <span>{`Floors: ${model.floorCount}`}</span>
+            <>
+              <span>{explorerStrings.floorsConfirmed(model.floorCount - 1)}</span>
+              {model.terrace ? <span className="ex-muted">{` · ${explorerStrings.terraceNote}`}</span> : null}
+            </>
           )}
         </p>
       </header>

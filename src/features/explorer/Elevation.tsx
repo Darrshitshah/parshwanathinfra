@@ -3,7 +3,8 @@
 /**
  * A clean schematic elevation of a block: one SVG band per floor. Hover or focus lights a band in its availability
  * colour; a click (or Enter, Space) selects the floor; Up and Down move between bands. The silhouette is drawn from
- * data (floor count, the block's relative length); it is not a measured drawing and says so.
+ * data (floor count, the block's relative length); it is not a measured drawing and says so. A roof terrace is drawn
+ * above the top floor as a labelled band that cannot be selected.
  */
 import { useId, type KeyboardEvent } from "react";
 import { massingWidth, type ExplorerModel } from "./floors";
@@ -12,6 +13,9 @@ import { explorerStrings } from "./strings";
 const BAND_H = 34;
 const PLINTH_H = 8;
 const PARAPET_H = 10;
+const TERRACE_H = 26;
+const RAIL_H = 5;
+const LABEL_X = -8;
 const SIDE = 14;
 const WINDOW_GAP = 30;
 
@@ -25,7 +29,8 @@ export function Elevation({ model, selected, onSelect }: ElevationProps) {
   const patternId = useId().replace(/:/g, "");
   const count = model.bands.length;
   const width = massingWidth(model.building);
-  const height = PARAPET_H + count * BAND_H + PLINTH_H;
+  const topH = model.terrace ? TERRACE_H : PARAPET_H;
+  const height = topH + count * BAND_H + PLINTH_H;
   const columns = Math.max(3, Math.round(width / WINDOW_GAP));
   const pitch = (width - SIDE * 2) / columns;
 
@@ -43,19 +48,32 @@ export function Elevation({ model, selected, onSelect }: ElevationProps) {
   };
 
   return (
-    <svg className="ex-elevation" viewBox={`-26 0 ${width + 52} ${height}`} role="group" aria-label={explorerStrings.elevationLabel} preserveAspectRatio="xMidYMax meet">
+    <svg className="ex-elevation" viewBox={`-64 0 ${width + 78} ${height}`} role="group" aria-label={explorerStrings.elevationLabel} preserveAspectRatio="xMidYMax meet">
       <defs>
         <pattern id={`ex-hatch-${patternId}`} width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
           <line x1="0" y1="0" x2="0" y2="6" className="ex-hatch" />
         </pattern>
       </defs>
-      <rect x={0} y={0} width={width} height={PARAPET_H} className="ex-parapet" />
+      {model.terrace ? (
+        <g className="ex-terrace" data-terrace>
+          <rect x={0} y={TERRACE_H - RAIL_H} width={width} height={RAIL_H} className="ex-parapet" />
+          <line x1={SIDE / 2} y1={4} x2={width - SIDE / 2} y2={4} className="ex-rail" />
+          {Array.from({ length: columns + 1 }, (_, post) => (
+            <line key={post} x1={SIDE / 2 + (post * (width - SIDE)) / columns} y1={4} x2={SIDE / 2 + (post * (width - SIDE)) / columns} y2={TERRACE_H - RAIL_H} className="ex-rail" />
+          ))}
+          <text x={LABEL_X} y={(TERRACE_H - RAIL_H) / 2 + 2} className="ex-band__label" textAnchor="end" dominantBaseline="middle">
+            {explorerStrings.terraceLabel}
+          </text>
+        </g>
+      ) : (
+        <rect x={0} y={0} width={width} height={PARAPET_H} className="ex-parapet" />
+      )}
       <rect x={0} y={height - PLINTH_H} width={width} height={PLINTH_H} className="ex-plinth" />
       {model.bands
         .slice()
         .reverse()
         .map((band) => {
-          const y = PARAPET_H + (count - 1 - band.index) * BAND_H;
+          const y = topH + (count - 1 - band.index) * BAND_H;
           const isSelected = selected === band.index;
           return (
             <g
@@ -75,13 +93,13 @@ export function Elevation({ model, selected, onSelect }: ElevationProps) {
                 <rect key={column} x={SIDE + column * pitch + pitch * 0.2} y={y + BAND_H * 0.25} width={pitch * 0.6} height={BAND_H * 0.5} className="ex-win" />
               ))}
               <line x1={0} y1={y + BAND_H} x2={width} y2={y + BAND_H} className="ex-slab" />
-              <text x={-8} y={y + BAND_H / 2} className="ex-band__label" textAnchor="end" dominantBaseline="middle">
-                {band.index + 1}
+              <text x={LABEL_X} y={y + BAND_H / 2} className="ex-band__label" textAnchor="end" dominantBaseline="middle">
+                {band.label}
               </text>
             </g>
           );
         })}
-      <rect x={0} y={PARAPET_H} width={width} height={count * BAND_H} className="ex-outline" />
+      <rect x={0} y={topH} width={width} height={count * BAND_H} className="ex-outline" />
     </svg>
   );
 }

@@ -4,14 +4,19 @@ import { plan } from "@/content/plan";
 import { bandLabel, explorerModel, floorStatus, massingWidth, unitEnquiryLabel } from "./floors";
 
 describe("explorer model", () => {
-  it("builds one band per indicative floor from the plan, marked indicative", () => {
+  it("builds one band per confirmed floor, Ground to 5th floor, with a roof terrace above", () => {
     const model = explorerModel("b18");
     expect(model).not.toBeNull();
     expect(model!.floorCount).toBe(6);
-    expect(model!.floorsIndicative).toBe(true);
+    expect(model!.floorsIndicative).toBe(false);
+    expect(model!.terrace).toBe(true);
     expect(model!.bands).toHaveLength(6);
-    expect(model!.bands.map((band) => band.label)).toEqual(["Level 1", "Level 2", "Level 3", "Level 4", "Level 5", "Level 6"]);
-    expect(model!.bands.every((band) => band.indicative)).toBe(true);
+    expect(model!.bands.map((band) => band.label)).toEqual(["Ground", "1st floor", "2nd floor", "3rd floor", "4th floor", "5th floor"]);
+    expect(model!.bands.some((band) => band.indicative)).toBe(false);
+  });
+
+  it("has no terrace where there is no floor count", () => {
+    expect(explorerModel("office")!.terrace).toBe(false);
   });
 
   it("says availability on request while every status is TBD", () => {
@@ -46,9 +51,13 @@ describe("explorer model", () => {
     expect(floorStatus([unit("TBD")])).toBe("TBD");
   });
 
-  it("names confirmed floors from the ground and estimated levels from one", () => {
+  it("names confirmed floors from the ground with ordinals and estimated levels from one", () => {
     expect(bandLabel(0, false)).toBe("Ground");
-    expect(bandLabel(3, false)).toBe("Floor 3");
+    expect(bandLabel(1, false)).toBe("1st floor");
+    expect(bandLabel(2, false)).toBe("2nd floor");
+    expect(bandLabel(3, false)).toBe("3rd floor");
+    expect(bandLabel(5, false)).toBe("5th floor");
+    expect(bandLabel(11, false)).toBe("11th floor");
     expect(bandLabel(0, true)).toBe("Level 1");
   });
 
@@ -60,7 +69,7 @@ describe("explorer model", () => {
   });
 
   it("writes the enquiry text from what is known", () => {
-    expect(unitEnquiryLabel("Block B18", "Level 3", "Typical flat, plan 473")).toBe("Block B18, Level 3, Typical flat, plan 473");
+    expect(unitEnquiryLabel("Block B18", "3rd floor", "Typical flat, plan 473")).toBe("Block B18, 3rd floor, Typical flat, plan 473");
     expect(unitEnquiryLabel("Block B18", null, null)).toBe("Block B18");
   });
 });

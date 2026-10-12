@@ -8,7 +8,7 @@ afterEach(cleanup);
 
 describe("plot card content", () => {
   it("reads type, status and confidence from the plan and inventory", () => {
-    expect(plotCardContent(1)).toEqual({ number: 1, typeLabel: null, statusLabel: null, indicative: false, interest: "not-sure" });
+    expect(plotCardContent(1)).toEqual({ number: 1, storeys: 2, typeLabel: null, statusLabel: null, indicative: false, interest: "not-sure" });
     expect(plotCardContent(80)).toMatchObject({ number: 80, indicative: true });
     expect(plotCardContent(0)).toBeNull();
     expect(plotCardContent(166)).toBeNull();
@@ -27,6 +27,7 @@ describe("<PlotCard>", () => {
     const card = screen.getByRole("dialog", { name: "Plot 12" });
     expect(within(card).getAllByText("TBD", { exact: false }).length).toBeGreaterThanOrEqual(2);
     expect(within(card).getByRole("img", { name: /Two-storey flat-roofed row houses by day/ })).toBeInTheDocument();
+    expect(within(card).getByText("2 storeys + terrace")).toBeInTheDocument();
     expect(within(card).getByRole("button", { name: "Enquire about plot 12" })).toBeInTheDocument();
     expect(within(card).queryByText("Indicative, as per the current layout plan")).not.toBeInTheDocument();
   });

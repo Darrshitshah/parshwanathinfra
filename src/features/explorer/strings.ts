@@ -1,4 +1,12 @@
 /** Interface strings for the building explorer. Facts come from content; no dashes. */
+
+/** 1 -> "1st", 2 -> "2nd", 3 -> "3rd", 4 -> "4th", 11 -> "11th". */
+export function ordinal(n: number): string {
+  const tail = n % 100;
+  if (tail >= 11 && tail <= 13) return `${n}th`;
+  return `${n}${({ 1: "st", 2: "nd", 3: "rd" } as Record<number, string>)[n % 10] ?? "th"}`;
+}
+
 export const explorerStrings = {
   title: (label: string) => label,
   floorsTbd: "Floors: TBD",
@@ -6,7 +14,10 @@ export const explorerStrings = {
   floorsIndicative: (n: number) => `${n} shown, indicative`,
   levelLabel: (n: number) => `Level ${n}`,
   groundLabel: "Ground",
-  floorLabel: (n: number) => `Floor ${n}`,
+  floorLabel: (n: number) => `${ordinal(n)} floor`,
+  terraceLabel: "Terrace",
+  floorsConfirmed: (upper: number) => `Floors: Ground + ${upper}`,
+  terraceNote: "roof terrace above",
   indicativeNote: "Levels counted from the renders. The number of floors is to be confirmed.",
   legendHeading: "Availability",
   legendTbd: "Availability on request",

@@ -48,6 +48,8 @@ export const planStrings = {
     title: (n: number) => `Plot ${n}`,
     type: "Type",
     status: "Status",
+    floors: "Floors",
+    storeys: (n: number) => `${n} storeys + terrace`,
     indicative: "Indicative, as per the current layout plan",
     enquire: (n: number) => `Enquire about plot ${n}`,
     close: "Close",

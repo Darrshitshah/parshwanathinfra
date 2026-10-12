@@ -65,6 +65,11 @@
   stroke-width: 1;
   vector-effect: non-scaling-stroke;
 }
+.ex-rail {
+  stroke: var(--ink-muted);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
 .ex-band {
   cursor: pointer;
   outline: none;
@@ -117,7 +122,7 @@
 }
 .ex-band__label {
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 10px;
   fill: var(--ink-muted);
 }
 .ex-outline {

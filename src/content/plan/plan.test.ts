@@ -74,12 +74,17 @@ describe("plan.json", () => {
     }
   });
 
-  it("describes the row-house district as indicative and keeps floors TBD with an estimate", () => {
+  it("describes the row-house district as indicative", () => {
     expect(plan.districts[0].name).toBe("Row houses, indicative as per the current layout plan");
     expect(plan.districts[0].indicative).toBe(true);
+    for (const building of plan.buildings.filter((b) => b.typology === "rowhouses")) expect(building.indicative).toBe(true);
+  });
+
+  it("carries the confirmed floors: 6 levels for blocks, mixed use and shops A, 2 storeys for row houses, office TBD", () => {
+    const expected = { flats: 6, mixed: 6, shops: 6, rowhouses: 2, office: "TBD" } as const;
     for (const building of plan.buildings) {
-      expect(building.floors).toBe("TBD");
-      if (building.typology === "rowhouses") expect(building.floorsIndicative).toBe(2);
+      expect(building.floors, building.id).toBe(expected[building.typology as keyof typeof expected]);
+      expect(building.floorsIndicative, building.id).toBeUndefined();
     }
   });
 

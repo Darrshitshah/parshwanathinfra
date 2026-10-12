@@ -1,7 +1,7 @@
 /**
  * The building explorer's model, built from content: floors per block, availability per floor, the units on a floor.
- * Floors are "TBD" in the plan; `floorsIndicative` (counted from the renders) is used for the drawing and always
- * marked indicative. Availability comes from inventory.ts and is "TBD" everywhere today ("Availability on request").
+ * Floors are confirmed in the plan (Ground, 1st to 5th floor, roof terrace above); a block whose floors were still "TBD"
+ * would fall back to `floorsIndicative`, always marked indicative. Availability comes from inventory.ts and is "TBD" everywhere today ("Availability on request").
  */
 import { inventory } from "@/content/inventory";
 import { buildingById, plan } from "@/content/plan";
@@ -15,7 +15,7 @@ export interface FloorBand {
   /** 0 is the lowest band. */
   index: number;
   label: string;
-  /** Floor numbers are an estimate from the renders, not confirmed. */
+  /** Floor count is an estimate from the renders, not confirmed. */
   indicative: boolean;
   status: UnitStatus;
   /** Units on this floor, or null while the unit list is TBD. */
@@ -29,6 +29,8 @@ export interface ExplorerModel {
   floorCount: number | null;
   /** True when the count is the render-based estimate. */
   floorsIndicative: boolean;
+  /** A roof terrace sits above the top floor (shown as a band that cannot be selected). */
+  terrace: boolean;
   /** Bands from the lowest to the highest. */
   bands: FloorBand[];
   unitsKnown: boolean;
@@ -79,6 +81,7 @@ export function explorerModel(buildingId: string): ExplorerModel | null {
     title: building.label ?? (building.sheetTag === "TBD" ? building.id : building.sheetTag),
     floorCount,
     floorsIndicative,
+    terrace: floorCount !== null && !floorsIndicative,
     bands,
     unitsKnown: units !== null,
     statuses: Array.from(new Set(bands.map((band) => band.status))),

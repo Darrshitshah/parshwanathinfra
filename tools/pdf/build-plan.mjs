@@ -103,8 +103,10 @@ const SECTOR_OF_TAG = {
   C1: "04", C2: "04", C3: "04", C4: "04", C5: "04",
   C8: "05", C9: "05", C10: "05", C11: "05", C12: "05", C13: "05",
 };
-const FLOORS_INDICATIVE_FLATS = 6; // stilt parking level plus five residential floors, counted in SS-10, SS-12 and SS-17
-const FLOORS_INDICATIVE_ROWHOUSES = 2; // two storeys with a flat roof (IMAGE NOTES, SS-26)
+// Confirmed by Darshit (DECISIONS 2026-10-11): flat blocks, the mixed-use building and shops block A are ground + 5
+// (Ground, 1st to 5th = 6 levels) with a roof terrace above; row houses are ground + 1 (2 storeys) with a roof terrace.
+const FLOORS_BLOCKS = 6;
+const FLOORS_ROWHOUSES = 2;
 
 function sectorOf(tags) {
   const sectors = new Set(tags.map((t) => SECTOR_OF_TAG[t] ?? "TBD"));
@@ -122,8 +124,7 @@ for (const b of cad.buildings) {
       newTag,
       sector: "TBD",
       typology: "flats",
-      floors: "TBD",
-      floorsIndicative: FLOORS_INDICATIVE_FLATS,
+      floors: FLOORS_BLOCKS,
       polygon,
       label: `Pair of tilted slabs at the top of sector 05 (tag ${newTag} on the newer sheet, not on the 2022 sheet)`,
       indicative: true,
@@ -134,7 +135,7 @@ for (const b of cad.buildings) {
   const sheetTag = tags.join("/");
   const base = { sheetTag, sector: sectorOf(tags), floors: "TBD", polygon, indicative: false };
   if (b.kind === "shops") {
-    buildings.push({ id: "shops-a", ...base, sector: "TBD", typology: "shops", floorsIndicative: FLOORS_INDICATIVE_FLATS, label: "Shops block A" });
+    buildings.push({ id: "shops-a", ...base, sector: "TBD", typology: "shops", floors: FLOORS_BLOCKS, label: "Shops block A" });
   } else if (b.kind === "office") {
     buildings.push({ id: "office", ...base, sheetTag: "BLDG", sector: "TBD", typology: "office", label: "Parshwanath Infra site office" });
   } else if (b.kind === "mixed") {
@@ -142,7 +143,7 @@ for (const b of cad.buildings) {
       id: tags.map((t) => t.toLowerCase()).join("-"),
       ...base,
       typology: "mixed",
-      floorsIndicative: FLOORS_INDICATIVE_FLATS,
+      floors: FLOORS_BLOCKS,
       label: `Mixed-use building ${sheetTag}, commercial and residential`,
     });
   } else {
@@ -150,7 +151,7 @@ for (const b of cad.buildings) {
       id: tags.map((t) => t.toLowerCase()).join("-"),
       ...base,
       typology: "flats",
-      floorsIndicative: FLOORS_INDICATIVE_FLATS,
+      floors: FLOORS_BLOCKS,
       label: `Block ${sheetTag}`,
     });
   }
@@ -163,8 +164,7 @@ traced.PJ_B.rows.forEach((s, i) => {
     sheetTag: "TBD",
     sector: "TBD",
     typology: "rowhouses",
-    floors: "TBD",
-    floorsIndicative: FLOORS_INDICATIVE_ROWHOUSES,
+    floors: FLOORS_ROWHOUSES,
     polygon: r1(parsePoints(s)),
     label: tip ? `Row-house slab ${i - 14} at the tip` : `Row-house strip ${i + 1}`,
     indicative: true,
@@ -246,7 +246,7 @@ const plan = {
     "A building can carry several sheet tags (B3/B4, C8/C9/C10): the tags mark stair cores of one continuous block. Sectors are given only where the SECTOR label sits inside the court the block surrounds.",
     "The tilted slab pair at the top of sector 05 (tag Q1) is on the newer printed sheet and in the render but not on the 2022 sheet: it keeps its traced outline.",
     "Row houses: plots 1 to 20 and 144 to 165 are on the 2022 sheet and keep numberConfidence high. The other 123 plots were read from a low-resolution phone photo of the newer sheet (numbers are consistent: three serpentine runs of 52, 56 and 57 plots) and are cut equally along the traced strips: numberConfidence low, geometry indicative.",
-    "Floors are TBD everywhere. floorsIndicative is counted from the renders: 6 for flat blocks and the mixed-use building (stilt parking level plus five floors, SS-10, SS-12, SS-17), the same for shops block A, 2 for row houses (SS-26 notes). The office has no estimate.",
+    "Floors (confirmed by Darshit): flat blocks, the mixed-use building and shops block A are ground + 5 (6 levels: Ground, 1st to 5th) with a roof terrace above; row houses are ground + 1 (2 storeys) with a roof terrace at the 3rd level. The office floor count is TBD. Units per floor are TBD.",
     "metresPerPx comes from transform.json (the dimension lines of the CAD sheet through the fitted transform); every metre value is indicative. The 9.00 MT width of the Vapi-Silvassa Road is as written on the sheet; whether it is the highway or a service lane is unconfirmed.",
     "Positions of the three tip amenities (building on a plaza, play area, round feature) are approximate; the label of the building is TBD (clubhouse or temple).",
     "northDeg 180: the render is the 2022 sheet turned 180 degrees and the sheet compass points up the paper (SOURCE_PACK section 3).",

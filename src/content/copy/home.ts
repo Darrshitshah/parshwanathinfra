@@ -86,7 +86,7 @@ export const homeCopy = {
   rowHouses: {
     eyebrow: "Row houses",
     heading: "The row-house street.",
-    body: "Two storeys under a flat roof. A deep white portal frame around one home, a recessed balcony bay on the next, a red exposed-brick pillar on each pair, planters with creepers under the upper windows and a car porch on the ground floor.",
+    body: "Two storeys under a flat roof terrace. A deep white portal frame around one home, a recessed balcony bay on the next, a red exposed-brick pillar on each pair, planters with creepers under the upper windows and a car porch on the ground floor.",
     dragHint: "Drag sideways to look along the street",
     regionLabel: "Row-house street, scrolls sideways",
     legendTitle: "What to look for",

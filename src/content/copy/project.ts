@@ -76,7 +76,7 @@ export const projectCopy = {
         { id: "sold", label: "Sold" },
         { id: "tbd", label: "TBD" },
       ],
-      note: "Floors per building: TBD. Availability on request.",
+      note: "Each block is ground + 5, with a roof terrace above. Units per floor: TBD. Availability on request.",
       caption: "Residential blocks around a parking court",
     },
   },

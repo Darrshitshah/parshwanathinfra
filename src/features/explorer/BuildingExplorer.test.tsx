@@ -28,25 +28,33 @@ afterEach(() => {
 });
 
 describe("<BuildingExplorer>", () => {
-  it("shows Floors: TBD with the indicative count marked, and one band per floor from the plan", () => {
+  it("shows the confirmed floors, one selectable band per floor and a Terrace band that cannot be selected", () => {
     const { container } = render(<BuildingExplorer buildingId="b18" />);
     expect(screen.getByRole("heading", { name: "Block B18" })).toBeInTheDocument();
-    expect(screen.getByText("Floors:")).toBeInTheDocument();
-    expect(screen.getByText("6 shown, indicative")).toBeInTheDocument();
-    expect(container.querySelectorAll("[data-band]")).toHaveLength(6);
+    expect(screen.getByText("Floors: Ground + 5")).toBeInTheDocument();
+    expect(screen.queryByText(/TBD|indicative|to be confirmed/i, { selector: ".ex-floors *, .ex-figure p" })).toBeNull();
+    const bands = Array.from(container.querySelectorAll("[data-band]"));
+    expect(bands).toHaveLength(6);
+    // drawn top to bottom, so the 5th floor comes first in the markup
+    expect(bands.map((band) => band.querySelector("text")?.textContent).reverse()).toEqual(["Ground", "1st floor", "2nd floor", "3rd floor", "4th floor", "5th floor"]);
+    const terrace = container.querySelector("[data-terrace]") as SVGGElement;
+    expect(terrace.querySelector("text")).toHaveTextContent("Terrace");
+    expect(terrace).not.toHaveAttribute("role", "button");
+    expect(terrace).not.toHaveAttribute("tabindex");
+    fireEvent.click(terrace);
+    expect(screen.getByText("Choose a floor to see its homes.")).toBeInTheDocument();
     expect(screen.getByText("Availability on request")).toBeInTheDocument();
-    expect(screen.getByText("Levels counted from the renders. The number of floors is to be confirmed.")).toBeInTheDocument();
   });
 
   it("lights a band on focus and selects a floor on click, listing its units as TBD with the plans we can show", () => {
     const { container } = render(<BuildingExplorer buildingId="b18" />);
     expect(screen.getByText("Choose a floor to see its homes.")).toBeInTheDocument();
     const third = container.querySelector('[data-band="2"]') as SVGGElement;
-    expect(third).toHaveAttribute("aria-label", "Level 3, indicative, to be confirmed");
+    expect(third).toHaveAttribute("aria-label", "2nd floor, to be confirmed");
     fireEvent.click(third);
     expect(third).toHaveAttribute("aria-pressed", "true");
     expect(third).toHaveClass("is-selected");
-    expect(screen.getByRole("heading", { name: "Level 3" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "2nd floor" })).toBeInTheDocument();
     expect(screen.getByText("Units on this floor:")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Typical flat, plan 473/ })).toBeInTheDocument();
     expect(screen.getAllByRole("button", { name: /Draw this plan/ })).toHaveLength(2);

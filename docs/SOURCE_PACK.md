@@ -28,6 +28,7 @@ Paths contain spaces (and this project folder ends in a space: `Parshwanath port
 | Map pin | 20.2934524, 72.9932563 · https://maps.app.goo.gl/DeFCbMwyrYEGZ5Gi9 | portfolio |
 | Village on the sheet | KARAMKHAL | layout plan title block |
 | Site office | The "BLDG" beside shops block A at the main entry: Ex. Office 01 (11'0" × 12'0"), 02 (11'0" × 11'8"), 03 (11'0" × 11'0"), Reception 9'10" × 15'3", otla, pantry, toilets. Darshit marks it as the Parshwanath Infra office | layout plan, portfolio |
+| Floors (confirmed 2026-10-11) | Flat blocks, the mixed-use building and shops block A: ground + 5 (6 levels: Ground, 1st, 2nd, 3rd, 4th, 5th) with a roof terrace above. Row houses: ground + 1 (2 storeys) with a roof terrace at the 3rd level. Units per floor: still TBD | Darshit, DECISIONS "Floors (Darshit, confirmed)" |
 | Darshit's role | Real Estate Project Manager / Business Operations Manager at Parshwanath Infra since Jan 2024 | portfolio |
 
 ### From past marketing material (real, but dates unknown: confirm before publishing)
@@ -45,7 +46,7 @@ Use the price only as "Starting ₹17.05 L* (*confirm current price)" until Dars
 
 RERA registration number and which authority (the site is near Silvassa, so it may fall under the Dadra and Nagar
 Haveli and Daman and Diu RERA rather than Gujarat RERA: never guess) · approvals (NA, plan sanction, etc.) ·
-land area · floors per building · carpet areas and which area type the sheet's numbers are · company email ·
+land area · units per floor · carpet areas and which area type the sheet's numbers are · company email ·
 WhatsApp number · office hours · amenity list as marketed · landmarks and distances · possession dates ·
 construction stage · inventory and availability · testimonials · leadership names and photos · company history,
 other projects, years in business · logo files for Parshwanath Infra itself (only "by Parshwanath Infra" exists) ·
@@ -128,7 +129,7 @@ The aerial render and Darshit's portfolio plan show the site **turned 180°** (r
   (28.16 m × 38.96 m); sector 04 court 93'2" × 191'9" (28.40 m × 58.45 m); gap between sectors 04 and 05: 49'7" (15.12 m);
   25'5" (7.74 m); 15' (4.57 m); 15'2" (4.62 m). Measure each line's end points in the vectors to get points per metre, then
   cross-check with the 40', 30' and 20' road widths. Call every derived number "indicative".
-- **Shops block A** (triangular, at the entry; has stairs and a lift, so upper floors exist: count TBD). Sizes and area labels:
+- **Shops block A** (triangular, at the entry; has stairs and a lift; ground + 5, see the floors row in section 1). Sizes and area labels:
   01 33'6" × 10'0" (355) · 02 33'6" × 10'0" (335) · 03 33'6" × 10'0" (355) · 04 33'6" × 10'0" (335) · 05 33'6" × 10'0" (335) ·
   06 33'6" × 10'0" (335) · 07 10'0" × 27'8" (276) · 08 9'8" × 27'8" (276) · 09 20'6" × 10'0" (205) · 10 20'6" × 10'0" (205) ·
   11 20'8" × 16'0" (423) · 12 10'0" × 27'2" (272) · 13 10'0" × 27'2" (272) · 14 10'0" × 40'8" (416) · 15 10'0" × 35'0" (360) ·
@@ -175,7 +176,7 @@ only sources until Darshit provides the updated CAD file.**
    the render). Do not guess the tag mapping: read it from a better scan.
 4. **The render** (`masterplan-topdown-upload.webp`, SS-02) matches the newer sheet. Darshit's traced plan encodes it as
    15 terrace strips plus an L-shaped strip and three tilted slabs at the tip (`PJ_B.rows`).
-5. **Typology:** 2 BHK and 3 BHK row houses (which plots are which: TBD). Two storeys, flat roof (SS-26 notes). Plans: TBD.
+5. **Typology:** 2 BHK and 3 BHK row houses (which plots are which: TBD). Two storeys (ground + 1), flat roof, roof terrace at the 3rd level (confirmed, section 1; SS-26 notes). Plans: TBD.
 
 **Ask Darshit (first popup):** "Do you have the updated layout plan as a PDF or DWG (the colour sheet that includes the row houses)?
 A phone scan of the printed sheet, shot straight on in daylight, also works." Until then, trace the district from the render
