@@ -61,6 +61,33 @@ RETRY = {
 }
 
 
+# Second retry (suffix contains r3). The first and last keyframes of segs 3 and 4 differ in camera position, so the prompt allows ONE slow
+# continuous pull-back and rise to the last framing, and forbids anything else (no swoop, no towers, no new blocks).
+RETRY3 = {
+    3: ("One slow, continuous, steady camera move only: the camera gently pulls back and rises, turning slightly, from the first frame's view to the last "
+        "frame's view. The whole township stays in view the entire time; the camera never descends, never swoops, never gets close to any one building. "
+        "The same building blocks stay in the same places in every frame, no new buildings appear and no isolated tall towers. All blocks rise together, "
+        "slowly and evenly, from flat concrete plinths to concrete frames of at most six levels, wrapped in green netting and scaffolding, with one yellow tower "
+        "crane, exactly as the last frame. Nothing ever grows taller than in the last frame. Warm golden morning light. No text."),
+    4: ("One slow, continuous, steady camera move only: the camera gently settles from the first frame's view into the last frame's view, never closer "
+        "than either frame. It never descends, never swoops, never flies toward any building. The same building blocks stay in the same places in every frame, "
+        "no new buildings, no isolated blocks, nothing taller than in the last frame. Over eight seconds the scaffolding and netting come away, walls take warm "
+        "khaki sand-olive paint with white window frames and charcoal railings, the crane lifts away, and lawns and trees grow in around the same blocks. Each "
+        "block ends as open stilt parking plus five floors plus a roof terrace, as in the last frame. Warm golden morning light. No text."),
+    5: ("A very slow, steady lift and drift to the right, never closer than the first frame, into the framing of the last frame. Exactly the same blocks "
+        "and roads in every frame, each block keeping open stilt parking plus five floors plus roof terrace; no building appears, vanishes or changes shape. "
+        "Greenery thickens slowly. Warm golden light. No text."),
+}
+
+
+def pick(seg, name):
+    if seg in RETRY3 and "r3" in name:
+        return RETRY3[seg]
+    if seg in RETRY and "r2" in name:
+        return RETRY[seg]
+    return SEG[seg]
+
+
 def prep():
     FR.mkdir(parents=True, exist_ok=True)
     for i in range(1, 6):
@@ -89,7 +116,7 @@ def from_gcs(uri, dest):
 
 def veo(seg, name, dest):
     first, last = frames(seg)
-    prompt = RETRY[seg] if (seg in RETRY and "r2" in name) else SEG[seg]
+    prompt = pick(seg, name)
     cfg = types.GenerateVideosConfig(aspect_ratio="16:9", resolution="4k", duration_seconds=8, number_of_videos=1, generate_audio=False,
                                      enhance_prompt=True, compression_quality="OPTIMIZED", negative_prompt=NEG, person_generation="allow_adult",
                                      last_frame=types.Image(image_bytes=last.read_bytes(), mime_type="image/jpeg"))
@@ -109,7 +136,7 @@ def veo(seg, name, dest):
 def omni(seg, name, dest):
     import omni as O
     first, last = frames(seg)
-    prompt = ("The first image is the first frame and the second image is the last frame. " + (RETRY[seg] if (seg in RETRY and "r2" in name) else SEG[seg]) +
+    prompt = ("The first image is the first frame and the second image is the last frame. " + pick(seg, name) +
               " No audio. Avoid: buildings morphing, extra or fewer floors, new buildings, text, logos, flicker, camera shake.")
     rf = [{"type": "video", "delivery": "uri", "gcs_uri": REVIEW, "aspect_ratio": "16:9", "resolution": "4k", "duration": "8s"}]
     j, dt = O.ia([{"type": "text", "text": prompt}, {"type": "image", "data": O.b64(first), "mime_type": "image/jpeg"},
