@@ -1,0 +1,38 @@
+{
+ "note": "Solved by tools/blender/hero_camera.py. Position in metres (Blender world, frame centred on the site), rotation = Blender XYZ euler in radians.",
+ "frame": [
+  2000,
+  1342
+ ],
+ "position": [
+  238.036,
+  -121.339,
+  92.853
+ ],
+ "rotationEuler": [
+  1.174814,
+  0.046236,
+  0.737276
+ ],
+ "focalPx": 1263.557,
+ "elevationDeg": 22.66,
+ "azimuthDeg": 316.7,
+ "stats": {
+  "reprojectionRmsPx": 36.7,
+  "pointRmsPx": 53.5,
+  "pointErrorsPx": {
+   "mixed-spine-ne-roof": 84.6,
+   "mixed-spine-se-roof": 66.0,
+   "mixed-north-arm-nw-roof": 26.8,
+   "mixed-south-arm-nw-roof": 18.3,
+   "mixed-south-arm-se-roof": 51.8,
+   "tip-round-feature": 44.1
+  },
+  "lineRmsPx": 24.5,
+  "horizonRmsPx": 86.2,
+  "priorPenalty": 0.0,
+  "hfovDeg": 76.7,
+  "vfovDeg": 55.9,
+  "focalPx": 1263.6
+ }
+}

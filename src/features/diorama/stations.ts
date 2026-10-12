@@ -23,7 +23,18 @@ export interface SceneMeta {
   metresPerPx: number;
   originPx: readonly [number, number];
   floorHeightM: number;
-  buildings: ReadonlyArray<{ id: string; typology: string; floorsUsed: number; heightM: number; indicative: boolean }>;
+  buildings: ReadonlyArray<{
+    id: string;
+    typology: string;
+    floorsUsed: number;
+    floorsConfirmed: boolean;
+    /** Roof terrace level above the ground, in metres. */
+    heightM: number;
+    /** Terrace parapet above heightM; 0 where the roof is not a confirmed terrace. */
+    parapetM: number;
+    coreBlocks: number;
+    indicative: boolean;
+  }>;
   camera: CameraConfig & { stations: ReadonlyArray<{ id: string; view: readonly number[] }> };
 }
 

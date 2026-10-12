@@ -110,3 +110,28 @@ describe("camera and labels", () => {
     for (const b of plan.buildings) expect(buildingHeight(b.id), b.id).toBeGreaterThan(0);
   });
 });
+
+describe("confirmed heights in the model", () => {
+  const byType = (t: string) => sceneMeta.buildings.filter((b) => b.typology === t);
+
+  it("gives flats, mixed use and shops 6 levels of 3 m with a 1.1 m terrace parapet and a stair/lift block", () => {
+    for (const t of ["flats", "mixed", "shops"]) {
+      expect(byType(t).length, t).toBeGreaterThan(0);
+      for (const b of byType(t)) {
+        expect(b.floorsUsed, b.id).toBe(6);
+        expect(b.floorsConfirmed, b.id).toBe(true);
+        expect(b.heightM, b.id).toBeCloseTo(18 + 0.12, 1);
+        expect(b.parapetM, b.id).toBe(1.1);
+        expect(b.coreBlocks, b.id).toBeGreaterThanOrEqual(1);
+      }
+    }
+  });
+
+  it("gives row houses 2 storeys under a roof terrace parapet", () => {
+    for (const b of byType("rowhouses")) {
+      expect(b.floorsUsed, b.id).toBe(2);
+      expect(b.heightM, b.id).toBeCloseTo(6 + 0.12, 1);
+      expect(b.parapetM, b.id).toBe(1.1);
+    }
+  });
+});

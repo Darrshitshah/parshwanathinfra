@@ -21,12 +21,14 @@ describe("captions", () => {
   });
 
   it("uses no em or en dashes in any visible string", () => {
-    const text = JSON.stringify([captions, dioramaStrings.massing, dioramaStrings.impression, dioramaStrings.stageLabel]);
+    const text = JSON.stringify([captions, dioramaStrings.impression, dioramaStrings.stageLabel]);
     expect(text).not.toMatch(new RegExp(`[${String.fromCharCode(0x2013)}${String.fromCharCode(0x2014)}]`));
   });
 
-  it("carries both required labels", () => {
-    expect(dioramaStrings.massing).toBe("Indicative massing");
+  it("keeps the artist's impression label and no longer calls the heights indicative massing", () => {
     expect(dioramaStrings.impression).toBe("Artist's impression");
+    // Chapter bodies may still say that positions and plot numbers are indicative; only the height wording is retired.
+    expect(JSON.stringify([captions[0], dioramaStrings])).not.toMatch(/indicative/i);
+    expect(JSON.stringify([captions, dioramaStrings])).not.toMatch(/indicative massing/i);
   });
 });

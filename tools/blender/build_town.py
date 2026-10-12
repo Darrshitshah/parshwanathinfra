@@ -9,8 +9,12 @@ from mathutils import Matrix, Vector
 
 from build_ground import LAWN_TOP, SITE_TOP
 from common import (
+    CONFIRMED_TYPOLOGIES,
+    CORE_HEIGHT_M,
+    CORE_SIZE_M,
     FLOOR_HEIGHT_M,
     FLOORS_FALLBACK,
+    TERRACE_PARAPET_M,
     Frame,
     box_bm,
     clean_ring,
@@ -24,17 +28,20 @@ from common import (
     seeded,
 )
 
-PARAPET_ROWHOUSE = 0.7
-PARAPET_OTHER = 0.45
+PARAPET_ROWHOUSE = TERRACE_PARAPET_M
+PARAPET_OTHER = 0.45      # amenity and office roofs, not confirmed terraces
 PARAPET_WIDTH = 0.5
+CORE_EDGE_CLEAR_M = 4.5   # headroom blocks keep this far from the roof edge
+CORE_SPACING_M = 38.0     # and this far from each other
 
 
 def floors_for(b: dict) -> tuple[int, bool]:
-    """Floors used for massing. Returns (floors, from_plan_estimate). Everything here is indicative while floors are TBD."""
+    """Floors used for massing. Returns (floors, confirmed). plan.json `floors` wins when it is a number; flats, mixed use,
+    shops A and row houses are confirmed at 6 / 6 / 6 / 2 even while the plan still says TBD."""
     if isinstance(b.get("floors"), int):
         return b["floors"], True
-    if b.get("floorsIndicative"):
-        return b["floorsIndicative"], True
+    if b["typology"] in CONFIRMED_TYPOLOGIES:
+        return FLOORS_FALLBACK[b["typology"]], True
     return FLOORS_FALLBACK.get(b["typology"], 3), False
 
 
@@ -62,19 +69,82 @@ def building_bm(ring, z0: float, height: float, parapet: float, rim: float = PAR
     return bm
 
 
+def _core_sites(ring) -> list[tuple[float, float]]:
+    """Spots for stair and lift headroom blocks: deep inside the roof, spread out along the building."""
+    xs, ys = [p[0] for p in ring], [p[1] for p in ring]
+    step = 1.5
+    samples = []
+    x = min(xs)
+    while x <= max(xs):
+        y = min(ys)
+        while y <= max(ys):
+            if point_in_ring((x, y), ring):
+                samples.append((x, y, _edge_distance((x, y), ring)))
+            y += step
+        x += step
+    area = abs(sum(ring[i][0] * ring[(i + 1) % len(ring)][1] - ring[(i + 1) % len(ring)][0] * ring[i][1] for i in range(len(ring)))) / 2
+    want = max(1, min(5, round(area / 900.0)))
+    for clear in (CORE_EDGE_CLEAR_M, 3.0, 1.5, 0.0):
+        pool = [s for s in samples if s[2] >= clear]
+        if pool:
+            break
+    else:
+        return []
+    chosen = [max(pool, key=lambda s: s[2])]
+    while len(chosen) < want:
+        far = max(pool, key=lambda s: min(math.hypot(s[0] - c[0], s[1] - c[1]) for c in chosen))
+        if min(math.hypot(far[0] - c[0], far[1] - c[1]) for c in chosen) < CORE_SPACING_M:
+            break
+        chosen.append(far)
+    return [(c[0], c[1]) for c in chosen]
+
+
+def _core_bm(cx: float, cy: float, angle: float, z0: float):
+    bm = box_bm(CORE_SIZE_M[0], CORE_SIZE_M[1], CORE_HEIGHT_M, z0)
+    bmesh.ops.rotate(bm, verts=bm.verts, cent=(0, 0, 0), matrix=Matrix.Rotation(angle, 3, "Z"))
+    bmesh.ops.translate(bm, vec=(cx, cy, 0), verts=bm.verts)
+    for f in bm.faces:
+        f.material_index = 0
+    return bm
+
+
+def _longest_edge_angle(ring) -> float:
+    best, ang = 0.0, 0.0
+    for i in range(len(ring)):
+        a, b = ring[i], ring[(i + 1) % len(ring)]
+        d = math.hypot(b[0] - a[0], b[1] - a[1])
+        if d > best:
+            best, ang = d, math.atan2(b[1] - a[1], b[0] - a[0])
+    return ang
+
+
 def build_buildings(plan, frame: Frame, mats, col):
+    """Flats, mixed use and shops A: `floors` levels, a roof terrace with a 1.1 m parapet and stair/lift headroom blocks.
+    Row-house strips stop at the 2nd storey; their terrace parapets are drawn per plot (build_plots)."""
     info = []
     for b in plan["buildings"]:
-        floors, estimated = floors_for(b)
-        height = floors * FLOOR_HEIGHT_M
+        floors, confirmed = floors_for(b)
+        slab = floors * FLOOR_HEIGHT_M          # terrace level above the site slab
         ring = frame.pts(b["polygon"])
-        parapet = 0.0 if b["typology"] == "rowhouses" else PARAPET_OTHER  # row-house parapets are drawn per plot
+        rowhouse = b["typology"] == "rowhouses"
+        terrace = confirmed and not rowhouse
+        parapet = TERRACE_PARAPET_M if terrace else (0.0 if rowhouse else PARAPET_OTHER)
+        height = slab + (TERRACE_PARAPET_M if terrace else 0.0)
         bm = building_bm(ring, SITE_TOP, height, parapet)
+        cores = 0
+        if terrace:
+            clean = clean_ring(ring)
+            ang = _longest_edge_angle(clean)
+            sites = _core_sites(clean)
+            cores = len(sites)
+            if sites:
+                bm = merge_bms([bm] + [_core_bm(sx, sy, ang, SITE_TOP + slab) for sx, sy in sites])
         obj = new_object(f"b-{b['id']}", bm, col, [mats["clay"], mats[f"roof-{b['typology']}"]])
         cx, cy = ring_centroid(clean_ring(ring))
         info.append({
-            "id": b["id"], "typology": b["typology"], "floorsUsed": floors, "floorsFromPlanEstimate": estimated,
-            "heightM": round(height + SITE_TOP, 2), "centre": [round(cx, 2), round(cy, 2)], "indicative": True,
+            "id": b["id"], "typology": b["typology"], "floorsUsed": floors, "floorsConfirmed": confirmed,
+            "heightM": round(slab + SITE_TOP, 2), "parapetM": TERRACE_PARAPET_M if (terrace or rowhouse) else 0.0,
+            "coreBlocks": cores, "centre": [round(cx, 2), round(cy, 2)], "indicative": bool(b.get("indicative")) or not confirmed,
         })
     return info
 
@@ -86,8 +156,8 @@ def build_plots(plan, frame: Frame, mats, col):
         by_strip.setdefault(plot["strip"], []).append(plot)
     strip_height = {b["id"]: floors_for(b)[0] * FLOOR_HEIGHT_M for b in plan["buildings"]}
     for strip, plots in by_strip.items():
-        z0 = SITE_TOP + strip_height.get(strip, 2 * FLOOR_HEIGHT_M) - 0.02
-        parts = [building_bm(frame.pts(p["polygon"]), z0, PARAPET_ROWHOUSE, 0.5, rim=0.32) for p in plots]
+        z0 = SITE_TOP + strip_height.get(strip, 2 * FLOOR_HEIGHT_M) - 0.1  # terrace floor lands exactly on the 2nd-storey slab
+        parts = [building_bm(frame.pts(p["polygon"]), z0, PARAPET_ROWHOUSE, PARAPET_ROWHOUSE - 0.1, rim=0.3) for p in plots]
         new_object(f"plots-{strip}", merge_bms(parts), col, [mats["clay"], mats["roof-rowhouses"]])
     return len(plan["plots"])
 

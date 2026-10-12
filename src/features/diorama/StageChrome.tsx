@@ -3,17 +3,12 @@
 import type { StageCaption } from "./captions";
 import { dioramaStrings } from "./strings";
 
-/** The two labels every view of the model carries. */
+/** The label every view of the model carries. Heights are confirmed, so only the artist's impression note remains. */
 export function StageBadges() {
   return (
-    <>
-      <p className="t-mono-sm pointer-events-none absolute left-3 top-3 m-0 rounded-sm bg-paper/85 px-2 py-1 text-ink md:left-5 md:top-5">
-        {dioramaStrings.massing}
-      </p>
-      <p className="t-mono-sm pointer-events-none absolute bottom-3 right-3 m-0 rounded-sm bg-paper/85 px-2 py-1 text-ink-muted md:bottom-5 md:right-5">
-        {dioramaStrings.impression}
-      </p>
-    </>
+    <p className="t-mono-sm pointer-events-none absolute bottom-3 right-3 m-0 rounded-sm bg-paper/85 px-2 py-1 text-ink-muted md:bottom-5 md:right-5">
+      {dioramaStrings.impression}
+    </p>
   );
 }
 

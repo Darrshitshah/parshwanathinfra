@@ -11,7 +11,7 @@ export interface StageCaption {
 
 export const OVERVIEW_CAPTION = {
   title: "Overview",
-  body: "Shiv Shiva Township as an indicative massing model. Flats are blue, row houses orange, shops green and the mixed-use building purple. Scroll to move through the chapters.",
+  body: "Shiv Shiva Township as a white-clay model. Flats are blue, row houses orange, shops green and the mixed-use building purple. Scroll to move through the chapters.",
 } as const;
 
 /** Caption per station: the overview first, then each chapter (title and body come from chapters.ts). */

@@ -31,8 +31,13 @@ TYPE_HEX = {
 BRICK_HEX = "#b5412f"
 PAPER_HEX = "#f3efe7"
 
-# Estimates used only when plan.json has no floorsIndicative; always flagged indicative.
-FLOORS_FALLBACK = {"flats": 6, "mixed": 6, "rowhouses": 2, "shops": 3, "office": 2}
+# Confirmed by the client (flats, mixed, shops A: 6 levels = ground + 5; row houses: 2 storeys) and used when plan.json
+# still says floors "TBD". The roof terrace sits on top (parapet below). Office and amenities stay placeholders.
+FLOORS_FALLBACK = {"flats": 6, "mixed": 6, "rowhouses": 2, "shops": 6, "office": 2}
+CONFIRMED_TYPOLOGIES = ("flats", "mixed", "shops", "rowhouses")
+TERRACE_PARAPET_M = 1.1   # roof terrace parapet, every confirmed typology
+CORE_SIZE_M = (3.6, 5.2)  # stair and lift headroom block on a flat-block roof (plan x, y)
+CORE_HEIGHT_M = 2.9
 
 
 def load_plan() -> dict:

@@ -19,7 +19,7 @@ If you change the number of frames, update `FRAME_COUNT` in `src/features/dioram
 
 ## Rules baked in
 - Metres = grid px x `metresPerPx`, centred on the site; plan y (down) becomes Blender -Y.
-- Floors are TBD in the plan: height = `floorsIndicative` x 3.0 m (fallbacks in `common.py`), always shown as "Indicative massing".
+- Floors come from `floors` in plan.json (flats, mixed, shops A: 6 levels; row houses: 2 storeys), 3.0 m per level, with a roof terrace and a 1.1 m parapet above (flats also get stair/lift headroom blocks). `common.py` holds the same confirmed counts as a fallback if a plan entry says TBD. The web labels carry only "Artist's impression".
 - Roofs carry the typology tint (colours from `tokens.css`), walls stay clay white, brick red is only the entry piers, the roundabout sculpture and a few accents.
 - Nothing is invented: only buildings, plots, roads, gardens and amenities that plan.json lists. Amenity heights are placeholders (1 to 2 storeys).
 - Row-house plots (165, indicative) are drawn as parapet tiles on the strips.
@@ -28,3 +28,12 @@ If you change the number of frames, update `FRAME_COUNT` in `src/features/dioram
 ## Files
 `common.py` helpers · `build_ground.py` ground, sunken roads, lawns, roundabout · `build_town.py` buildings, plots, amenities, entries,
 trees, cars · `build_scene.py` entry point · `cameras.py` · `render_stills.py` · `to_webp.mjs` · `export_gltf.py`.
+
+## Hero camera and construction stages (for the Nano Banana film frames)
+```bash
+$P tools/blender/hero_camera.py --overlay <scratch>/cam   # solves the camera from hero_gcps.json, writes hero_camera.json, overlay.png
+$P tools/blender/render_stages.py                         # _source/generated/hero-stages/stage-1..5.png (2560 x 1440) + contact-sheet.png
+```
+`hero_gcps.json` holds the control points between the SS-01 aerial and plan.json (the C-shaped mixed-use building, the tip feature, the
+Vapi-Silvassa road edges). The aerial is an artist's render, so the match is approximate (about 37 px RMS on the 2000 px frame; far
+row houses drift most). Stages keep the aerial's vertical field of view, so extra land shows at both sides of the 16:9 frame.

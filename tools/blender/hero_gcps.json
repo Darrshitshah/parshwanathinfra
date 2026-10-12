@@ -1,0 +1,142 @@
+{
+ "note": "Ground control points between SS-01 (public/media/masterplan-aerial.webp, 2000 x 1342 frame) and plan.json. The aerial is an artist's render, so correspondences are approximate: the mixed-use C-shaped building B1/B2 (roof corners, parapet top at 19.2 m) and the Vapi-Silvassa road centreline. plan = grid px, z = metres above the ground.",
+ "frame": [
+  2000,
+  1342
+ ],
+ "horizonY": 228,
+ "points": [
+  {
+   "id": "mixed-spine-ne-roof",
+   "plan": [
+    1871,
+    392
+   ],
+   "z": 19.2,
+   "img": [
+    1882,
+    696
+   ]
+  },
+  {
+   "id": "mixed-spine-se-roof",
+   "plan": [
+    1871,
+    589
+   ],
+   "z": 19.2,
+   "img": [
+    1841,
+    828
+   ]
+  },
+  {
+   "id": "mixed-north-arm-nw-roof",
+   "plan": [
+    1739,
+    362
+   ],
+   "z": 19.2,
+   "img": [
+    1677,
+    639
+   ]
+  },
+  {
+   "id": "mixed-south-arm-nw-roof",
+   "plan": [
+    1765,
+    556
+   ],
+   "z": 19.2,
+   "img": [
+    1651,
+    756
+   ]
+  },
+  {
+   "id": "mixed-south-arm-se-roof",
+   "plan": [
+    1836,
+    614
+   ],
+   "z": 19.2,
+   "img": [
+    1768,
+    820
+   ]
+  },
+  {
+   "id": "tip-round-feature",
+   "plan": [
+    240,
+    614
+   ],
+   "z": 0.5,
+   "img": [
+    317,
+    457
+   ]
+  }
+ ],
+ "lines": [
+  {
+   "id": "highway-west-edge",
+   "road": "vapi-silvassa-road",
+   "offsetM": -4.5,
+   "img": [
+    [
+     1887,
+     605
+    ],
+    [
+     1873,
+     752
+    ],
+    [
+     1871,
+     859
+    ],
+    [
+     1851,
+     1006
+    ],
+    [
+     1836,
+     1104
+    ],
+    [
+     1815,
+     1226
+    ],
+    [
+     1793,
+     1342
+    ]
+   ]
+  },
+  {
+   "id": "highway-east-edge",
+   "road": "vapi-silvassa-road",
+   "offsetM": 4.5,
+   "img": [
+    [
+     1931,
+     605
+    ],
+    [
+     1932,
+     859
+    ],
+    [
+     1914,
+     1006
+    ],
+    [
+     1890,
+     1342
+    ]
+   ]
+  }
+ ]
+}
