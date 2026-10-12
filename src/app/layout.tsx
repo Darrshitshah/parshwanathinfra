@@ -14,7 +14,8 @@ const display = Instrument_Serif({
   weight: "400",
   style: ["normal", "italic"],
   subsets: ["latin"],
-  display: "swap",
+  // "block", not "swap": the wordmark is never the LCP element, and swapping it caused a 0.19 layout shift (QA 2026-10-12).
+  display: "block",
   variable: "--font-instrument-serif",
 });
 
