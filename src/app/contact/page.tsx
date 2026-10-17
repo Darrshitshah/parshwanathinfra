@@ -103,7 +103,7 @@ export default function ContactPage() {
             <p className="t-small mt-3 max-w-[26rem] text-ink-muted">{contactCopy.directionsNote}</p>
 
             <div className="mt-10">
-              <LocationMap />
+              <LocationMap links={false} />
             </div>
           </aside>
         </div>

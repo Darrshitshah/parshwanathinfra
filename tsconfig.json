@@ -48,7 +48,9 @@
     ".next-scene/types/**/*.ts",
     ".next-scene/dev/types/**/*.ts",
     ".next-qa/types/**/*.ts",
-    ".next-qa/dev/types/**/*.ts"
+    ".next-qa/dev/types/**/*.ts",
+    ".next-map/types/**/*.ts",
+    ".next-map/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",

@@ -100,6 +100,17 @@ export const homeCopy = {
     labels: { address: "Address", pin: "Pin", landmarks: "Landmarks", distances: "Distances" },
     mapCaption: "Schematic map, not to scale",
     mapTitle: "Schematic map of the Vapi-Silvassa Road between Vapi and Silvassa with the Shiv Shiva Township site marked",
+    /** Shown instead of `body` when the live satellite map is configured. */
+    bodyMap: "The township is on the Vapi-Silvassa Road. The satellite view shows the site and what surrounds it.",
+    satelliteCaption: "Satellite view centred on the site pin. Imagery by Google, and it may not be current.",
+    map: {
+      siteLabel: "Site",
+      regionLabel: "Satellite map of Shiv Shiva Township on the Vapi-Silvassa Road",
+      controlsLabel: "Map controls",
+      zoomIn: "Zoom in",
+      zoomOut: "Zoom out",
+      recenter: "Centre on the site",
+    },
   },
   gallery: {
     eyebrow: "Gallery",

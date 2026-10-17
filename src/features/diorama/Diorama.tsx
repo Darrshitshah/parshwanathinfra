@@ -5,15 +5,14 @@
  * image sequence scrubbed by scroll, Tier C and reduced motion the overview still with the chapter captions.
  */
 import dynamic from "next/dynamic";
-import Image from "next/image";
 import { useCallback, useMemo, useState, type ReactNode } from "react";
 import { chapters } from "@/content/plan/chapters";
 import { useDeviceTier } from "@/lib/device-tier-provider";
 import { buildCaptions } from "./captions";
-import { STILL_HEIGHT, STILL_WIDTH, stillUrl } from "./frames";
 import { ScrollStage } from "./ScrollStage";
 import { SequenceCanvas } from "./SequenceCanvas";
 import { CaptionCard, ChapterTextList, StageBadges } from "./StageChrome";
+import { StagePoster } from "./StagePoster";
 import { StillFigure } from "./StillFigure";
 import { buildStations, labelAnchors } from "./stations";
 import { dioramaStrings } from "./strings";
@@ -30,9 +29,9 @@ export interface DioramaProps {
 
 export function Diorama({ onBuildingSelect, fallback }: DioramaProps) {
   const device = useDeviceTier();
-  const [modelReady, setModelReady] = useState(false);
+  const [stageDrawn, setStageDrawn] = useState(false);
   const [webglFailed, setWebglFailed] = useState(false);
-  const onReady = useCallback(() => setModelReady(true), []);
+  const onReady = useCallback(() => setStageDrawn(true), []); // first frame of the live scene or sequence is on screen
   const onFail = useCallback(() => setWebglFailed(true), []);
 
   const picked = pickDioramaMode(device);
@@ -49,16 +48,8 @@ export function Diorama({ onBuildingSelect, fallback }: DioramaProps) {
     <ScrollStage stationCount={stations.length} tier={tier} label={dioramaStrings.sequenceLabel}>
       {({ store, activeIndex }) => (
         <>
-          <Image
-            src={stillUrl("overview")}
-            alt=""
-            width={STILL_WIDTH}
-            height={STILL_HEIGHT}
-            unoptimized
-            className="absolute inset-0 size-full object-cover"
-          />
           {mode === "webgl" ? (
-            <div className={`absolute inset-0 transition-opacity duration-700 ${modelReady ? "opacity-100" : "opacity-0"}`} role="img" aria-label={dioramaStrings.stageLabel}>
+            <div className="absolute inset-0" role="img" aria-label={dioramaStrings.stageLabel}>
               <SceneCanvas
                 store={store}
                 stations={stations}
@@ -70,9 +61,10 @@ export function Diorama({ onBuildingSelect, fallback }: DioramaProps) {
             </div>
           ) : (
             <div className="absolute inset-0" role="img" aria-label={dioramaStrings.stageLabel}>
-              <SequenceCanvas store={store} />
+              <SequenceCanvas store={store} onDraw={onReady} />
             </div>
           )}
+          <StagePoster drawn={stageDrawn} />
           <StageBadges />
           <CaptionCard caption={captions[activeIndex]} index={activeIndex} total={captions.length} onBuildingSelect={onBuildingSelect} />
           <ChapterTextList captions={captions} />

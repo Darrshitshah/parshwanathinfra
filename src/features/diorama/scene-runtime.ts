@@ -92,6 +92,7 @@ export function createDioramaScene(options: SceneOptions): SceneHandle {
   const swapped = new Map<Mesh, Material | Material[]>();
   const tintMaterials: Record<string, MeshStandardMaterial> = {};
   let hoveredId: string | null = null;
+  let readyPending = false; // the model is in the scene; `onReady` fires once its first frame has been drawn
   const pointer = new Vector2();
   const raycaster = new Raycaster();
   const projected = new Vector3();
@@ -179,6 +180,10 @@ export function createDioramaScene(options: SceneOptions): SceneHandle {
     camera.updateMatrixWorld();
     renderer.render(scene, camera);
     updateLabels();
+    if (readyPending) {
+      readyPending = false;
+      options.onReady();
+    }
     if (position.distanceTo(goalPosition) > SETTLE_DISTANCE_M || aim.distanceTo(goalAim) > SETTLE_DISTANCE_M) requestRender();
   }
   function requestRender() {
@@ -208,8 +213,8 @@ export function createDioramaScene(options: SceneOptions): SceneHandle {
       });
       scene.add(model);
       renderer.shadowMap.needsUpdate = true;
-      resize();
-      options.onReady();
+      readyPending = true;
+      resize(); // requests the frame that reports ready
     },
     () => {
       if (!disposed) options.onFail();
