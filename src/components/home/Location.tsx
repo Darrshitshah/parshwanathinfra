@@ -1,18 +1,17 @@
 /**
- * Location: the address, the pin, a schematic map (labelled "Not to scale") and the real Google Maps link.
+ * Location: the address, the pin, the Google satellite map (a labelled schematic fallback without a key) and the map links.
  * Landmarks and distances are TBD chips until confirmed. Used on Home and on the project page (id="location").
  * Owner: pages-lead.
  */
 import type { ReactNode } from "react";
 import { cn } from "@/components/ui/cn";
 import { Eyebrow } from "@/components/ui/Section";
-import { TextLink } from "@/components/ui/TextLink";
 import { Tbd } from "@/components/ui/Tbd";
 import { rich, withTbd } from "@/components/ui/with-tbd";
-import { directionsUrl, formatCoordinates } from "@/components/ui/map-links";
+import { formatCoordinates } from "@/components/ui/map-links";
 import { homeCopy } from "@/content/copy/home";
-import { en } from "@/content/i18n/en";
 import { shivShiva } from "@/content/projects";
+import { getMapsApiKey } from "@/lib/google-maps";
 import { LocationMap } from "./LocationMap";
 
 interface LocationProps {
@@ -44,7 +43,7 @@ export function Location({ id = "location", index = "07", tone = "paper" }: Loca
         </h2>
         <div className="mt-10 grid gap-12 md:mt-14 lg:grid-cols-12 lg:gap-x-(--gutter)">
           <div className="lg:col-span-5">
-            <p className="t-lead m-0 text-ink-muted">{rich(homeCopy.location.body)}</p>
+            <p className="t-lead m-0 text-ink-muted">{rich(getMapsApiKey() ? homeCopy.location.bodyMap : homeCopy.location.body)}</p>
 
             <dl className="m-0 mt-10 grid gap-0">
               <FactRow label={labels.address}>
@@ -78,11 +77,6 @@ export function Location({ id = "location", index = "07", tone = "paper" }: Loca
                 )}
               </FactRow>
             </dl>
-
-            <p className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-3">
-              <TextLink href={location.mapUrl}>{en.common.openInMaps}</TextLink>
-              <TextLink href={directionsUrl(location.geo)}>{en.common.getDirections}</TextLink>
-            </p>
           </div>
 
           <div className="lg:col-span-7">

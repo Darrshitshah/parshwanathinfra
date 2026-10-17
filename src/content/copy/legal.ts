@@ -197,7 +197,7 @@ export const disclaimerDoc: LegalDoc = {
     {
       heading: "Maps, distances and landmarks",
       paragraphs: [
-        "The location map is a schematic and is not to scale. Landmarks and distances: TBD.",
+        "The location map is indicative and not to scale. Satellite imagery is supplied by Google Maps and may not show the site as it is today. Landmarks and distances: TBD.",
       ],
     },
     {

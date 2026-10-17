@@ -1,89 +1,36 @@
 /**
- * Stylised map: Vapi, Silvassa, the Vapi-Silvassa Road and the site pin. A schematic, labelled "Not to scale":
- * it shows how the places relate, never how far apart they are. The site sits on the road nearer Silvassa (the
- * source pack places it near Silvassa). Landmarks and distances stay TBD until Darshit confirms them, so none are
- * drawn. The drawing is SVG; the labels are HTML placed in percentages so they keep a readable size at 360 px.
- * Owner: pages-lead.
+ * Location map entry point (Home, the project page and /contact). With NEXT_PUBLIC_GOOGLE_MAPS_API_KEY set, the site
+ * shows a Google satellite map that loads only when the section nears the viewport (see map/SiteMap). Without a key it
+ * renders the static, themed fallback (a schematic of the Vapi-Silvassa Road, labelled "Not to scale", plus the glass
+ * card with the address, coordinates and map links), so the page never shows a broken map. Server component: with no
+ * key it ships no client JavaScript at all. Owner: pages-lead.
  */
-import type { CSSProperties } from "react";
-import { en } from "@/content/i18n/en";
+import { MapShell } from "@/components/map/MapShell";
+import { SchematicFallback } from "@/components/map/SchematicFallback";
+import { SiteInfoCard } from "@/components/map/SiteInfoCard";
+import { SiteMap } from "@/components/map/SiteMap";
+import { siteMapPlace, type MapPlace } from "@/components/map/place";
 import { homeCopy } from "@/content/copy/home";
-import { shivShiva } from "@/content/projects";
+import { getMapId, getMapsApiKey } from "@/lib/google-maps";
 
-const W = 600;
-const H = 440;
-
-/** Cubic road from Vapi (top left) to Silvassa (bottom right). */
-const ROAD = { p0: [60, 96], p1: [210, 112], p2: [340, 205], p3: [548, 336] } as const;
-const ROAD_PATH = `M ${ROAD.p0.join(" ")} C ${ROAD.p1.join(" ")}, ${ROAD.p2.join(" ")}, ${ROAD.p3.join(" ")}`;
-
-function pointOnRoad(t: number): { x: number; y: number } {
-  const u = 1 - t;
-  const a = u * u * u;
-  const b = 3 * u * u * t;
-  const c = 3 * u * t * t;
-  const d = t * t * t;
-  return {
-    x: a * ROAD.p0[0] + b * ROAD.p1[0] + c * ROAD.p2[0] + d * ROAD.p3[0],
-    y: a * ROAD.p0[1] + b * ROAD.p1[1] + c * ROAD.p2[1] + d * ROAD.p3[1],
-  };
+interface LocationMapProps {
+  place?: MapPlace;
+  className?: string;
+  /** Show "Open in Google Maps" and "Get directions" in the card (off where the page already lists them next to the map). */
+  links?: boolean;
 }
 
-const VAPI = { x: ROAD.p0[0], y: ROAD.p0[1] };
-const SILVASSA = { x: ROAD.p3[0], y: ROAD.p3[1] };
-const SITE = pointOnRoad(0.78);
-const ROAD_LABEL = pointOnRoad(0.4);
-const ROAD_LABEL_ANGLE = 25.5;
-
-function place(x: number, y: number, transform: string): CSSProperties {
-  return { left: `${(x / W) * 100}%`, top: `${(y / H) * 100}%`, transform };
-}
-
-const LABEL = "t-mono-sm absolute whitespace-nowrap text-ink";
-
-export function LocationMap({ className }: { className?: string }) {
-  const projectName = shivShiva.name;
+export function LocationMap({ place = siteMapPlace(), className, links = true }: LocationMapProps) {
+  const apiKey = getMapsApiKey();
+  const fallback = <SchematicFallback place={place} />;
+  const card = <SiteInfoCard place={place} links={links} />;
+  if (!apiKey) {
+    return <MapShell className={className} state="fallback" frame={fallback} card={card} caption={homeCopy.location.mapCaption} />;
+  }
+  const { map } = homeCopy.location;
+  const labels = { region: map.regionLabel, controls: map.controlsLabel, zoomIn: map.zoomIn, zoomOut: map.zoomOut, recenter: map.recenter };
+  const captions = { fallback: homeCopy.location.mapCaption, live: homeCopy.location.satelliteCaption };
   return (
-    <figure className={className ?? "m-0"}>
-      <div className="relative aspect-[600/440] w-full overflow-hidden rounded-(--radius-card) bg-paper-raised">
-        <svg viewBox={`0 0 ${W} ${H}`} className="absolute inset-0 size-full" role="img" aria-labelledby="map-title map-desc">
-          <title id="map-title">{homeCopy.location.mapCaption}</title>
-          <desc id="map-desc">{homeCopy.location.mapTitle}</desc>
-          <path d={ROAD_PATH} fill="none" stroke="var(--ink)" strokeOpacity="0.16" strokeWidth="22" strokeLinecap="round" />
-          <path d={ROAD_PATH} fill="none" stroke="var(--paper)" strokeWidth="13" strokeLinecap="round" />
-          <path d={ROAD_PATH} fill="none" stroke="var(--ink)" strokeOpacity="0.4" strokeWidth="1.5" strokeDasharray="2 9" strokeLinecap="round" />
-          {[VAPI, SILVASSA].map((node) => (
-            <g key={`${node.x}-${node.y}`}>
-              <circle cx={node.x} cy={node.y} r="12" fill="var(--paper)" />
-              <circle cx={node.x} cy={node.y} r="5" fill="var(--ink)" />
-            </g>
-          ))}
-          <circle cx={SITE.x} cy={SITE.y} r="17" fill="var(--brick)" fillOpacity="0.16" />
-          <circle cx={SITE.x} cy={SITE.y} r="9" fill="var(--brick)" stroke="var(--paper)" strokeWidth="2.5" />
-        </svg>
-
-        <span className={LABEL} style={place(VAPI.x, VAPI.y + 20, "translate(-50%, 0)")}>
-          Vapi
-        </span>
-        <span className={LABEL} style={place(SILVASSA.x, SILVASSA.y + 20, "translate(-50%, 0)")}>
-          Silvassa
-        </span>
-        <span
-          className={`${LABEL} text-ink-muted`}
-          style={place(ROAD_LABEL.x, ROAD_LABEL.y - 16, `translate(-50%, -50%) rotate(${ROAD_LABEL_ANGLE}deg)`)}
-        >
-          {shivShiva.location.road}
-        </span>
-        <span
-          className="absolute whitespace-nowrap rounded-full bg-paper px-3 py-1.5 text-ink shadow-[0_8px_24px_-10px_color-mix(in_srgb,var(--ink)_40%,transparent)]"
-          style={place(SITE.x + 10, SITE.y - 16, "translate(0, -100%)")}
-        >
-          <span className="t-mono-sm block text-brick-ink">Site</span>
-          <span className="font-display text-[0.9375rem] font-medium uppercase leading-none sm:text-[1.0625rem]">{projectName}</span>
-        </span>
-        <span className="t-mono-sm absolute bottom-3 left-3 rounded-full bg-paper px-3 py-1 text-ink">{en.common.notToScale}</span>
-      </div>
-      <figcaption className="t-small mt-4 text-ink-muted">{homeCopy.location.mapCaption}</figcaption>
-    </figure>
+    <SiteMap apiKey={apiKey} mapId={getMapId()} geo={place.geo} title={place.name} labels={labels} captions={captions} fallback={fallback} card={card} />
   );
 }
