@@ -152,17 +152,21 @@ describe("boundaryCurtain", () => {
     expect(root.style.pointerEvents).toBe("none");
   });
 
-  it("keeps cover, title and reveal quick: the panel round trip stays under 0.95 s", () => {
+  it("keeps the panel round trip short: under 1.5 s", () => {
     const root = curtain();
     const cover = boundaryCurtain(root, { phase: "cover", variant: "panel", paused: true });
     const reveal = boundaryCurtain(root, { phase: "reveal", variant: "panel", paused: true });
-    expect(cover.duration() + reveal.duration()).toBeLessThanOrEqual(0.95);
+    expect(cover.duration() + reveal.duration()).toBeLessThanOrEqual(1.5);
   });
 
-  it("hole timings are quick too, and the title is readable before the page is revealed", () => {
-    expect(CURTAIN_TIMING.hole.cover + CURTAIN_TIMING.hole.reveal + CURTAIN_TIMING.revealDelay).toBeLessThanOrEqual(0.9);
-    const titleEnd = CURTAIN_TIMING.hole.cover * CURTAIN_TIMING.titleStart + CURTAIN_TIMING.titleIn;
-    expect(titleEnd).toBeLessThanOrEqual(0.5);
+  it("hole curtain lingers on the boundary but the round trip stays about 2 s, title readable before the reveal", () => {
+    const h = CURTAIN_TIMING.hole;
+    expect(h.shrink + h.coverLinger + h.close).toBeCloseTo(h.cover, 5);
+    expect(h.open + h.revealLinger + h.grow).toBeCloseTo(h.reveal, 5);
+    expect(h.coverLinger).toBeGreaterThanOrEqual(0.25);
+    expect(h.cover + h.reveal + CURTAIN_TIMING.revealDelay).toBeLessThanOrEqual(2.1);
+    const titleEnd = h.cover * CURTAIN_TIMING.titleStart + CURTAIN_TIMING.titleIn;
+    expect(titleEnd).toBeLessThanOrEqual(h.cover + 0.1);
   });
 
   it("falls back to the panel when no hole is given", () => {

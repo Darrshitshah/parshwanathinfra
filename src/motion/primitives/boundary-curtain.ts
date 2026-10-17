@@ -30,17 +30,33 @@ export interface BoundaryCurtainOptions extends PrimitiveOptions {
 }
 
 /**
- * Seconds. Chosen so the whole round trip (cover, title, reveal) stays around 0.9 s on desktop, with the next page
- * already there. `titleStart` is where the title begins sliding in, as a share of the cover time.
+ * Seconds. Darshit (2026-10-17) asked for a slower curtain so the Shiv Shiva boundary is clearly visible on every
+ * page change: the township window shrinks to a "showcase" size where the whole outline sits on screen, lingers
+ * there, then closes; the reveal mirrors it. Round trip about 2 s with the next page already there.
+ * `hole.cover = shrink + linger + close`, `hole.reveal = open + linger + grow`. `titleStart` is a share of the cover.
  */
 export const CURTAIN_TIMING = {
-  hole: { cover: 0.32, reveal: 0.4 },
-  panel: { cover: 0.3, reveal: 0.4 },
-  titleIn: 0.3,
-  titleStart: 0.3,
+  hole: {
+    shrink: 0.45,
+    coverLinger: 0.3,
+    close: 0.25,
+    cover: 1.0,
+    open: 0.25,
+    revealLinger: 0.2,
+    grow: 0.45,
+    reveal: 0.9,
+  },
+  panel: { cover: 0.5, reveal: 0.6 },
+  titleIn: 0.32,
+  titleStart: 0.72,
   titleOut: 0.22,
-  revealDelay: 0.05,
+  revealDelay: 0.1,
 } as const;
+
+/** Scale (1 = township at its natural size on the render grid) where the whole boundary reads clearly on screen. */
+const SHOWCASE_SCALE = 0.82;
+/** How far the outline drifts while it lingers, so it breathes instead of freezing. */
+const LINGER_DRIFT = 0.9;
 
 /** Where the hole stops shrinking before it snaps shut (a few pixels wide, so the snap is invisible). */
 const HOLE_REST_SCALE = 0.012;
@@ -105,20 +121,30 @@ function buildHoleCurtain(
 ): Timeline {
   const full = options.fullScale ?? hole.measureCoverScale();
   const timing = CURTAIN_TIMING.hole;
-  const progress = { t: 0 };
+
+  // The showcase size must stay well inside the cover size, also on very small or very wide screens.
+  const showcase = Math.min(SHOWCASE_SCALE, full * 0.5);
+  const drifted = showcase * LINGER_DRIFT;
+  const stage = (from: number, to: number, duration: number, ease: string, at: number, closeAtEnd = false) => {
+    const proxy = { t: 0 };
+    timeline.to(
+      proxy,
+      {
+        t: 1,
+        duration,
+        ease,
+        onUpdate: () => hole.setScale(closeAtEnd && proxy.t >= 1 ? 0 : lerpLog(from, to, proxy.t)),
+      },
+      at,
+    );
+  };
 
   if (options.phase === "cover") {
     hole.setScale(full);
-    timeline.set(curtain, SHOW, 0).to(
-      progress,
-      {
-        t: 1,
-        duration: timing.cover,
-        ease: EASE.inOut,
-        onUpdate: () => hole.setScale(progress.t >= 1 ? 0 : lerpLog(full, HOLE_REST_SCALE, progress.t)),
-      },
-      0,
-    );
+    timeline.set(curtain, SHOW, 0);
+    stage(full, showcase, timing.shrink, EASE.out, 0);
+    stage(showcase, drifted, timing.coverLinger, "none", timing.shrink);
+    stage(drifted, HOLE_REST_SCALE, timing.close, "power2.in", timing.shrink + timing.coverLinger, true);
     addTitleIn(timeline, parts, timing.cover * CURTAIN_TIMING.titleStart);
     timeline.call(() => options.onCovered?.(), undefined, timing.cover);
     return timeline;
@@ -127,18 +153,11 @@ function buildHoleCurtain(
   hole.setScale(0);
   timeline.set(curtain, SHOW, 0);
   addTitleOut(timeline, parts);
-  timeline
-    .to(
-      progress,
-      {
-        t: 1,
-        duration: timing.reveal,
-        ease: EASE.inOut,
-        onUpdate: () => hole.setScale(lerpLog(HOLE_REST_SCALE, full, progress.t)),
-      },
-      CURTAIN_TIMING.revealDelay,
-    )
-    .set(curtain, HIDE);
+  const start = CURTAIN_TIMING.revealDelay;
+  stage(HOLE_REST_SCALE, drifted, timing.open, "power2.out", start);
+  stage(drifted, showcase, timing.revealLinger, "none", start + timing.open);
+  stage(showcase, full, timing.grow, EASE.inOut, start + timing.open + timing.revealLinger);
+  timeline.set(curtain, HIDE);
   return timeline;
 }
 

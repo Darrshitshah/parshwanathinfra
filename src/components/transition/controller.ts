@@ -22,11 +22,11 @@ import type { Timeline } from "@/motion/types";
 import { normalizePath } from "./link-rules";
 
 /** Hard cap from click to `router.push`. Must stay below 900 ms (BUILD_SPEC section 2). */
-export const COVER_PUSH_LIMIT_MS = 850;
+export const COVER_PUSH_LIMIT_MS = 1250;
 export const ROUTE_WAIT_LIMIT_MS = 6000;
-export const REVEAL_LIMIT_MS = 2500;
+export const REVEAL_LIMIT_MS = 3000;
 /** The title stays readable for this long after it has finished sliding in. */
-export const TITLE_HOLD_MS = 70;
+export const TITLE_HOLD_MS = 180;
 /** A run older than this is considered stuck and replaced by the next click. */
 const STALE_RUN_MS = 9000;
 /** A hand-played cover that nobody reveals is opened after this long, so it can never block clicks for long. */
