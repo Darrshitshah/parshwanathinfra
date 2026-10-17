@@ -1,16 +1,14 @@
 /**
  * The row-house street (S6 mounts at data-slot="row-house-street"): the daytime elevation as a cinematic panorama
- * with seven round pins for the features in the image notes (white portal frame, recessed balcony bay, red
- * exposed-brick pillar, planters with creepers, car porch, two storeys, flat roof). Below lg the callouts become
- * numbered pins and the numbered legend carries the words; on phones the image can be dragged sideways so the pins
- * stay a usable size. Used on Home and on the project page (id="row-houses"). Owner: pages-lead.
+ with an unnumbered feature list beneath it (white portal frame, recessed balcony bay, red
+ * exposed-brick pillar, planters with creepers, car porch, two storeys, flat roof). On phones the image can be
+ * dragged sideways so it stays a usable size. Used on Home and on the project page (id="row-houses"). Owner: pages-lead.
  */
-import { CalloutLegend } from "@/components/media/CalloutLegend";
 import { Figure } from "@/components/media/Figure";
 import { cn } from "@/components/ui/cn";
 import { Eyebrow } from "@/components/ui/Section";
 import { rich, withTbd } from "@/components/ui/with-tbd";
-import { rowHouseCallouts } from "@/content/copy/callouts";
+import { rowHouseFeatures } from "@/content/copy/callouts";
 import { homeCopy } from "@/content/copy/home";
 import { getMedia } from "@/content/media";
 import { shivShiva } from "@/content/projects";
@@ -60,7 +58,6 @@ export function RowHouseStreet({ id = "row-houses", index = "06", tone = "mist" 
               media={street}
               shape="bleed"
               sizes="(min-width: 768px) 100vw, 740px"
-              callouts={rowHouseCallouts}
               caption={<span className="wrap block">{homeCopy.rowHouses.caption}</span>}
             />
           </div>
@@ -69,7 +66,14 @@ export function RowHouseStreet({ id = "row-houses", index = "06", tone = "mist" 
 
       <div className="wrap mt-12 lg:mt-16">
         <p className="t-mono-sm m-0 mb-4 text-ink-muted">{homeCopy.rowHouses.legendTitle}</p>
-        <CalloutLegend items={rowHouseCallouts} label={homeCopy.rowHouses.legendTitle} className="md:grid-cols-2 md:gap-x-10 lg:grid-cols-3" />
+        <ul className="m-0 grid list-none gap-x-10 gap-y-6 p-0 md:grid-cols-2 lg:grid-cols-3" aria-label={homeCopy.rowHouses.legendTitle}>
+          {rowHouseFeatures.map((item) => (
+            <li key={item.id} className="border-t border-current/20 pt-4">
+              <p className="font-display m-0 text-[clamp(1.25rem,1.05rem+0.7vw,1.6rem)] font-medium leading-tight text-ink">{item.label}</p>
+              <p className="t-small m-0 mt-2 text-ink-muted">{item.detail}</p>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );

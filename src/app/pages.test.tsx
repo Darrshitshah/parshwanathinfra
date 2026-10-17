@@ -137,12 +137,13 @@ describe("Home", () => {
     expect(linear?.textContent).toMatch(/Schematic/);
   });
 
-  it("marks the row-house street with seven callouts and a matching legend", () => {
+  it("lists the seven row-house features without pins or numbers", () => {
     const container = renderPage(<Home />);
     const street = container.querySelector("#row-houses");
-    expect(street?.querySelectorAll(".callout")).toHaveLength(7);
-    expect(street?.querySelectorAll(".legend li")).toHaveLength(7);
-    expect(street?.querySelector("[data-callouts]")).toHaveAttribute("aria-hidden", "true");
+    expect(street?.querySelectorAll(".callout")).toHaveLength(0);
+    expect(street?.querySelector("[data-callouts]")).toBeNull();
+    expect(street?.querySelectorAll("ul[aria-label] li")).toHaveLength(7);
+    expect(street?.querySelector(".legend__n")).toBeNull();
     for (const feature of [/portal frame/i, /balcony bay/i, /brick pillar/i, /planters/i, /car porch/i, /two storeys/i, /flat roof/i]) {
       expect(street?.textContent).toMatch(feature);
     }
