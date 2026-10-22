@@ -1,0 +1,156 @@
+/*
+ * Gold preview 2 · Antique Gold and Bottle Green. Colour overrides for src/styles/tokens.css: the same token names and the same three
+ * selectors, so applying it is a tokens-only change (replace the matching colour declarations; layout, motion, radius
+ * and font tokens stay as they are).
+ * Mood: Heritage club and old-bank grandeur: parchment, bottle-green leather, antique brass lettering.
+ * Page curtain and loader: Deep bottle green with an antique-gold title.
+ */
+
+:root {
+  color-scheme: light;
+  --paper: #f2eada;
+  --paper-raised: #faf6ec;
+  --paper-sunk: #e7ddc8;
+  --ink: #0f2a1f;
+  --ink-muted: #44574c;
+  --ink-faint: #56685d;
+  --line: rgb(15 42 31 / 0.14);
+  --line-strong: rgb(15 42 31 / 0.34);
+  --grid: rgb(15 42 31 / 0.05);
+  --block-mist: #e4d2a4;
+  --block-jewel: #0f3d2e;
+  --block-ink: #0a1d16;
+  --on-mist: #0f2a1f;
+  --on-jewel: #eedfb6;
+  --on-ink: #efe7d2;
+  --clay: #faf6ec;
+  --brick: #9a7a36;
+  --brick-ink: #6e521c;
+  --on-brick: #06130d;
+  --forest: #2f6a4a;
+  --sand: #d9c69a;
+  --curtain: #0f4433;
+  --curtain-sheen: #2a6a50;
+  --curtain-deep: #05241a;
+  --on-curtain: #f0deb0;
+  --type-rowhouses: #9e3a22;
+  --type-flats: #1e4d72;
+  --type-shops: #ab881f;
+  --type-mixed: #b5527e;
+  --type-office: #0f2a1f;
+  --type-amenity: #2f6a4a;
+  --status-available: #2f7a52;
+  --status-booked: #a3423f;
+  --status-sold: #44574c;
+  --status-tbd: #56685d;
+  --on-dark-rowhouses: #ef8c6c;
+  --on-dark-flats: #b0d4f2;
+  --on-dark-shops: #f2d47c;
+  --on-dark-mixed: #e08abb;
+  --on-dark-amenity: #8fcaa5;
+  --script-night: #dcbc72;
+  --scrim: rgb(15 42 31 / 0.5);
+  --focus: #6e521c;
+  --glass: rgb(242 234 218 / 0.72);
+  --glass-edge: rgb(15 42 31 / 0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --paper: #07130e;
+    --paper-raised: #0f1f18;
+    --paper-sunk: #040b08;
+    --ink: #efe6cf;
+    --ink-muted: #b2ae98;
+    --ink-faint: #8c8a76;
+    --line: rgb(239 230 207 / 0.14);
+    --line-strong: rgb(239 230 207 / 0.34);
+    --grid: rgb(239 230 207 / 0.05);
+    --block-mist: #0f2b21;
+    --block-jewel: #0f4030;
+    --block-ink: #030a07;
+    --on-mist: #efe6cf;
+    --on-jewel: #eedfb6;
+    --on-ink: #ede4cc;
+    --clay: #e9e2d0;
+    --brick: #cfae63;
+    --brick-ink: #dcc07f;
+    --on-brick: #0a1a12;
+    --forest: #8fcaa5;
+    --sand: #cdb88f;
+    --curtain: #0c3a2b;
+    --curtain-sheen: #1f5a44;
+    --curtain-deep: #031a12;
+    --on-curtain: #ecd9a8;
+    --type-rowhouses: #ef8c6c;
+    --type-flats: #b0d4f2;
+    --type-shops: #f2d47c;
+    --type-mixed: #e08abb;
+    --type-office: #efe6cf;
+    --type-amenity: #8fcaa5;
+    --status-available: #7fd0a0;
+    --status-booked: #e8948a;
+    --status-sold: #b2ae98;
+    --status-tbd: #8c8a76;
+    --on-dark-rowhouses: #ef8c6c;
+    --on-dark-flats: #b0d4f2;
+    --on-dark-shops: #f2d47c;
+    --on-dark-mixed: #e08abb;
+    --on-dark-amenity: #8fcaa5;
+    --script-night: #dcc07f;
+    --scrim: rgb(4 11 8 / 0.62);
+    --focus: #dcc07f;
+    --glass: rgb(7 19 14 / 0.64);
+    --glass-edge: rgb(239 230 207 / 0.16);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #07130e;
+  --paper-raised: #0f1f18;
+  --paper-sunk: #040b08;
+  --ink: #efe6cf;
+  --ink-muted: #b2ae98;
+  --ink-faint: #8c8a76;
+  --line: rgb(239 230 207 / 0.14);
+  --line-strong: rgb(239 230 207 / 0.34);
+  --grid: rgb(239 230 207 / 0.05);
+  --block-mist: #0f2b21;
+  --block-jewel: #0f4030;
+  --block-ink: #030a07;
+  --on-mist: #efe6cf;
+  --on-jewel: #eedfb6;
+  --on-ink: #ede4cc;
+  --clay: #e9e2d0;
+  --brick: #cfae63;
+  --brick-ink: #dcc07f;
+  --on-brick: #0a1a12;
+  --forest: #8fcaa5;
+  --sand: #cdb88f;
+  --curtain: #0c3a2b;
+  --curtain-sheen: #1f5a44;
+  --curtain-deep: #031a12;
+  --on-curtain: #ecd9a8;
+  --type-rowhouses: #ef8c6c;
+  --type-flats: #b0d4f2;
+  --type-shops: #f2d47c;
+  --type-mixed: #e08abb;
+  --type-office: #efe6cf;
+  --type-amenity: #8fcaa5;
+  --status-available: #7fd0a0;
+  --status-booked: #e8948a;
+  --status-sold: #b2ae98;
+  --status-tbd: #8c8a76;
+  --on-dark-rowhouses: #ef8c6c;
+  --on-dark-flats: #b0d4f2;
+  --on-dark-shops: #f2d47c;
+  --on-dark-mixed: #e08abb;
+  --on-dark-amenity: #8fcaa5;
+  --script-night: #dcc07f;
+  --scrim: rgb(4 11 8 / 0.62);
+  --focus: #dcc07f;
+  --glass: rgb(7 19 14 / 0.64);
+  --glass-edge: rgb(239 230 207 / 0.16);
+}
