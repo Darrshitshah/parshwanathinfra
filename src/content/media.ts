@@ -413,6 +413,18 @@ export const media: readonly Media[] = mediaLibrarySchema.parse([
     "alt": "Shiv Shiva Township logo",
     "artistImpression": false,
     "source": "portfolio logo.png"
+  },
+  {
+    "id": "linear-garden",
+    "kind": "generated",
+    "src": "/media/linear-garden.webp",
+    "width": 1600,
+    "height": 1073,
+    "blurDataURL": "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAAAQAgCdASoQAAsAA4BaJZgCdAEG323mQ7wAAP6UPyVO612Ac5qtGaQAgTN1Jr3K/Jv3mc+dF9cs8VSYlSHiY6kFmt7lwU8hyiLSsWMFw0xYKIVTFNNgq2/BNvV/BX/CO34l7OYAAAA=",
+    "alt": "A linear garden running down the middle of a lane between rows of terraced houses: a clipped lawn with a rectangular fountain, flowering borders, young trees and benches, with a narrow paved road on each side and residents sitting and walking in the golden evening light",
+    "caption": "Linear garden with a water feature",
+    "artistImpression": true,
+    "source": "Nano Banana 2.1 edit of SS-30 Row House Lane Long View Model (Hiranandani Style v2), artist's impression"
   }
 ]);
 

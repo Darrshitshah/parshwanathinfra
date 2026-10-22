@@ -127,14 +127,16 @@ describe("Home", () => {
     expect(rows[3]?.querySelectorAll("[data-dim-tick]")).toHaveLength(2);
   });
 
-  it("labels every amenity with its evidence and draws a schematic for the one without a render", () => {
+  it("labels every amenity with its evidence and shows the linear garden as an artist's impression, not a schematic", () => {
     const container = renderPage(<Home />);
     const cards = Array.from(container.querySelectorAll("[data-amenity]"));
     expect(cards).toHaveLength(shivShiva.amenities.length);
     for (const card of cards) expect(card.textContent).toMatch(/As per plan|As shown in renders/);
     const linear = container.querySelector("[data-amenity='linear-garden']");
-    expect(linear?.querySelector("svg")).not.toBeNull();
-    expect(linear?.textContent).toMatch(/Schematic/);
+    expect(linear?.querySelector("svg")).toBeNull();
+    expect(linear?.querySelector("img")?.getAttribute("src")).toContain("linear-garden");
+    expect(linear?.textContent).toMatch(/As per plan/);
+    expect(linear?.textContent).not.toMatch(/Schematic|no render yet/);
   });
 
   it("lists the seven row-house features without pins or numbers", () => {

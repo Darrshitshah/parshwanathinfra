@@ -373,7 +373,7 @@ export const projectSchema = z.object({
       id: slug,
       name: copy,
       description: copy.optional(),
-      mediaId: slug.optional(),
+      mediaId: slug,
       evidence: z.enum(["plan", "render", "plan-and-render"]),
       /** Matching amenity id in plan.json once it exists. */
       planId: slug.optional(),

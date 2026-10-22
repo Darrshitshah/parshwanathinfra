@@ -80,8 +80,6 @@ export const homeCopy = {
     heading: "What the plan and renders *show*.",
     body: "Only what appears in the layout plan or in the renders is listed. Specifications and timelines: TBD.",
     scrollerLabel: "Amenities, scroll sideways for more",
-    schematicLabel: "Schematic",
-    schematicNote: "Drawn from the plan, no render yet",
   },
   rowHouses: {
     eyebrow: "Row houses",

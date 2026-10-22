@@ -17,10 +17,14 @@ function drawCover(ctx: CanvasRenderingContext2D, image: HTMLImageElement, width
 
 /**
  * Tier B: the pre-rendered fly-through scrubbed by scroll. Frames load in order, three at a time, and the nearest
- * loaded frame is drawn until the exact one arrives. Stops loading, drawing and observing on unmount.
+ * loaded frame is drawn until the exact one arrives. `onDraw` fires once, after the first frame is on the canvas. Stops loading, drawing and observing on unmount.
  */
-export function SequenceCanvas({ store }: { store: ProgressStore }) {
+export function SequenceCanvas({ store, onDraw }: { store: ProgressStore; onDraw?: () => void }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const onDrawRef = useRef(onDraw);
+  useEffect(() => {
+    onDrawRef.current = onDraw;
+  });
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -34,6 +38,7 @@ export function SequenceCanvas({ store }: { store: ProgressStore }) {
     let nextToLoad = 0;
     let active = 0;
     let disposed = false;
+    let reported = false;
 
     const paint = () => {
       frameHandle = 0;
@@ -43,6 +48,10 @@ export function SequenceCanvas({ store }: { store: ProgressStore }) {
       drawn = index;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       drawCover(ctx, image, canvas.width, canvas.height);
+      if (!reported) {
+        reported = true;
+        onDrawRef.current?.();
+      }
     };
     const schedule = () => {
       if (!frameHandle && !disposed) frameHandle = requestAnimationFrame(paint);

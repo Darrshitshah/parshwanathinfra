@@ -40,7 +40,7 @@ export const shivShiva: Project = projectSchema.parse({
     { id: "courtyard-playground", name: "Courtyard playgrounds", mediaId: "courtyard-playground", evidence: "plan-and-render", planId: "playground-sector-05" },
     { id: "central-lawn", name: "Central lawn axis", mediaId: "central-lawn", evidence: "render" },
     { id: "garden-courts", name: "Garden courts", mediaId: "garden-court", evidence: "plan-and-render", planId: "garden-courts" },
-    { id: "linear-garden", name: "Linear garden with a water feature", evidence: "plan", planId: "linear-garden" },
+    { id: "linear-garden", name: "Linear garden with a water feature", mediaId: "linear-garden", evidence: "plan", planId: "linear-garden" },
     { id: "shop-street", name: "Shops inside the township", mediaId: "shop-street-night", evidence: "plan-and-render" },
   ],
   galleryIds: [
