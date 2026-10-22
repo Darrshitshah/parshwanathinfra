@@ -18,6 +18,24 @@ Owner: hero lead A (Opus). Lead B owns seg5 and the assembly. Updated at every c
   site; buildings static. Script `tools/imagegen/hero_glide.py [--seconds S] [--mode grow|dissolve]`.
 - 2026-10-22: Veo refuses `enhance_prompt=False` ("Veo 3 prompt enhancement cannot be disabled"): one failed call, logged.
   seg3 Veo take 1 (prompt 3a) submitted.
+- 2026-10-22 PAUSE (coordinator, usage 73 %). Nothing in flight (Veo operation 9c5dade1-ccf3-422b-b3db-59abb05b73c2 finished).
+  seg3 Veo DONE: `_source/generated/video/hero/seg3-veo-aligned.mp4` (8.00 s, 4K, 36 MB, logged, uploaded to
+  `gs://parshwanath-infra-veo/review/hero/seg3-veo-aligned.mp4`). Automatic check: camera locked (max shift 0.6 px at 3840 against
+  the first frame on the unchanged surroundings, no lost frames, so no swoop and no cut). VISUAL CHECK STILL PENDING (invented
+  buildings, at most 6 levels): strip `scratchpad/hero-a/frames/seg3-veo-aligned-strip.jpg`, stills `-0..5.jpg`, numbers
+  `-check.json`, preview `scratchpad/hero-a/seg3-veo-aligned.mp4` (scratchpad was wiped at the last reset; rebuild with `review`).
+  Also done: `seg4b-glide-2s.mp4` (2 s variant), both seg4b files uploaded to the review bucket. SEG34_READY.json NOT written yet.
+
+## Next steps (in order, one model request at a time)
+1. Frame-check seg3 Veo by eye (rebuild the strip if the scratchpad is gone):
+   `... hero_video_aligned.py review seg3-veo-aligned 3`
+2. `... hero_video_aligned.py run 3 omni 3a` · 3. `... run 4 veo 4a` · 4. `... run 4 omni 4a`
+   (`...` = `GOOGLE_CLOUD_PROJECT=my-jev-autonomous-agent ~/.local/bin/uv run --no-project --python 3.12 --with google-genai --with pillow
+   --with google-cloud-storage --with imageio-ffmpeg --with opencv-python-headless --with numpy python tools/imagegen/hero_video_aligned.py`).
+   A take passes if the check shows max shift under about 10 px and no lost frames, and the strip shows no invented building and the
+   right floors. On a fail add prompt keys 3b/4b in PROMPTS and rerun with a suffix (`run 3 veo 3b -r2`), at most 3 per engine.
+5. Write `_source/generated/video/hero/SEG34_READY.json` (passing takes: path, engine, duration; plus seg4b-glide.mp4 1.5 s and the
+   2 s variant), append a review-notes row to docs/IMAGEGEN_LOG.md, report.
 
 ## What was measured (2026-10-17)
 Photoreal keyframes (`_source/generated/hero-keyframes/frames-4k/stage-3/4/5.jpg`, 3840x2160) registered to their clay stages
