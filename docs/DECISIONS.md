@@ -44,3 +44,10 @@ Every choice made without Darshit, and every answer he gives. Format: `date · d
 - 2026-10-13 · New theme (Darshit) · "classy and luxurious", a complete visual change that no longer resembles Darshit's portfolio: no drafting lines or grid, depth from backgrounds, imagery and glassmorphism; light glass AND dark glass (auto by system preference, toggle kept); pages, sections, content and layout stay as they are. Built with the installed design skills. Work happens on `develop` (Vercel preview); `main` (live) only after Darshit approves.
 - 2026-10-13 · Loader (Darshit) · short (~1 s) brand intro on every new visit (new browser session), never delaying the hero image; the red boundary curtain stays for page changes, re-coloured to the new theme.
 - 2026-10-17 · Page curtain (Darshit) · slower, so the township boundary is visible: shrink 0.45 s, linger 0.3 s at showcase scale, close 0.25 s; reveal open 0.25 s, linger 0.2 s, grow 0.45 s (round trip about 2 s). Overrides BUILD_SPEC's 900 ms transition cap. Theme v2 layout approved; colours under review (three gold palettes, light and dark).
+
+## 2026-10-22 · Colour theme: palette 1, Champagne and Espresso (Darshit, popup)
+Darshit picked palette 1 of the three gold candidates (docs/handoff/colour-lead/gold-previews-sheet.jpg). Values are in
+docs/handoff/colour-lead/variant-1.css (tokens only, light and dark; curtain becomes burnished gold-bronze #7c5620 / #6b4a1a).
+To apply: move variant-1.css values into src/styles/tokens.css, then the hard-coded colours (viewport themeColor in
+layout.tsx, diorama scene colours and ivory backgrounds, OG card, app icon), then restyle plan.css / explorer.css /
+diorama chrome / lightbox. Ship develop to main only after Darshit sees it.

@@ -21,3 +21,10 @@ Six agents were wrapped up at once to save their work before the 5-hour limit. E
 1. Read each agent note. Verify (typecheck, lint, test, build), then commit by explicit path to develop.
 2. Send Darshit: logo sheet, gold palette sheets, map key steps, hero takes.
 3. After he picks a palette: apply tokens, restyle plan.css / explorer.css / diorama chrome / lightbox, update viewport themeColor in layout.tsx, then develop to main with his approval.
+
+## 2026-10-22 update
+- Committed: map (6570604), diorama ghost fix + linear garden (3ef00fb), gold palette candidates (fb96a0d).
+- Darshit picked palette 1 (Champagne and Espresso): see DECISIONS.md. Not applied yet.
+- Hero B paused (docs/handoff/hero-b.md); one Omni call seg5-omni-sb2 left running on its own. Hero A paused (docs/handoff/hero-a.md).
+- Logo agent was told to deliver what it has into brand/logo-concepts/.
+- Resuming the agents reloads their whole history: about 60% of a Pro window for five agents at once. Resume at most two at a time.
