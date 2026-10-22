@@ -28,3 +28,8 @@ Six agents were wrapped up at once to save their work before the 5-hour limit. E
 - Hero B paused (docs/handoff/hero-b.md); one Omni call seg5-omni-sb2 left running on its own. Hero A paused (docs/handoff/hero-a.md).
 - Logo agent was told to deliver what it has into brand/logo-concepts/.
 - Resuming the agents reloads their whole history: about 60% of a Pro window for five agents at once. Resume at most two at a time.
+- Palette 1 applied to tokens + viewport themeColor (213b673, develop only). Screenshots: light/dark home look right.
+  Left: plan.css chapter panel is still a grey translucent box; explorer.css, diorama scene colours, lightbox, OG card, app icon.
+- Logo agent drew nothing yet; plan and tooling in brand/logo-concepts/ (32033f5). Next: draw the 10, boards, overview sheet.
+- Stopped at 86% of the window (2026-10-22, resets 19:10 IST). Next window, two agents at a time:
+  1) logo agent (draw), 2) one hero agent (A first: SEG34_READY), then theme restyle of the leftovers, then develop to main with Darshit.
