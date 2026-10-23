@@ -1,8 +1,9 @@
 /* eslint-disable @next/next/no-img-element -- next/og renders plain <img>; next/image does not exist inside ImageResponse. */
 /**
- * Open Graph card, "Residence" theme. Owner: pages-lead. Ivory ground, the uppercase display serif wordmark, a tracked
- * label line, and one visual: the masterplan render (labelled "Artist's impression") or the township boundary
- * drawn as a single forest line with the roundabout in maroon. Used by `app/opengraph-image.tsx` (render) and
+ * Open Graph card, palette "Champagne and Espresso". Owner: pages-lead. Champagne paper ground, the logo (brand/logo:
+ * the gold arch mark beside the espresso name), the project name in the uppercase display serif, a tracked label line,
+ * and one visual: the masterplan render (labelled "Artist's impression") or the township boundary drawn as a single
+ * espresso line with the roundabout in gold. Used by `app/opengraph-image.tsx` (render) and
  * `app/projects/[slug]/opengraph-image.tsx` (plan outline); both are generated once at build time.
  */
 import { readFile } from "node:fs/promises";
@@ -12,6 +13,7 @@ import sharp from "sharp";
 import { seoCopy } from "@/content/copy/seo";
 import { getMedia } from "@/content/media";
 import { plan } from "@/content/plan";
+import { LOGO_GAP, LOGO_MARK, LOGO_WORD } from "@/components/ui/logo-data";
 import type { Project } from "@/content/schema";
 
 export const OG_SIZE = { width: 1200, height: 630 } as const;
@@ -19,13 +21,15 @@ export const OG_SIZE = { width: 1200, height: 630 } as const;
 export const OG_CONTENT_TYPE = "image/jpeg";
 const OG_JPEG_QUALITY = 82;
 
-// Residence tokens (src/styles/tokens.css, light theme). Satori has no CSS variables, so the values are repeated here.
-const PAPER = "#f3f2ea";
-const PAPER_SUNK = "#c9d9d6";
-const INK = "#13251d";
-const INK_MUTED = "#46564e";
-const LINE = "rgba(19, 37, 29, 0.28)";
-const BRICK = "#5e1431";
+// Champagne and Espresso tokens (src/styles/tokens.css, light theme). Satori has no CSS variables, so the values are
+// repeated here. GOLD is the site gold (--brick); the logo's mark uses it, the name stays espresso.
+const PAPER = "#f6efe2";
+const PAPER_SUNK = "#ece3d2";
+const INK = "#231a12";
+const INK_MUTED = "#5e5144";
+const LINE = "rgba(35, 26, 18, 0.28)";
+const GOLD = "#a58039";
+const LOGO_HEIGHT = 50;
 
 const PADDING = 56;
 const TEXT_WIDTH = 560;
@@ -67,12 +71,22 @@ async function renderDataUri(mediaId: string): Promise<string> {
   return `data:image/jpeg;base64,${jpeg.toString("base64")}`;
 }
 
-function RoundaboutMark({ size }: { size: number }) {
+/** The horizontal lockup: mark and name as two SVGs of one height, like components/ui/Logo.tsx. */
+function OgLogo({ height }: { height: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      <circle cx="12" cy="12" r="9" stroke={BRICK} strokeWidth="1.5" />
-      <circle cx="12" cy="12" r="2.75" fill={BRICK} />
-    </svg>
+    <div style={{ display: "flex", alignItems: "flex-start" }}>
+      <svg width={(LOGO_MARK.width / 100) * height} height={height} viewBox={`0 0 ${LOGO_MARK.width} 100`}>
+        <path d={LOGO_MARK.d} fill={GOLD} />
+      </svg>
+      <svg
+        width={(LOGO_WORD.width / 100) * height}
+        height={height}
+        viewBox={`0 0 ${LOGO_WORD.width} 100`}
+        style={{ marginLeft: LOGO_GAP * height }}
+      >
+        <path d={LOGO_WORD.d} fill={INK} />
+      </svg>
+    </div>
   );
 }
 
@@ -106,8 +120,8 @@ function PlanOutline() {
     <svg width={frameW} height={frameH} viewBox={viewBox} style={{ position: "absolute", top: 0, left: 0 }}>
       <path d={path} fill={INK} fillOpacity={0.05} stroke="none" />
       <path d={path} fill="none" stroke={INK} strokeWidth={stroke} strokeLinejoin="round" />
-      <circle cx={cx} cy={cy} r={radius} fill="none" stroke={BRICK} strokeWidth={stroke} />
-      <circle cx={cx} cy={cy} r={radius * 0.28} fill={BRICK} />
+      <circle cx={cx} cy={cy} r={radius} fill="none" stroke={GOLD} strokeWidth={stroke} />
+      <circle cx={cx} cy={cy} r={radius * 0.28} fill={GOLD} />
     </svg>
   );
 }
@@ -159,12 +173,7 @@ function OgCard({ project, visual, renderSrc }: OgCardProps) {
   return (
     <div style={{ display: "flex", width: "100%", height: "100%", background: PAPER, color: INK, padding: PADDING }}>
       <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", width: TEXT_WIDTH }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-          <RoundaboutMark size={34} />
-          <div style={{ display: "flex", fontFamily: "Zalando Sans Expanded", fontSize: 17, letterSpacing: 2.4, textTransform: "uppercase" }}>
-            {og.eyebrow}
-          </div>
-        </div>
+        <OgLogo height={LOGO_HEIGHT} />
 
         <div style={{ display: "flex", flexDirection: "column", fontFamily: "Playfair", fontWeight: 500, textTransform: "uppercase", fontSize: 112, lineHeight: 0.98, letterSpacing: -2 }}>
           {lines.map((line) => (

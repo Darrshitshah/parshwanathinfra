@@ -1,5 +1,11 @@
 # Hero B handoff (Sonnet): seg5, assemble_hero.py, web encodes
 
+## 2026-10-23 RESUMED (Hero B, Sonnet): assembling the final film
+Brief: assemble seg1-omni, seg2-veo, SEG34_READY (seg3-omni-aligned-3b, seg4-veo-aligned-4b, seg4b-glide), seg5 from the takes on disk (no new model calls); do NOT wire into the site. Checkpoints, newest last:
+- [x] 22:35 IST edit written: `tools/imagegen/hero_edit.json` (full cut about 40.7 s, short cut about 22.3 s; masters 3840x2160). seg5 = seg5-omni-sa, then my own 1.0 s bloom dissolve straight into seg5-omni-sb1 from 2.25 s (the model's warped ghost frames at 1.70 to 2.25 s are never used), then a 1.2 s dissolve into the real `frames-4k/ss01.jpg` held as a still (so the film ends exactly on SS-01; sb1's last frames already match its pose within 5 px at 3840, only tone differs). Assembler gained: stills as segments (anchor = never colour-matched), poster of the first frame (`hero-poster-start`), chapter merging, `master.crf`.
+- [ ] masters built (4K) · [ ] web encodes · [ ] poster, sequence, manifest · [ ] joins checked on the 4K masters · [ ] phone preview + contact strip · [ ] upload to the review bucket · [ ] zz-test files deleted
+Helper tools written this session (all in `tools/imagegen/`): `hero_strip.py` (labelled frame grids, crops, any video), `hero_motion.py` (per-frame difference and camera-shift curve, finds pops and jumps).
+
 PAUSED 2026-10-22 14:33 IST by the coordinator (usage 73%), updated 14:45. Nothing is committed. No model job is running or queued.
 The scratchpad hero-b folder gets purged (it was on 10-22 00:01), so everything needed is in tools/imagegen/ and _source/generated/ (previews: `_source/generated/video/hero/previews/`).
 

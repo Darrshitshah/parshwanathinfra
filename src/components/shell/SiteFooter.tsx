@@ -1,5 +1,5 @@
 /**
- * Site footer, a forest colour block under the page: the seal, company and tagline, navigation, legal links, the site
+ * Site footer, a dark colour block under the page: the logo and tagline, navigation, legal links, the site
  * office with a map link and the sales numbers, the legal name and project facts (TBD chips while unconfirmed), the
  * disclaimers and the copyright line. The RERA line and the RERA disclaimer appear only when SHOW_RERA is on
  * (src/content/copy/flags.ts; off by Darshit's decision). Owner: pages-lead.
@@ -11,7 +11,7 @@ import { en } from "@/content/i18n/en";
 import { isTbd } from "@/content/schema";
 import { shivShiva } from "@/content/projects";
 import { site } from "@/content/site";
-import { Seal } from "@/components/ui/Seal";
+import { Logo } from "@/components/ui/Logo";
 import { TextLink } from "@/components/ui/TextLink";
 import { formatPhone } from "@/features/enquiry/phone";
 import { TbdValue, rich } from "@/components/ui/with-tbd";
@@ -47,9 +47,8 @@ export function SiteFooter() {
       <div className="wrap relative">
         <div className="grid gap-14 lg:grid-cols-12 lg:gap-x-(--gutter)">
           <div className="lg:col-span-5">
-            <Seal size={112} spin className="text-ink" />
-            <p className="t-display-3 mb-0 mt-8 text-ink">{site.name}</p>
-            <p className="t-lead mt-4 max-w-[26rem] text-ink-muted">{site.tagline}</p>
+            <Logo label={site.name} className="text-ink [--logo-h:3.5rem] lg:[--logo-h:4.5rem]" markClassName="text-brick-ink" />
+            <p className="t-lead mb-0 mt-8 max-w-[26rem] text-ink-muted">{site.tagline}</p>
           </div>
           <div className="grid grid-cols-2 gap-10 sm:grid-cols-3 lg:col-span-7 lg:grid-cols-[1fr_1fr_1.6fr]">
             <FooterNav label={en.footer.navLabel} items={NAV_ITEMS} />

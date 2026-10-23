@@ -1,0 +1,15 @@
+{
+  "frames": 120,
+  "pattern": "/sequences/hero-zz-test/frame-{n:03d}.webp",
+  "first": 1,
+  "width": 1280,
+  "height": 720,
+  "format": "webp",
+  "quality": 62,
+  "preBlur": 1.5,
+  "totalBytes": 5557662,
+  "durationSeconds": 15.5,
+  "fps": 24,
+  "artistImpression": true,
+  "alt": "test alt"
+}
