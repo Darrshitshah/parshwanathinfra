@@ -4,6 +4,9 @@
       --with google-cloud-storage --with imageio-ffmpeg --with opencv-python-headless --with numpy python tools/imagegen/hero_video_aligned.py \
       run <3|4> <veo|omni> <prompt-key> [suffix]                     one take (4K, 8 s, first + last frame, no audio)
       review <name> <3|4>                                             re-run the frame check on an existing take
+      ends <name> <3|4>                                               first / last frame vs the keyframes (join quality)
+      compare <name> <3|4> [t ...]                                    full-res crops, last keyframe next to the take at t (floor count)
+      sheet [SEG34_READY.json] [out.jpg]                              phone review sheet from the "review" list of SEG34_READY.json
 
 seg3: frames-4k/stage-3.jpg -> aligned/stage-4-aligned.jpg; seg4: aligned/stage-4-aligned.jpg -> aligned/stage-5-aligned.jpg.
 Outside the site the first and last frames are pixel-identical, so the frame check registers sampled frames to the first keyframe on
@@ -38,6 +41,8 @@ FRAMES = {3: (FR / "stage-3.jpg", AL / "stage-4-aligned.jpg"), 4: (AL / "stage-4
 
 LOCK = ("Static locked-off camera on a tripod: a construction time-lapse in one continuous shot with no cuts. The camera does not move at all, "
         "no zoom, no pan, no tilt, no push-in, no change of angle. ")
+LOCK2 = ("One continuous shot from a fixed camera high above the site, like a webcam: the framing never changes, no zoom, no pan, no tilt, "
+         "no push-in, no cuts. ")
 PROMPTS = {
     "3a": LOCK + ("The farmland, trees, farm huts, the dirt yard with its trucks and brick stacks, the road on the right and the horizon stay exactly "
                   "still in every frame. Only the buildings inside the site change, in place: over eight seconds the flat concrete plinths grow into raw "
@@ -51,12 +56,64 @@ PROMPTS = {
                   "sand-olive paint with white window frames and charcoal railings, and lawns, palms and flowering trees grow in between the blocks. Each "
                   "block ends exactly as in the last frame: an open stilt-parking ground floor, five floors of windows and a roof terrace. No block moves, "
                   "grows taller or appears from nowhere. Warm golden morning light. No text."),
+    # 3b (2026-10-23): 3a on Veo invented 8 to 10 storey towers mid-clip that later shrank, and very tall cranes. No "tower", no
+    # "columns first", no "construction time-lapse" (stock time-lapses are high-rise), an explicit low-rise rule and height schedule.
+    "3b": LOCK2 + ("This is a low-rise housing colony, not high-rise: every block in this scene is long and low and is never taller than six "
+                   "levels at any moment, and there are no tall buildings anywhere at any time. The farmland, trees, farm huts, the dirt yard "
+                   "with its trucks and brick stacks, the road on the right and the horizon stay exactly still. Over eight seconds each building "
+                   "grows straight up from its own white plinth, keeping exactly that footprint, in one even, steady rise of grey concrete frames "
+                   "with floor slabs: about one third of its final height by three seconds, two thirds by five seconds, and exactly as in the "
+                   "last frame by seven seconds. Heights only ever increase and never pass the last frame. The row houses at the back rise in "
+                   "red brick to two storeys. Green safety netting and scaffolding appear on the right-hand blocks, and two yellow construction "
+                   "cranes stand where the last frame shows them, no taller than in the last frame. Nothing appears outside the plinths. Warm "
+                   "golden morning light. No text."),
+    # 3c: 3b passed on Omni but the rise took only 1.5 s (1.25 to 2.75 s); same rules, with the rise spread over the whole clip.
+    "3c": LOCK2 + ("This is a low-rise housing colony, not high-rise: every block is long and low and is never taller than six levels at any "
+                   "moment, and there are no tall buildings anywhere at any time. The farmland, trees, farm huts, the dirt yard with its trucks "
+                   "and brick stacks, the road on the right and the horizon stay exactly still. The construction is slow and continuous through "
+                   "the whole eight seconds, never rushed: for the first second only the white plinths, then grey concrete columns and floor "
+                   "slabs rise on every plinth one floor at a time, all blocks together, keeping exactly their footprints: a quarter of the final "
+                   "height by two and a half seconds, half by four seconds, three quarters by five and a half seconds, and the full height of "
+                   "the last frame only at about seven seconds. Heights only ever increase and never pass the last frame. The red-brick row "
+                   "houses at the back rise to two storeys over the same time. Scaffolding and green safety netting appear on the right-hand "
+                   "blocks in the last two seconds, and two yellow construction cranes stand where the last frame shows them, no taller than in "
+                   "the last frame. Nothing appears outside the plinths. Warm golden morning light. No text."),
+    # 4b: same rules for seg4; the blocks keep their outline, only their surface is finished in place.
+    "4b": LOCK2 + ("Low-rise housing blocks of six levels; there are no tall buildings anywhere at any time. The farmland, trees, farm huts, "
+                   "the dirt yard with the truck, brick stacks and steel bars, the road on the right and the horizon stay exactly still. The "
+                   "blocks never change their outline or height: from the first frame to the last each one keeps the same footprint and "
+                   "roofline, and only its surface is finished in place, a few blocks at a time: the open concrete frames fill with walls and "
+                   "windows, the walls take a warm khaki sand-olive paint with white window frames and charcoal railings, the green netting and "
+                   "scaffolding disappear, and the two yellow cranes are dismantled and gone by six seconds. Lawns, palms and flowering trees "
+                   "appear between the blocks. By the end every block shows an open stilt-parking ground floor, five floors of windows and a "
+                   "roof terrace, exactly as in the last frame. Warm golden morning light. No text."),
+    # 4c: 4b on Omni cross-dissolved the left blocks (2.8 to 3.1 s). Give the model a physical way to swap a facade: wrap in netting,
+    # then the netting drops away to reveal the finished block, group by group from right to left.
+    "4c": LOCK2 + ("Low-rise housing blocks of six levels; there are no tall buildings anywhere at any time. The farmland, trees, farm huts, "
+                   "the dirt yard with the truck, brick stacks and steel bars, the road on the right and the horizon stay exactly still. No "
+                   "block ever changes its outline or height. The finishing moves across the site one group of blocks at a time, from the "
+                   "right-hand blocks to the far left: each block is first wrapped in scaffolding and green safety netting, and a moment later "
+                   "the netting drops away to reveal the finished block underneath, painted warm khaki sand-olive with white window frames and "
+                   "charcoal railings, with an open stilt-parking ground floor, five floors of windows and a roof terrace. The two yellow cranes "
+                   "are dismantled and gone by six seconds. Lawns, palms and flowering trees appear between the blocks at the end. Every change "
+                   "is solid and physical: nothing fades, blends or turns transparent. By the end everything is exactly as in the last frame. "
+                   "Warm golden morning light. No text."),
 }
-NEG = ("camera movement, zoom, push-in, dolly, pan, tilt, orbit, fly-through, cut, scene change, close-up, towers, skyscrapers, extra floors, "
-       "new buildings, buildings outside the site, morphing, melting, text, letters, logos, watermark, flicker, people close to camera")
+# 4d: 4c on Omni wrapped and revealed nicely but let the front-right block next to the road vanish at 0.2 s and pop back finished at
+# 4.8 s. Same mechanism plus an explicit rule that every block stays visible in every frame.
+PROMPTS["4d"] = PROMPTS["4c"].replace(
+    "No block ever changes its outline or height.",
+    "Every block of the first frame stays in place and visible in every frame, including the block at the front right beside the road: "
+    "no block ever disappears, shrinks or changes its outline or height, even for a moment.")
+NEG = ("camera movement, zoom, push-in, dolly, pan, tilt, orbit, fly-through, cut, scene change, close-up, towers, skyscrapers, high-rise, "
+       "tall buildings, extra floors, buildings shrinking, giant cranes, new buildings, buildings outside the site, morphing, melting, "
+       "ghosting, double exposure, cross-dissolve, transparent buildings, text, letters, logos, watermark, flicker, people close to camera")
 OMNI_HEAD = "The first image is the first frame and the second image is the last frame. "
-OMNI_TAIL = " No audio. Avoid: camera movement, zoom, cuts, close-ups, new buildings, towers, extra floors, text, logos, flicker."
+OMNI_TAIL = (" No audio. Avoid: camera movement, zoom, cuts, close-ups, new buildings, towers, high-rise, extra floors, buildings shrinking, "
+             "ghosting, transparent or cross-dissolving buildings, text, logos, flicker.")
 TRANSIENT = ("429", "RESOURCE_EXHAUSTED", "500", "INTERNAL", "503", "UNAVAILABLE", "Internal error")
+VEO_TRANSIENT = ("high load", "'code': 8,", "'code': 13,", "'code': 14,")
+VEO_ATTEMPTS, VEO_PAUSE = 3, 120
 
 
 def retry(fn, tries=4, first_wait=30.0):
@@ -206,6 +263,165 @@ def stills(name, src, n=6):
     return fdir / f"{name}-strip.jpg"
 
 
+def dense(name, src, step=0.5, cols=3, per_sheet=9, tile=(640, 360), t0=0.0, t1=None, tag="dense"):
+    """Frames every `step` seconds as 3x3 sheets (scratchpad hero-a/frames/<name>-<tag><k>.jpg) for the by-eye check."""
+    fdir = SCR / "frames"
+    fdir.mkdir(parents=True, exist_ok=True)
+    dur = duration(src)
+    t1 = dur if t1 is None else min(t1, dur)
+    ts = [min(t0 + i * step, dur - 0.06) for i in range(int((t1 - t0) / step + 1e-6) + 1)]
+    tiles = []
+    for t in ts:
+        tl = cv2.resize(grab(src, t, tile[0]), tile, interpolation=cv2.INTER_AREA)
+        cv2.rectangle(tl, (0, 0), (100, 24), (0, 0, 0), -1)
+        cv2.putText(tl, f"t={t:.2f}s", (4, 17), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 255, 255), 1)
+        tiles.append(tl)
+    paths = []
+    for k in range(0, len(tiles), per_sheet):
+        chunk = tiles[k:k + per_sheet]
+        chunk += [np.zeros_like(tiles[0])] * (-len(chunk) % cols)
+        sheet = np.vstack([np.hstack(chunk[r:r + cols]) for r in range(0, len(chunk), cols)])
+        p = fdir / f"{name}-{tag}{k // per_sheet}.jpg"
+        cv2.imwrite(str(p), sheet, [cv2.IMWRITE_JPEG_QUALITY, 86])
+        paths.append(p)
+    return paths
+
+
+def jumps(src, w=256):
+    """Every frame, small and grey: mean absolute change from the previous frame. A cut or a pop shows up as a spike."""
+    h = w * 9 // 16
+    r = subprocess.run([FF, "-loglevel", "error", "-i", str(src), "-vf", f"scale={w}:{h},format=gray", "-f", "rawvideo", "-"],
+                       capture_output=True, check=True)
+    fr = np.frombuffer(r.stdout, np.uint8).reshape(-1, h, w).astype(np.float32)
+    d = np.abs(np.diff(fr, axis=0)).mean(axis=(1, 2))
+    fps = len(fr) / duration(src)
+    med = float(np.median(d))
+    spikes = [dict(t=round((i + 1) / fps, 2), mad=round(float(v), 2)) for i, v in enumerate(d) if v > max(3 * med, med + 3)]
+    return dict(frames=len(fr), median_frame_change=round(med, 2), max_frame_change=round(float(d.max()), 2),
+                max_at=round((int(d.argmax()) + 1) / fps, 2), spikes=spikes)
+
+
+def ends(src, seg, w=960):
+    """Mean absolute difference (0..255) of the take's first / last frame against the segment's keyframes, whole frame and site only.
+    Small numbers mean the joins to the neighbouring segments will not jump."""
+    dur = duration(src)
+    hh = round(w * 9 / 16)
+    site = cv2.resize((cv2.imread(str(AL / "stage-4-alpha.png"), cv2.IMREAD_GRAYSCALE) > 0).astype(np.uint8), (w, hh),
+                      interpolation=cv2.INTER_NEAREST) > 0
+    out = {}
+    for tag, t, kf in (("first", 0.0, FRAMES[seg][0]), ("last", dur - 0.06, FRAMES[seg][1])):
+        a = grab(src, t, w).astype(np.float32)
+        b = cv2.resize(cv2.imread(str(kf)), (w, hh), interpolation=cv2.INTER_AREA).astype(np.float32)
+        d = np.abs(a - b).mean(axis=2)
+        out[tag] = dict(vs=kf.name, mad=round(float(d.mean()), 2), mad_site=round(float(d[site].mean()), 2))
+    return out
+
+
+CROPS = {"roof-mid": (1300, 740, 2500, 1040), "lower-left": (150, 1000, 1350, 1600), "lower-mid": (1300, 1380, 2500, 1980),
+         "right": (2950, 1000, 3840, 2160)}
+
+
+def compare(name, seg, t=None):
+    """Full-resolution crops for counting floors: the segment's last keyframe (left) next to the take at time t (right, default: end)."""
+    src = OUT / f"{name}.mp4"
+    t = duration(src) - 0.06 if t is None else t
+    kf = cv2.imread(str(FRAMES[seg][1]))
+    fr = grab(src, t, W)
+    rows = []
+    for tag, (x0, y0, x1, y1) in CROPS.items():
+        a, b = kf[y0:y1, x0:x1].copy(), fr[y0:y1, x0:x1].copy()
+        for im, lab in ((a, f"keyframe {FRAMES[seg][1].stem}"), (b, f"{name} t={t:.2f}s")):
+            cv2.rectangle(im, (0, 0), (12 + 13 * len(lab), 30), (0, 0, 0), -1)
+            cv2.putText(im, lab, (6, 22), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
+        pair = np.hstack([a, np.zeros((a.shape[0], 12, 3), np.uint8), b])
+        rows.append(cv2.resize(pair, (1800, round(pair.shape[0] * 1800 / pair.shape[1])), interpolation=cv2.INTER_AREA))
+    p = SCR / "frames" / f"{name}-cmp-{t:.2f}.jpg"
+    cv2.imwrite(str(p), np.vstack(rows), [cv2.IMWRITE_JPEG_QUALITY, 88])
+    print("compare", p, flush=True)
+    return p
+
+
+def sheet(ready=OUT / "SEG34_READY.json", dest=OUT / "previews" / "seg34-review.jpg", n=6, width=1600):
+    """Phone review sheet: keyframe reference row, then for every take in SEG34_READY.json a name + verdict line and a strip of n frames."""
+    from PIL import Image, ImageDraw, ImageFont
+    spec = json.loads(ready.read_text())
+    fb, fr = "/System/Library/Fonts/Supplemental/Arial Bold.ttf", "/System/Library/Fonts/Supplemental/Arial.ttf"
+    f_h1, f_name, f_txt, f_tag = (ImageFont.truetype(fb, 46), ImageFont.truetype(fb, 32), ImageFont.truetype(fr, 27),
+                                  ImageFont.truetype(fb, 19))
+    ink, bg, col = (29, 27, 24), (246, 243, 238), {"PASS": (31, 122, 58), "CAUTION": (178, 106, 0), "FAIL": (179, 38, 30)}
+    pad, gap = 28, 6
+    blocks = []
+
+    def text_block(lines, h_line):
+        im = Image.new("RGB", (width, h_line * len(lines) + 8), bg)
+        d = ImageDraw.Draw(im)
+        for i, (txt, font, fill) in enumerate(lines):
+            d.text((pad, 4 + i * h_line), txt, font=font, fill=fill)
+        return im
+
+    def wrap(txt, font, maxw):
+        words, lines, cur = txt.split(), [], ""
+        for wd in words:
+            nxt = (cur + " " + wd).strip()
+            if font.getlength(nxt) <= maxw:
+                cur = nxt
+            else:
+                lines.append(cur)
+                cur = wd
+        return lines + ([cur] if cur else [])
+
+    def strip(images, labels):
+        k = len(images)
+        tw = (width - 2 * pad - (k - 1) * gap) // k
+        th = round(tw * 9 / 16)
+        im = Image.new("RGB", (width, th + 12), bg)
+        d = ImageDraw.Draw(im)
+        for i, (fr_img, lab) in enumerate(zip(images, labels)):
+            x = pad + i * (tw + gap)
+            im.paste(fr_img.resize((tw, th), Image.LANCZOS), (x, 0))
+            box = d.textbbox((0, 0), lab, font=f_tag)
+            d.rectangle((x, 0, x + box[2] + 10, box[3] + 8), fill=(0, 0, 0))
+            d.text((x + 5, 3), lab, font=f_tag, fill=(255, 220, 90))
+        return im
+
+    def frames_of(path, times):
+        return [Image.fromarray(cv2.cvtColor(grab(path, t, 800), cv2.COLOR_BGR2RGB)) for t in times]
+
+    blocks.append(text_block([(spec.get("sheet_title", "Hero film: seg3 and seg4 takes"), f_h1, ink),
+                              (spec.get("sheet_subtitle", ""), f_txt, (90, 86, 80))], 58))
+    ref = [(FR / "stage-3.jpg", "stage 3"), (AL / "stage-4-aligned.jpg", "stage 4 aligned"), (AL / "stage-5-aligned.jpg", "stage 5 aligned"),
+           (FR / "stage-5.jpg", "stage 5 original")]
+    blocks.append(text_block([("Keyframes (approved, the targets)", f_name, ink)], 42))
+    blocks.append(strip([Image.open(p).convert("RGB").resize((800, 450), Image.LANCZOS) for p, _ in ref], [lab for _, lab in ref]))
+    for item in spec["review"]:
+        if "section" in item:  # a group header, e.g. "seg3 · plinths to frames"
+            blocks.append(Image.new("RGB", (width, 30), bg))
+            hdr = text_block([(item["section"], f_h1, ink)], 56)
+            ImageDraw.Draw(hdr).line((pad, hdr.height - 3, width - pad, hdr.height - 3), fill=(190, 182, 170), width=3)
+            blocks.append(hdr)
+            continue
+        path = pathlib.Path(item["file"])
+        path = path if path.is_absolute() else GEN.parents[1] / path
+        dur = duration(path)
+        times = item.get("times") or [0.04 + (dur - 0.12) * i / (n - 1) for i in range(n)]
+        status = item["status"]
+        lines = [(f"{item['name']}   ·   {status}", f_name, col.get(status, ink))]
+        lines += [(ln, f_txt, ink) for ln in wrap(item["verdict"], f_txt, width - 2 * pad)]
+        blocks.append(Image.new("RGB", (width, 22), bg))
+        blocks.append(text_block(lines, 38))
+        blocks.append(strip(frames_of(path, times), [f"{t:.1f}s" for t in times]))
+    blocks.append(Image.new("RGB", (width, pad), bg))
+    out = Image.new("RGB", (width, sum(b.height for b in blocks)), bg)
+    y = 0
+    for b in blocks:
+        out.paste(b, (0, y))
+        y += b.height
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    out.save(dest, quality=86, optimize=True, progressive=True)
+    print("sheet", dest, out.size, dest.stat().st_size // 1024, "KB", flush=True)
+    return dest
+
+
 def preview(name, src):
     mp4 = SCR / f"{name}.mp4"
     for crf in (24, 26, 28, 30, 32, 34, 36):
@@ -218,12 +434,17 @@ def preview(name, src):
 
 def review(name, src, seg):
     strip = stills(name, src)
+    sheets = dense(name, src)
     mp4 = preview(name, src)
     chk = lock_check(src, seg)
-    chk.update(name=name, duration=duration(src), preview=str(mp4), strip=str(strip))
+    jmp = jumps(src)
+    chk.update(name=name, duration=duration(src), preview=str(mp4), strip=str(strip), dense=[str(p) for p in sheets], jumps=jmp,
+               ends=ends(src, seg))
     (SCR / "frames" / f"{name}-check.json").write_text(json.dumps(chk, indent=1))
     print(f"{name}: {chk['duration']:.2f}s | camera shift max {chk['max_shift_px']} px @3840 | lost {chk['lost_at']} | env MAD max "
-          f"{chk['max_env_mad']} | preview {mp4.stat().st_size // 1024} KB | strip {strip}", flush=True)
+          f"{chk['max_env_mad']} | frame change median {jmp['median_frame_change']} max {jmp['max_frame_change']} @ {jmp['max_at']}s, "
+          f"spikes {jmp['spikes']} | ends {chk['ends']} | preview {mp4.stat().st_size // 1024} KB | strip {strip} | "
+          f"dense {[p.name for p in sheets]}", flush=True)
     return chk
 
 
@@ -237,13 +458,21 @@ def run(seg, eng, key, suffix="", enhance=True):
     prompt = PROMPTS[key]
     ins = f"{first.name} + last {last.name} (aligned keyframes)"
     model = VIDEO_MODEL if eng == "veo" else OMNI_MODEL
-    t0 = time.time()
-    try:
-        model, used, extra = veo(first, last, prompt, dest, enhance) if eng == "veo" else omni(first, last, prompt, dest)
-    except Exception as e:  # noqa: BLE001
-        log_call(model, ins, f"[4k 8s, prompt {key}] seg{seg} {eng}", "-", f"failure: {str(e)[:220]}")
-        print("FAILED", name, str(e)[:400], flush=True)
-        return None
+    for attempt in range(1, VEO_ATTEMPTS + 1):
+        t0 = time.time()
+        try:
+            model, used, extra = veo(first, last, prompt, dest, enhance) if eng == "veo" else omni(first, last, prompt, dest)
+            break
+        except Exception as e:  # noqa: BLE001
+            msg = str(e)
+            log_call(model, ins, f"[4k 8s, prompt {key}] {name} attempt {attempt}", "-", f"failure: {msg[:220]}")
+            print("FAILED", name, msg[:400], flush=True)
+            # a Veo operation can be accepted and then fail with "high load" (code 8): resubmit after a pause, each attempt logged
+            if eng == "veo" and attempt < VEO_ATTEMPTS and any(t in msg for t in TRANSIENT + VEO_TRANSIENT):
+                print(f"  transient Veo failure, resubmitting in {VEO_PAUSE * attempt}s", flush=True)
+                time.sleep(VEO_PAUSE * attempt)
+                continue
+            return None
     (OUT / f"{name}.prompt.txt").write_text(f"model={model} 4k 16:9 8s no audio first={first.name} last={last.name} key={key}\n{extra}\n\n{used}\n")
     to_gcs(dest, f"review/hero/{name}.mp4")
     log_call(model, ins, f"[4k 8s, prompt {key}, hero lead A] {used}", f"_source/generated/video/hero/{name}.mp4",
@@ -258,5 +487,14 @@ if __name__ == "__main__":
         run(int(a[1]), a[2], a[3], a[4] if len(a) > 4 and not a[4].startswith("--") else "", enhance="--no-enhance" not in a)
     elif a and a[0] == "review":
         review(a[1], OUT / f"{a[1]}.mp4", int(a[2]))
+    elif a and a[0] == "ends":
+        print(a[1], json.dumps(ends(OUT / f"{a[1]}.mp4", int(a[2]))))
+    elif a and a[0] == "sheet":
+        sheet(*(pathlib.Path(x) for x in a[1:3]))
+    elif a and a[0] == "window":  # window <name> <t0> <t1> <step>: a closer look at one stretch
+        print([str(p) for p in dense(a[1], OUT / f"{a[1]}.mp4", step=float(a[4]), t0=float(a[2]), t1=float(a[3]), tag=f"win{a[2]}-")])
+    elif a and a[0] == "compare":
+        for tt in (a[3:] or [None]):
+            compare(a[1], int(a[2]), None if tt is None else float(tt))
     else:
         raise SystemExit(__doc__)

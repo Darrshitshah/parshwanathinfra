@@ -33,3 +33,10 @@ Six agents were wrapped up at once to save their work before the 5-hour limit. E
 - Logo agent drew nothing yet; plan and tooling in brand/logo-concepts/ (32033f5). Next: draw the 10, boards, overview sheet.
 - Stopped at 86% of the window (2026-10-22, resets 19:10 IST). Next window, two agents at a time:
   1) logo agent (draw), 2) one hero agent (A first: SEG34_READY), then theme restyle of the leftovers, then develop to main with Darshit.
+
+## 2026-10-23 update
+- Logos: nine concepts committed (13a68ef). Darshit picked 05 Sheltering Arch (DECISIONS.md). Next: refine 05, then favicon,
+  app icon, header mark, OG card, signboard, letterhead.
+- Hero: seg3 = seg3-omni-aligned-3b (Omni), seg4 = seg4-veo-aligned-4b (Veo), seg4b = seg4b-glide; SEG34_READY.json written;
+  review sheet _source/generated/video/hero/previews/seg34-review.jpg. Next: Hero B builds the final edit (hero-b.md step 2).
+- Burn rate: two Opus max agents use about 2% of the Pro window per minute (about 35 minutes of work per window).

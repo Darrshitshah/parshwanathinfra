@@ -51,3 +51,8 @@ docs/handoff/colour-lead/variant-1.css (tokens only, light and dark; curtain bec
 To apply: move variant-1.css values into src/styles/tokens.css, then the hard-coded colours (viewport themeColor in
 layout.tsx, diorama scene colours and ivory backgrounds, OG card, app icon), then restyle plan.css / explorer.css /
 diorama chrome / lightbox. Ship develop to main only after Darshit sees it.
+
+## 2026-10-23 · Logo: 05 Sheltering Arch (Darshit, popup)
+Darshit picked concept 05 (seven-lobed torana arch on an otla) from brand/logo-concepts/logo-concepts-sheet.png.
+Next: refine it (final polish pass), then derive the site favicon / app icon / header mark, OG card, signboard and
+letterhead from brand/logo-concepts/05-sheltering-arch/. Concepts 01 to 09 stay in the repo as the record.
