@@ -237,6 +237,7 @@ def stroke_path(p: pathops.Path, w: float, join="miter", cap="butt", miter=4.0) 
     joins = {"miter": pathops.LineJoin.MITER_JOIN, "round": pathops.LineJoin.ROUND_JOIN, "bevel": pathops.LineJoin.BEVEL_JOIN}
     caps = {"butt": pathops.LineCap.BUTT_CAP, "round": pathops.LineCap.ROUND_CAP, "square": pathops.LineCap.SQUARE_CAP}
     q.stroke(w, caps[cap], joins[join], miter)
+    q.convertConicsToQuads()
     q.simplify(fix_winding=True)
     return q
 

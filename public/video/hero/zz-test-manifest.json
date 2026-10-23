@@ -1,0 +1,77 @@
+{
+  "title": "test",
+  "alt": "test alt",
+  "artistImpression": true,
+  "fps": 24,
+  "aspect": "16:9",
+  "muted": true,
+  "poster": {
+    "src": "/video/hero/zz-test-poster.webp",
+    "width": 1600,
+    "height": 900,
+    "bytes": 190246,
+    "avif": {
+      "src": "/video/hero/zz-test-poster.avif",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 172579
+    },
+    "quality": 71
+  },
+  "sequence": "/sequences/hero-zz-test/manifest.json",
+  "cuts": {
+    "full": {
+      "durationSeconds": 15.5,
+      "chapters": [
+        {
+          "label": "Roads",
+          "start": 0.0,
+          "end": 8.0
+        },
+        {
+          "label": "Foundations",
+          "start": 7.5,
+          "end": 15.5
+        }
+      ],
+      "files": {
+        "desktop": {
+          "mp4": {
+            "src": "/video/hero/zz-test-desktop.mp4",
+            "bytes": 2935247,
+            "width": 1920,
+            "height": 1080,
+            "durationSeconds": 15.5,
+            "codec": "h264"
+          },
+          "webm": {
+            "src": "/video/hero/zz-test-desktop.webm",
+            "bytes": 2890532,
+            "width": 1920,
+            "height": 1080,
+            "durationSeconds": 15.5,
+            "codec": "vp9"
+          }
+        },
+        "mobile": {
+          "mp4": {
+            "src": "/video/hero/zz-test-mobile.mp4",
+            "bytes": 1956596,
+            "width": 1280,
+            "height": 720,
+            "durationSeconds": 15.5,
+            "codec": "h264"
+          },
+          "webm": {
+            "src": "/video/hero/zz-test-mobile.webm",
+            "bytes": 1923384,
+            "width": 1280,
+            "height": 720,
+            "durationSeconds": 15.5,
+            "codec": "vp9"
+          }
+        }
+      }
+    }
+  }
+}
