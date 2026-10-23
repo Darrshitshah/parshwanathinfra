@@ -1,11 +1,10 @@
 # Hero B handoff (Sonnet): seg5, assemble_hero.py, web encodes
 
-PAUSED 2026-10-22 14:33 IST by the coordinator (usage 73%). Nothing is committed. No new model job is queued.
+PAUSED 2026-10-22 14:33 IST by the coordinator (usage 73%), updated 14:45. Nothing is committed. No model job is running or queued.
 The scratchpad hero-b folder gets purged (it was on 10-22 00:01), so everything needed is in tools/imagegen/ and _source/generated/ (previews: `_source/generated/video/hero/previews/`).
 
-## IN FLIGHT (do not wait for it)
-- One Omni call is still running, started 14:31 IST: `seg5-omni-sb2` (prompt SB2, first `seg5-mid1`, last `ss01`, 8 s, light-glare variant of step B). Omni calls are synchronous POSTs (no operation name). When the process finishes it writes `_source/generated/video/hero/seg5-omni-sb2.mp4` (+ `.prompt.txt`), copies it to `gs://parshwanath-infra-veo/review/hero/seg5-omni-sb2.mp4`, appends a row to docs/IMAGEGEN_LOG.md and makes a preview in the scratchpad. If the process died, the raw clip (with audio) lands in `gs://parshwanath-infra-veo/review/hero/omni-raw/` (newest object). Not yet frame-checked.
-- CANCELLED before starting (driver killed on the pause order): `seg5-omni-b` (prompt B, direct stage-5 to ss01, blocks complete themselves), `seg5-veo-sa` (prompt SA, stage-5 to seg5-mid1), `seg5-veo-sb1` (prompt SB1, seg5-mid1 to ss01). Commands below.
+## IN FLIGHT
+Nothing. The last Omni call, `seg5-omni-sb2` (prompt SB2, seg5-mid1 to ss01, glare variant), FAILED at 14:43 with HTTP 500 "Internal error encountered" (twice: the first request and the script's one built-in retry 60 s later, which fired after the pause order because it is part of the same job). It is logged as a failure in docs/IMAGEGEN_LOG.md; no clip was produced. No other job was started: `seg5-omni-b` (prompt B, direct stage-5 to ss01, blocks complete themselves), `seg5-veo-sa` (SA, stage-5 to seg5-mid1) and `seg5-veo-sb1` (SB1, seg5-mid1 to ss01) never ran (driver killed). Commands to run them, and to retry sb2, are below.
 
 ## Done (on disk)
 | What | Path | Size |
@@ -41,7 +40,7 @@ Tested on a 15.5 s test cut (seg1-veo + seg2-omni): master render 27 s (CRF 14, 
 `_source/generated/video/hero/zz-test-master.mp4` (60.5 MB); `public/video/hero/zz-test-{desktop.mp4 2.94 MB, desktop.webm 2.89 MB, mobile.mp4 1.96 MB, mobile.webm 1.92 MB, poster.webp 190 KB, poster.avif 173 KB, manifest.json}`; `public/sequences/hero-zz-test/` (120 WebP frames, 5.6 MB). No other file in public/ was written; `public/video/hero/manifest.json` and `public/sequences/hero/` do not exist yet.
 
 ## Not done yet (in order)
-1. Frame-check seg5-omni-sb2 when it lands (`review` + `strip` below). Optional, only if usage allows: omni-b, veo-sa, veo-sb1 (max 3 attempts per engine; Veo has used 1, Omni 4 incl. the mid steps).
+1. Optional, only if usage allows: retry sb2 (Omni returned HTTP 500 twice, may be transient), omni-b, veo-sa, veo-sb1 (max 3 attempts per engine; Veo has used 1, Omni 4 incl. the mid steps). Otherwise go straight to step 2 with the takes on disk.
 2. Write `tools/imagegen/hero_edit.json` (final) and `hero_edit_provisional.json` (seg1-omni, seg2-veo, 1.5 s crossfade into seg5 = sa + sb1 pieces, name `hero-provisional`, no poster or sequence, suffix `-provisional`). Final needs seg3, seg4, seg4b-glide from Lead A (`SEG34_READY.json`).
 3. Build: master, web (full and short cut), poster, sequence, `public/video/hero/manifest.json`; phone previews under 6 MB and 10-frame contact strips via `--preview-dir`; upload masters (`--only upload`); append review notes and the assembly note to docs/IMAGEGEN_LOG.md; delete zz-test files.
 
@@ -52,8 +51,10 @@ export GOOGLE_CLOUD_PROJECT=my-jev-autonomous-agent
 U=~/.local/bin/uv
 GEN="$U run --no-project --python 3.12 --with google-genai --with pillow --with google-cloud-storage --with imageio-ffmpeg --with numpy python"
 # frame-check a take (preview under 2 MB + 6-still strip go to the scratchpad hero-b dir; copy them to previews/ afterwards)
-$GEN tools/imagegen/hero_seg5.py review seg5-omni-sb2
-$GEN tools/imagegen/hero_seg5.py strip seg5-omni-sb2 seg5-omni-sb2-dense 12 3 560 1.0 4.0
+$GEN tools/imagegen/hero_seg5.py review <take-name>
+$GEN tools/imagegen/hero_seg5.py strip <take-name> <out-name> 12 3 560 1.0 4.0
+# retry of the failed glare step, then the cancelled jobs
+$GEN tools/imagegen/hero_seg5.py take omni seg5-omni-sb2 SB2 seg5-mid1 ss01 8
 # cancelled jobs (each about 4 to 6 min, one at a time; take <omni|veo> <name> <prompt-key> <first> <last> <seconds>)
 $GEN tools/imagegen/hero_seg5.py take omni seg5-omni-b B stage-5 ss01 8
 $GEN tools/imagegen/hero_seg5.py take veo seg5-veo-sa SA stage-5 seg5-mid1 8
