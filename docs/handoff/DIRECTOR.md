@@ -40,3 +40,12 @@ Six agents were wrapped up at once to save their work before the 5-hour limit. E
 - Hero: seg3 = seg3-omni-aligned-3b (Omni), seg4 = seg4-veo-aligned-4b (Veo), seg4b = seg4b-glide; SEG34_READY.json written;
   review sheet _source/generated/video/hero/previews/seg34-review.jpg. Next: Hero B builds the final edit (hero-b.md step 2).
 - Burn rate: two Opus max agents use about 2% of the Pro window per minute (about 35 minutes of work per window).
+
+## 2026-10-23 evening · stopped at 93% (Darshit's cap: 95%)
+- Usage can jump 20% in 5 minutes; with two max-effort agents, start the wrap at 70% and poll every 3 to 4 minutes after 60%.
+- Logo agent (stopped mid-mockups): brand/logo/ (svg, png, brand-sheet.png, mockups in progress, README), site integration
+  uncommitted: src/components/ui/Logo.tsx, logo-data.ts, logo.test.tsx, icon.svg, favicon.ico, apple-icon.tsx, og-card.tsx,
+  SiteHeader/MobileMenu/SiteFooter, globals.css, copy/seo.ts. Verify (typecheck, lint, test, build, screenshots) before committing.
+- Hero agent (stopped): tools/imagegen/hero_edit.json, hero_motion.py, hero_strip.py, assemble_hero.py edits, hero-b.md updated.
+  Final encodes not confirmed yet; zz-test files still present.
+- Everything is on wip/agents-snapshot. develop untouched since 96ae583.
