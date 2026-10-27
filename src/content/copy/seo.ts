@@ -7,8 +7,6 @@ export const seoCopy = {
   /** Same string the root layout uses as its default title, so Home's social title matches its <title>. */
   homeTitle: "Parshwanath Infra · Shiv Shiva Township, Vapi-Silvassa Road",
   og: {
-    /** Small caps line above the wordmark. */
-    eyebrow: "Parshwanath Infra",
     artistImpression: "Artist's impression",
     homeAlt: "Shiv Shiva Township by Parshwanath Infra: an artist's impression of the township from the air",
     projectAlt: "Shiv Shiva Township drawn as a plan: the township boundary with the entry roundabout marked",

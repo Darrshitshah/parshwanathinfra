@@ -635,6 +635,19 @@ address em {
     }
   }
 
+  /* The logo (components/ui/Logo.tsx): mark and name share one height, --logo-h, so the lockup stays aligned. */
+  .logo {
+    display: inline-flex;
+    flex: none;
+    align-items: flex-start;
+    font-size: var(--logo-h, 2.5rem);
+    line-height: 1;
+  }
+  .logo svg {
+    display: block;
+    flex: none;
+  }
+
   /* Theme toggle icons: one is visible, driven by data-theme (system preference when JavaScript is off). */
   .theme-sun {
     display: none;

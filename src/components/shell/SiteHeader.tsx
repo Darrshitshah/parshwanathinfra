@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Site header: a floating glass pill with the round seal and name, the primary navigation, the theme toggle, the
+ * Site header: a floating glass pill with the logo (the mark, plus the name from sm up), the primary navigation, the theme toggle, the
  * Enquire call to action and, below the md breakpoint, a menu button that opens the mobile menu (a lazily loaded dialog). Plain next/link everywhere:
  * the page transitions intercept internal link clicks at document level. Strings arrive as props from the server
  * shell so this chunk carries no string tables. Owner: pages-lead.
@@ -12,7 +12,7 @@ import { usePathname } from "next/navigation";
 import { useState, type MouseEvent } from "react";
 import { EnquireButton } from "@/components/ui/EnquireButton";
 import { Icon } from "@/components/ui/Icon";
-import { Seal } from "@/components/ui/Seal";
+import { Logo } from "@/components/ui/Logo";
 import { isCurrent } from "./is-current";
 import type { ShellLabels, ShellNavItem, ShellOffice } from "./shell-types";
 import { ThemeToggle } from "./ThemeToggle";
@@ -43,9 +43,8 @@ export function SiteHeader({ nav, labels, office }: SiteHeaderProps) {
     <header className="pointer-events-none fixed inset-x-0 top-0 z-(--z-header)" data-site-header="">
       <div className="mx-auto w-full max-w-(--content-max) px-3 pt-3 sm:px-(--gutter)">
         <div className="glass pointer-events-auto flex h-14 items-center justify-between gap-3 rounded-full pl-2 pr-2 md:h-16 md:pl-3 md:pr-3">
-          <Link href="/" aria-label={labels.homeLink} className="flex min-h-11 items-center gap-3 whitespace-nowrap text-ink">
-            <Seal size={44} />
-            <span className="t-mono-sm hidden sm:inline">{labels.wordmark}</span>
+          <Link href="/" aria-label={labels.homeLink} className="flex min-h-11 items-center whitespace-nowrap pl-2 text-ink md:pl-1">
+            <Logo wordmark="sm" className="[--logo-h:2.25rem] md:[--logo-h:2.5rem]" markClassName="text-brick-ink" />
           </Link>
 
           <nav aria-label={labels.primary} className="hidden md:block">

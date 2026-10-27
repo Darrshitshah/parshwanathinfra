@@ -12,7 +12,7 @@ import { useRef } from "react";
 import { createPortal } from "react-dom";
 import { EnquireButton } from "@/components/ui/EnquireButton";
 import { Icon } from "@/components/ui/Icon";
-import { Seal } from "@/components/ui/Seal";
+import { Logo } from "@/components/ui/Logo";
 import { keepTogether } from "@/components/ui/nowrap";
 import { TextLink } from "@/components/ui/TextLink";
 import { useDialog } from "@/components/ui/use-dialog";
@@ -60,10 +60,7 @@ function MenuPanel({ onClose, pathname, nav, labels, office, fadesOnly }: PanelP
       transition={{ duration: 0.25 }}
     >
       <div className="wrap flex h-(--header-h) shrink-0 items-center justify-between">
-        <span className="flex items-center gap-3 text-ink">
-          <Seal size={44} spin />
-          <span className="t-mono-sm">{labels.wordmark}</span>
-        </span>
+        <Logo label={labels.wordmark} className="text-ink [--logo-h:2.25rem]" markClassName="text-brick-ink" />
         <button type="button" className="btn-icon btn-icon--outlined" onClick={onClose} aria-label={labels.closeMenu}>
           <Icon name="close" />
         </button>
