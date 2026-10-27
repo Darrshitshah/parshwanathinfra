@@ -36,10 +36,8 @@ html[data-pi-cursor="on"]
   will-change: transform, opacity;
 }
 
-/* the dot blends against the page: it must not sit inside another stacking context, so it has no isolation */
-.pi-cursor--dot {
-  mix-blend-mode: difference;
-}
+/* The dot is espresso with a champagne halo by day and the reverse at night, so it reads on paper, on the dark
+   colour blocks and over photographs alike. (A white "difference" dot read as navy on champagne.) */
 
 .pi-cursor__shape {
   position: absolute;
@@ -57,11 +55,15 @@ html[data-pi-cursor="on"]
 }
 
 .pi-cursor__ring {
-  border: 1.5px solid #fff;
+  border: 1.5px solid var(--ink);
+  box-shadow:
+    0 0 0 1.5px color-mix(in srgb, var(--paper) 70%, transparent),
+    inset 0 0 0 1.5px color-mix(in srgb, var(--paper) 70%, transparent);
 }
 
 .pi-cursor__fill {
-  background: #fff;
+  background: var(--ink);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--paper) 72%, transparent);
 }
 
 .pi-cursor__disc {

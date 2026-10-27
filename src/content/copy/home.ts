@@ -4,12 +4,6 @@
  * No em or en dashes.
  */
 
-export interface RouteStop {
-  id: string;
-  title: string;
-  text: string;
-}
-
 export const homeCopy = {
   hero: {
     eyebrow: "An integrated township",
@@ -34,46 +28,6 @@ export const homeCopy = {
     note: "Row-house district: indicative, as per the current layout plan.",
     figureCaption: "Layout from directly above",
     legendTitle: "Marked on the plan",
-  },
-  walk: {
-    eyebrow: "Walk the township",
-    heading: "Walk the *township*.",
-    body: "Start on the Vapi-Silvassa Road and come in by the main gate. Follow the boulevard to the roundabout, pass the flat blocks, take the spine road to the row houses and end at the open lawn at the far tip.",
-    stillCaption: "The township and its surroundings",
-    routeLabel: "The route",
-    stops: [
-      {
-        id: "entry",
-        title: "Entry",
-        text: "The Vapi-Silvassa Road, the main entry, the security cabin, the shops at the gate and the site office.",
-      },
-      {
-        id: "boulevard",
-        title: "Boulevard",
-        text: "The 40 ft road from the entry to the roundabout and its sculpture.",
-      },
-      {
-        id: "flats",
-        title: "Flats",
-        text: "Sectors 01 to 05: courtyard gardens, playgrounds and the mixed-use building.",
-      },
-      {
-        id: "spine",
-        title: "Spine and gate",
-        text: "The 30 ft road and the entry into the row-house district.",
-      },
-      {
-        id: "row-houses",
-        title: "Row houses",
-        text: "Homes on 20 ft lanes and a linear garden with a water feature.",
-      },
-      {
-        id: "tip",
-        title: "The tip",
-        text: "Open lawn, a building on a paved plaza (clubhouse or temple: TBD) and a play area.",
-      },
-    ] satisfies RouteStop[],
-    note: "The route follows the current layout plan and is indicative.",
   },
   amenities: {
     eyebrow: "Amenities",

@@ -3,7 +3,7 @@
 /**
  * S8 cursor. Owner: motion-lead. Mounted by `MotionRoot` only on a fine pointer, off Tier C, once the tier is known.
  *
- * A small circle that inverts whatever it is over (mix-blend-mode: difference). It grows into a ring over links and
+ * A small espresso circle with a champagne halo (reversed at night, cursor.css). It grows into a ring over links and
  * buttons, and becomes a labelled disc over anything with `data-cursor-label="View|Drag|Explore"`. Text fields keep the
  * native cursor. Never an arrow-and-glow cursor (Darshit rejected it).
  *

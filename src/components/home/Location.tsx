@@ -30,7 +30,7 @@ function FactRow({ label, children }: { label: string; children: ReactNode }) {
   );
 }
 
-export function Location({ id = "location", index = "07", tone = "paper" }: LocationProps) {
+export function Location({ id = "location", index = "06", tone = "paper" }: LocationProps) {
   const location = shivShiva.location;
   const labels = homeCopy.location.labels;
   const landmarks = location.landmarks;

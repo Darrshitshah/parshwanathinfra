@@ -29,7 +29,7 @@ interface GalleryReelProps {
   index?: string;
 }
 
-export function GalleryReel({ id = "gallery", index = "08" }: GalleryReelProps) {
+export function GalleryReel({ id = "gallery", index = "07" }: GalleryReelProps) {
   const items: GalleryItem[] = shivShiva.galleryIds.map((mediaId) => {
     const media = getMedia(mediaId);
     return {

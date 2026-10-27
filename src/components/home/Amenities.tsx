@@ -49,7 +49,7 @@ interface AmenitiesProps {
   index?: string;
 }
 
-export function Amenities({ id = "amenities", index = "05" }: AmenitiesProps) {
+export function Amenities({ id = "amenities", index = "04" }: AmenitiesProps) {
   const items = shivShiva.amenities;
   const trackId = `${id}-track`;
 

@@ -9,7 +9,7 @@
  * Owner: pages-lead.
  */
 import { lazy, Suspense, useCallback, useState, type ReactNode } from "react";
-import { useNear } from "@/features/diorama/use-near";
+import { useNear } from "@/lib/use-near";
 import type { LatLngLiteral } from "@/lib/google-maps";
 import { MapShell } from "./MapShell";
 

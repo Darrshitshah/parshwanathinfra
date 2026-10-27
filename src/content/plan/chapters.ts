@@ -1,5 +1,5 @@
 /**
- * The six scroll chapters shared by the Living Plan (S3) and the diorama (S4). Owner: data-lead.
+ * The six scroll chapters of the Living Plan (S3). Owner: data-lead.
  *
  * `view` is the camera on the render grid (2000 x 1342), [x, y, w, h], and always has the default stage ratio 20:11
  * (the viewBox of the web plan SVG is 0 150 2000 1100); on any other stage ratio, fit the box with "meet".

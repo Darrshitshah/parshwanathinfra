@@ -1,9 +1,10 @@
 "use client";
 
 /**
- * Gallery lightbox: one frame at a time on a sheet of paper. A real dialog (role="dialog", aria-modal, focus trap,
- * Escape to close, focus restored to the frame that opened it) with Left and Right arrow keys, Home and End,
- * previous and next buttons, and swipe on touch. Loaded lazily from GalleryStrip. Owner: pages-lead.
+ * Gallery lightbox: one frame at a time on a softly lit sheet of paper (the theme's champagne or espresso), with glass
+ * controls like the header. A real dialog (role="dialog", aria-modal, focus trap, Escape to close, focus restored
+ * to the frame that opened it) with Left and Right arrow keys, Home and End, previous and next buttons, and swipe on
+ * touch. Loaded lazily from GalleryStrip. Owner: pages-lead.
  */
 import { AnimatePresence, LazyMotion, MotionConfig, domAnimation, useIsPresent } from "motion/react";
 import * as m from "motion/react-m";
@@ -62,7 +63,7 @@ function Viewer({ items, index, labels, onClose, onIndexChange }: ViewerProps) {
       tabIndex={-1}
       data-lenis-prevent=""
       data-gallery-lightbox=""
-      className="fixed inset-0 z-(--z-drawer) flex flex-col bg-paper-sunk outline-none"
+      className="fixed inset-0 z-(--z-drawer) flex flex-col bg-paper-sunk bg-[radial-gradient(ellipse_at_50%_42%,var(--paper)_0%,var(--paper-sunk)_78%)] outline-none"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -72,7 +73,7 @@ function Viewer({ items, index, labels, onClose, onIndexChange }: ViewerProps) {
         <p className="t-mono m-0 text-ink" aria-live="polite">
           {String(index + 1).padStart(2, "0")} {labels.counterOf} {String(count).padStart(2, "0")}
         </p>
-        <button ref={closeRef} type="button" className="btn-icon btn-icon--outlined" onClick={onClose} aria-label={labels.close}>
+        <button ref={closeRef} type="button" className="btn-icon glass" onClick={onClose} aria-label={labels.close}>
           <Icon name="close" />
         </button>
       </div>
@@ -107,7 +108,7 @@ function Viewer({ items, index, labels, onClose, onIndexChange }: ViewerProps) {
           type="button"
           onClick={() => step(-1)}
           aria-label={labels.previous}
-          className="btn-icon btn-icon--outlined absolute left-2 top-1/2 -translate-y-1/2 bg-paper md:left-6"
+          className="btn-icon absolute left-2 top-1/2 -translate-y-1/2 bg-paper-raised shadow-[0_8px_24px_-10px_color-mix(in_srgb,var(--block-ink)_50%,transparent)] md:left-6"
         >
           <Icon name="chevron-left" />
         </button>
@@ -115,7 +116,7 @@ function Viewer({ items, index, labels, onClose, onIndexChange }: ViewerProps) {
           type="button"
           onClick={() => step(1)}
           aria-label={labels.next}
-          className="btn-icon btn-icon--outlined absolute right-2 top-1/2 -translate-y-1/2 bg-paper md:right-6"
+          className="btn-icon absolute right-2 top-1/2 -translate-y-1/2 bg-paper-raised shadow-[0_8px_24px_-10px_color-mix(in_srgb,var(--block-ink)_50%,transparent)] md:right-6"
         >
           <Icon name="chevron-right" />
         </button>

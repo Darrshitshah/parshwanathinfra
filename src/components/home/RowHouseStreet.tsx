@@ -22,7 +22,7 @@ interface RowHouseStreetProps {
 
 const TONE = { mist: "tone-mist", ink: "tone-ink", paper: "tone-paper" } as const;
 
-export function RowHouseStreet({ id = "row-houses", index = "06", tone = "mist" }: RowHouseStreetProps) {
+export function RowHouseStreet({ id = "row-houses", index = "05", tone = "mist" }: RowHouseStreetProps) {
   const street = getMedia("row-houses-day");
   const offering = shivShiva.offering.find((item) => item.typology === "rowhouses");
   const count = shivShiva.counts.rowHouses.toLocaleString("en-IN");

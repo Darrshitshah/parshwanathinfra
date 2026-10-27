@@ -114,7 +114,9 @@
 
 @utility tone-mist {
   --paper: var(--block-mist);
-  --paper-raised: color-mix(in srgb, var(--block-mist) 45%, var(--paper-raised));
+  /* Its own token: mixing from var(--paper-raised) here would reference itself, and a self-referencing custom
+     property is invalid, which left every raised surface on the band transparent. */
+  --paper-raised: var(--mist-raised);
   --paper-sunk: color-mix(in srgb, var(--block-mist) 82%, var(--ink));
   background: var(--paper);
   color: var(--ink);
@@ -698,7 +700,7 @@ address em {
     line-height: 1;
     box-shadow:
       0 0 0 4px color-mix(in srgb, var(--brick) 28%, transparent),
-      0 2px 10px rgb(0 0 0 / 0.3);
+      0 2px 10px color-mix(in srgb, var(--block-ink) 30%, transparent);
   }
   .callout__leader,
   .callout__label {

@@ -18,7 +18,7 @@ interface EnquiryCtaProps {
   index?: string;
 }
 
-export function EnquiryCta({ id = "visit", index = "09" }: EnquiryCtaProps) {
+export function EnquiryCta({ id = "visit", index = "08" }: EnquiryCtaProps) {
   const office = site.contact.office;
   return (
     <section id={id} aria-labelledby={`${id}-title`} className="tone-jewel sheet overflow-hidden">

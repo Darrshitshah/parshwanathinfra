@@ -18,7 +18,7 @@ import ProjectPage, { generateMetadata, generateStaticParams } from "./projects/
 import ProjectsPage, { metadata as projectsMetadata } from "./projects/page";
 import TermsPage from "./terms/page";
 
-// DioramaMount (client) reads the app router; the tests render the pages without one.
+// Client components may read the app router; the tests render the pages without one.
 vi.mock("next/navigation", () => ({ useRouter: () => ({ push: vi.fn(), replace: vi.fn(), prefetch: vi.fn() }) }));
 
 const DASHES = new RegExp(`[${String.fromCharCode(0x2013)}${String.fromCharCode(0x2014)}]`);
@@ -89,13 +89,12 @@ describe("Home", () => {
   it("has the sections of BUILD_SPEC section 8 in order, each with the slot Phase 2 mounts into", () => {
     const container = renderPage(<Home />);
     const sections = Array.from(container.querySelectorAll("section")).map((section) => section.id);
-    expect(sections).toEqual(["top", "idea", "numbers", "plan", "walk", "amenities", "row-houses", "location", "gallery", "visit"]);
+    expect(sections).toEqual(["top", "idea", "numbers", "plan", "amenities", "row-houses", "location", "gallery", "visit"]);
     const slots = Array.from(container.querySelectorAll("[data-slot]")).map((element) => `${element.id}:${element.getAttribute("data-slot")}`);
     expect(slots).toEqual([
       "top:sky-descent",
       "numbers:dimension-count",
       "plan:living-plan",
-      "walk:diorama",
       "amenities:amenities",
       "row-houses:row-house-street",
       "gallery:gallery",

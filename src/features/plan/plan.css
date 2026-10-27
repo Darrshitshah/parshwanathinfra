@@ -1,11 +1,20 @@
 /*
  * The Living Plan (S3). Owner: plan-lead. Tokens only (src/styles/tokens.css), no raw colours.
  * Everything that moves is transform or opacity; the typology highlight is pure CSS keyed on [data-active].
+ *
+ * Look: the "Residence" vocabulary (Champagne and Espresso). The drawing keeps its linework; the furniture around it
+ * does not: no hairline boxes. The stage is a large-radius frame, cards are soft glass, controls are pills and the
+ * numbered keys are round badges, as everywhere else on the site.
  */
 
 .lp {
   position: relative;
   color: var(--ink);
+  /* One soft shadow and one glass surface for every floating card on the plan. */
+  --lp-shadow: 0 18px 44px -22px color-mix(in srgb, var(--block-ink) 50%, transparent);
+  --lp-glass: color-mix(in srgb, var(--paper-raised) 84%, transparent);
+  --lp-fill: color-mix(in srgb, var(--ink) 6%, transparent);
+  --lp-fill-hover: color-mix(in srgb, var(--ink) 11%, transparent);
 }
 
 .lp-skip {
@@ -107,7 +116,7 @@
   inset: 0;
   overflow: hidden;
   background: var(--paper-raised);
-  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-card);
   touch-action: pan-y;
   user-select: none;
   -webkit-user-select: none;
@@ -159,8 +168,8 @@
   stroke-width: 1.6;
 }
 .lp-building {
-  fill-opacity: 0.2;
-  stroke: var(--ink);
+  fill-opacity: 0.34;
+  stroke: color-mix(in srgb, var(--ink) 72%, transparent);
   stroke-width: 1;
   cursor: pointer;
 }
@@ -313,10 +322,11 @@ circle.lp-amenity {
 }
 .lp-tag {
   position: absolute;
-  right: 0.6rem;
-  bottom: 0.5rem;
-  padding: 0.15rem 0.5rem;
-  background: color-mix(in srgb, var(--paper) 88%, transparent);
+  right: 0.9rem;
+  bottom: 0.7rem;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--paper-raised) 82%, transparent);
   font-family: var(--font-mono);
   font-size: 0.625rem;
   letter-spacing: 0.1em;
@@ -328,8 +338,8 @@ circle.lp-amenity {
 /* ---- sheet furniture ---- */
 .lp-overlays {
   position: absolute;
-  left: 0.75rem;
-  top: 0.75rem;
+  left: 1rem;
+  top: 1rem;
   display: flex;
   align-items: flex-start;
   gap: 0.4rem;
@@ -404,6 +414,7 @@ circle.lp-amenity {
   border-radius: 50%;
   background: var(--brick);
   border: 2px solid var(--paper-raised);
+  box-shadow: 0 1px 6px color-mix(in srgb, var(--block-ink) 30%, transparent);
 }
 .lp-hotspot__dot::after {
   content: "";
@@ -428,16 +439,25 @@ circle.lp-amenity {
   top: 50%;
   left: calc(100% + 6px);
   transform: translateY(-50%);
-  padding: 0.2rem 0.5rem;
-  background: color-mix(in srgb, var(--paper-raised) 94%, transparent);
-  border: 1px solid var(--line-strong);
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--paper-raised) 90%, transparent);
+  box-shadow: 0 4px 14px -6px color-mix(in srgb, var(--block-ink) 40%, transparent);
   font-family: var(--font-mono);
+  font-weight: 600;
   width: max-content;
   max-width: 8.5rem;
   font-size: 0.625rem;
   line-height: 1.3;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
+}
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .lp-hotspot__label {
+    background: color-mix(in srgb, var(--paper-raised) 74%, transparent);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
 }
 @media (min-width: 48rem) {
   .lp-hotspot__label {
@@ -457,10 +477,12 @@ circle.lp-amenity {
 }
 
 /* ---- chapter card, chips, list ---- */
+/* The chapter card: a soft champagne (espresso at night) glass card, no rule around it. Over the stage it sits
+   concentric with the stage's rounded corner. */
 .lp-chapter {
-  padding: 0.85rem 1rem;
+  padding: 1rem 1.15rem 1.1rem;
   background: var(--paper-raised);
-  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-card);
 }
 @media (min-width: 56rem) {
   .lp-stage-wrap > .lp-chapter {
@@ -469,23 +491,35 @@ circle.lp-amenity {
     bottom: 0.75rem;
     z-index: 2;
     width: min(23rem, 38%);
-    padding: 1.1rem 1.25rem;
+    padding: 1.25rem 1.4rem 1.3rem;
+    border-radius: calc(var(--radius-card) - 0.5rem);
+    background: var(--lp-glass);
+    box-shadow: var(--lp-shadow);
+  }
+  @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+    .lp-stage-wrap > .lp-chapter {
+      background: color-mix(in srgb, var(--paper-raised) 72%, transparent);
+      -webkit-backdrop-filter: blur(18px) saturate(1.3);
+      backdrop-filter: blur(18px) saturate(1.3);
+    }
   }
 }
 .lp-chapter__n {
-  margin: 0 0 0.25rem;
+  margin: 0 0 0.35rem;
   font-family: var(--font-mono);
   font-size: 0.6875rem;
-  letter-spacing: 0.1em;
+  font-weight: 600;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--ink-muted);
+  color: var(--brick-ink);
 }
 .lp-chapter__title {
   margin: 0;
   font-family: var(--font-display);
-  font-weight: 400;
+  font-weight: 500;
   font-size: clamp(1.5rem, 1.2rem + 1vw, 2.25rem);
-  line-height: 1.05;
+  line-height: 1.02;
+  text-transform: uppercase;
 }
 .lp-chapter__body {
   margin: 0.4rem 0 0;
@@ -501,9 +535,10 @@ circle.lp-amenity {
   list-style: none;
 }
 .lp-dots li {
-  height: 2px;
+  height: 3px;
   flex: 1;
-  background: var(--line-strong);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ink) 14%, transparent);
 }
 .lp-dots li.is-done,
 .lp-dots li.is-on {
@@ -521,15 +556,23 @@ circle.lp-amenity {
   align-items: center;
   gap: 0.5rem;
   min-height: 2.75rem;
-  padding: 0 0.9rem;
-  border: 1px solid var(--line-strong);
-  background: transparent;
+  padding: 0 1.05rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: var(--lp-fill);
   font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.08em;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   white-space: nowrap;
   cursor: pointer;
+  transition: background-color var(--duration-quick) linear;
+}
+@media (hover: hover) and (pointer: fine) {
+  .lp-chip:hover {
+    background: var(--lp-fill-hover);
+  }
 }
 .lp-chip[aria-pressed="true"] {
   background: var(--ink);
@@ -537,19 +580,17 @@ circle.lp-amenity {
   border-color: var(--ink);
 }
 .lp-chip__n {
-  color: var(--brick);
+  color: var(--brick-ink);
 }
 .lp-chip[aria-pressed="true"] .lp-chip__n {
   color: inherit;
 }
 .lp-chapter-list {
   display: grid;
-  gap: 1px;
+  gap: 0.6rem;
   margin: 1rem 0 0;
   padding: 0;
   list-style: none;
-  background: var(--line-strong);
-  border: 1px solid var(--line-strong);
 }
 @media (min-width: 48rem) {
   .lp-chapter-list {
@@ -557,11 +598,13 @@ circle.lp-amenity {
   }
 }
 .lp-chapter-list__item {
-  padding: 1rem 1.1rem 1.1rem;
+  padding: 1.1rem 1.25rem 1.2rem;
+  border-radius: var(--radius-card);
   background: var(--paper-raised);
 }
 .lp-chapter-list__item.is-on {
   background: var(--paper-sunk);
+  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--brick) 55%, transparent);
 }
 .lp-hint {
   margin: 0;
@@ -579,8 +622,10 @@ circle.lp-amenity {
 }
 .lp-bar {
   display: flex;
-  gap: 2px;
+  gap: 3px;
   height: 14px;
+  border-radius: 999px;
+  overflow: hidden;
 }
 .lp-seg {
   display: grid;
@@ -624,12 +669,20 @@ circle.lp-amenity {
     "v";
   align-content: center;
   min-height: 2.75rem;
-  padding: 0.3rem 0.4rem;
-  border: 1px solid var(--line-strong);
-  border-top-width: 3px;
-  background: transparent;
+  padding: 0.75rem 0.4rem 0.35rem 0.6rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: var(--lp-fill);
   text-align: left;
   cursor: pointer;
+  transition:
+    opacity var(--duration-base) var(--ease-out),
+    background-color var(--duration-quick) linear;
+}
+@media (hover: hover) and (pointer: fine) {
+  .lp-key:not(.lp-key--total):not([aria-pressed="true"]):hover {
+    background: var(--lp-fill-hover);
+  }
 }
 .lp-key__n {
   display: none;
@@ -652,7 +705,7 @@ circle.lp-amenity {
 .lp-key--total {
   display: none;
   cursor: default;
-  border-style: dashed;
+  background: transparent;
   grid-template-areas:
     "l"
     "v";
@@ -669,18 +722,20 @@ circle.lp-amenity {
 .lp-key__n {
   grid-area: n;
   place-items: center;
-  width: 1.35rem;
-  height: 1.35rem;
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 50%;
   font-family: var(--font-mono);
-  font-size: 0.6875rem;
+  font-size: 0.625rem;
+  font-weight: 600;
   font-style: normal;
-  border: 1px solid currentColor;
 }
 .lp-key__l {
   grid-area: l;
   font-family: var(--font-mono);
   font-size: 0.625rem;
-  letter-spacing: 0.03em;
+  font-weight: 600;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   line-height: 1.2;
 }
@@ -704,32 +759,42 @@ circle.lp-amenity {
 .lp-key[data-t="mixed"] {
   --key-colour: var(--type-mixed);
 }
+/* Phones: no number badge, so a short rounded dash in the typology colour marks each key. */
 .lp-key[data-t] {
-  border-top-color: var(--key-colour);
+  background:
+    linear-gradient(var(--key-colour), var(--key-colour)) left 0.6rem top 0.4rem / 1.25rem 3px no-repeat,
+    var(--lp-fill);
 }
+/* The number is a round badge in the typology colour, like the numbered pins and legends elsewhere. */
 .lp-key[data-t] .lp-key__n {
-  color: var(--key-colour);
+  background: var(--key-colour);
+  color: var(--paper);
 }
 @media (min-width: 40rem) {
   .lp-key[data-t] {
-    border-top-color: var(--line-strong);
+    background: var(--lp-fill);
   }
 }
 .lp-key[aria-pressed="true"] {
   background: var(--ink);
   color: var(--paper);
-  border-color: var(--ink);
+}
+@media (max-width: 39.99rem) {
+  .lp-key[data-t][aria-pressed="true"] {
+    background:
+      linear-gradient(var(--key-colour), var(--key-colour)) left 0.6rem top 0.4rem / 1.25rem 3px no-repeat,
+      var(--ink);
+  }
 }
 .lp-key[aria-pressed="true"] .lp-key__n {
-  color: inherit;
+  box-shadow: 0 0 0 2px var(--paper);
 }
 .lp-key[aria-pressed="true"] .lp-key__v {
   color: inherit;
 }
 .lp[data-active="flats"] .lp-key[data-also~="flats"],
 .lp[data-active="shops"] .lp-key[data-also~="shops"] {
-  border-style: dashed;
-  border-color: var(--type-mixed);
+  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--type-mixed) 70%, transparent);
 }
 
 /* ---- tools ---- */
@@ -757,41 +822,47 @@ circle.lp-amenity {
   flex: none;
   min-height: 2.75rem;
   min-width: 2.75rem;
-  padding: 0 0.6rem;
-  border: 1px solid var(--line-strong);
-  border-radius: var(--radius-xs);
-  background: transparent;
+  padding: 0 0.85rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: var(--lp-fill);
   font-family: var(--font-mono);
   font-size: 0.625rem;
-  letter-spacing: 0.06em;
+  font-weight: 600;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   white-space: nowrap;
   cursor: pointer;
+  transition: background-color var(--duration-quick) linear;
 }
 @media (min-width: 40rem) {
   .lp-tool {
-    padding: 0 0.8rem;
+    padding: 0 1.1rem;
     font-size: 0.6875rem;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.12em;
   }
 }
 @media (hover: hover) and (pointer: fine) {
   .lp-tool:hover {
-    border-color: var(--ink);
+    background: var(--lp-fill-hover);
   }
 }
 .lp-tool[aria-pressed="true"] {
   background: var(--ink);
   color: var(--paper);
-  border-color: var(--ink);
 }
 .lp-tool--icon {
   font-size: 1.1rem;
   padding: 0;
 }
 .lp-tool--accent {
-  border-color: var(--brick);
+  background: color-mix(in srgb, var(--brick) 20%, transparent);
   color: var(--brick-ink);
+}
+@media (hover: hover) and (pointer: fine) {
+  .lp-tool--accent:hover {
+    background: color-mix(in srgb, var(--brick) 32%, transparent);
+  }
 }
 .lp-goto {
   display: inline-flex;
@@ -815,9 +886,9 @@ circle.lp-amenity {
   appearance: textfield;
   -moz-appearance: textfield;
   min-height: 2.75rem;
-  padding: 0 0.6rem;
-  border: 1px solid var(--line-strong);
-  border-radius: var(--radius-xs);
+  padding: 0 1rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
   background: var(--paper-raised);
   font-family: var(--font-mono);
   font-size: 0.75rem;
@@ -862,9 +933,10 @@ circle.lp-amenity {
   gap: 0.7rem;
   max-height: 72%;
   overflow: auto;
-  padding: 1rem 1.1rem 1.1rem;
+  padding: 1.15rem 1.25rem 1.25rem;
+  border-radius: calc(var(--radius-card) - 0.5rem);
   background: var(--paper-raised);
-  border: 1px solid var(--ink);
+  box-shadow: var(--lp-shadow);
 }
 @media (min-width: 48rem) {
   .lp-card {
@@ -881,6 +953,7 @@ circle.lp-amenity {
   width: auto;
   max-height: none;
   margin-bottom: 1rem;
+  box-shadow: none;
 }
 .lp-card__head {
   display: flex;
@@ -891,9 +964,10 @@ circle.lp-amenity {
 .lp-card__title {
   margin: 0;
   font-family: var(--font-display);
-  font-weight: 400;
+  font-weight: 500;
   font-size: 2rem;
   line-height: 1;
+  text-transform: uppercase;
   outline: none;
 }
 .lp-card__close {
@@ -902,6 +976,7 @@ circle.lp-amenity {
   height: 2.75rem;
   margin: -0.5rem -0.6rem 0 0;
   border: 0;
+  border-radius: 50%;
   background: none;
   font-size: 1.6rem;
   line-height: 1;
@@ -916,7 +991,8 @@ circle.lp-amenity {
 .lp-card__facts dt {
   font-family: var(--font-mono);
   font-size: 0.6875rem;
-  letter-spacing: 0.1em;
+  font-weight: 600;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ink-muted);
 }
@@ -925,8 +1001,9 @@ circle.lp-amenity {
 }
 .lp-card__note {
   margin: 0;
-  padding-left: 0.6rem;
-  border-left: 2px solid var(--brick);
+  padding: 0.55rem 0.85rem;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--brick) 12%, transparent);
   font-size: 0.8125rem;
   color: var(--ink-muted);
 }
@@ -938,8 +1015,8 @@ circle.lp-amenity {
 .lp-twin {
   margin-top: 0.75rem;
   padding: 1.25rem;
+  border-radius: var(--radius-card);
   background: var(--paper-raised);
-  border: 1px solid var(--line-strong);
 }
 .lp-twin:focus {
   outline: none;
@@ -947,8 +1024,9 @@ circle.lp-amenity {
 .lp-twin__title {
   margin: 0;
   font-family: var(--font-display);
-  font-weight: 400;
+  font-weight: 500;
   font-size: 2rem;
+  text-transform: uppercase;
 }
 .lp-twin__lead {
   margin: 0.25rem 0 1.25rem;
