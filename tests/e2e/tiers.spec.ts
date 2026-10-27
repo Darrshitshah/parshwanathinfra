@@ -1,6 +1,6 @@
 /**
- * Device tiers (BUILD_SPEC section 10): Tier B (image sequence) and Tier C (static, no WebGL) must load without
- * console errors or horizontal scroll, and Tier C must never create a WebGL canvas or load the Three.js chunk.
+ * Device tiers (BUILD_SPEC section 10): Tier B (shorter pins) and Tier C (static) must load without console errors or
+ * horizontal scroll, and Tier C must never create a canvas.
  * `?tier=` is the QA override from src/lib/device-tier.ts. Owner: qa-lead.
  */
 import { expect, test } from "@playwright/test";
