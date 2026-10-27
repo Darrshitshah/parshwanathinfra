@@ -56,3 +56,9 @@ diorama chrome / lightbox. Ship develop to main only after Darshit sees it.
 Darshit picked concept 05 (seven-lobed torana arch on an otla) from brand/logo-concepts/logo-concepts-sheet.png.
 Next: refine it (final polish pass), then derive the site favicon / app icon / header mark, OG card, signboard and
 letterhead from brand/logo-concepts/05-sheltering-arch/. Concepts 01 to 09 stay in the repo as the record.
+
+## 2026-10-28 · Hero film and go-live (Darshit)
+Hero: short cut on phones, full cut on desktop (public/video/hero, manifest.json). Then push the new look (gold theme,
+logo, no diorama) plus the film live. Darshit knows the film is not perfect yet; it gets refined after launch
+(Nano Banana keyframes to video). Genie 4 (Google DeepMind, 2026-10-27) is a research preview for trusted testers
+only, so the refinement uses Omni 1.1 Flash and Veo 3.1 GA on Vertex until Genie 4 reaches the Gemini API.

@@ -49,3 +49,9 @@ Six agents were wrapped up at once to save their work before the 5-hour limit. E
 - Hero agent (stopped): tools/imagegen/hero_edit.json, hero_motion.py, hero_strip.py, assemble_hero.py edits, hero-b.md updated.
   Final encodes not confirmed yet; zz-test files still present.
 - Everything is on wip/agents-snapshot. develop untouched since 96ae583.
+
+## 2026-10-28 · next window
+1. Sonnet high: wire the hero film (short on phones, full on desktop, poster first, reduced motion = poster, sequence fallback per manifest), checks, screenshots.
+2. Commit public/video/hero + public/sequences/hero with it; check the Vercel preview of develop (connector needs team access approval).
+3. Merge develop to main (Darshit approved going live, 2026-10-28) and confirm the production deploy.
+4. Then: film refinement round with Omni/Veo; plan hotspot label overlap at 390 px; BUILD_SPEC/PROGRESS still mention the diorama.
