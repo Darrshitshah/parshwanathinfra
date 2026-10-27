@@ -1,0 +1,55 @@
+{
+  "name": "hero",
+  "fps": 24,
+  "size": [3840, 2160],
+  "master": {"crf": 14},
+  "title": "Shiv Shiva Township: from bare land to finished township",
+  "alt": "Aerial film of the Shiv Shiva Township site: bare land, roads laid out, foundations, blocks rising floor by floor, finishing and landscaping, ending on the finished township. Artist's impression.",
+  "color_match": true,
+  "notes": "Edit written 2026-10-23 by hero lead B. Takes: seg1-omni, seg2-veo, seg3-omni-aligned-3b, seg4-veo-aligned-4b, seg4b-glide (no model), seg5-omni-sa, seg5-omni-sb1, then the real SS-01 render held as a still. Trims sit in static stretches of each take so every join is a dissolve between near-identical frames; the only layout change (stage-5 massing to the SS-01 plan) is one 1.0 s bloom dissolve of my own instead of the model's warped ghost frames at 1.70 to 2.25 s of sb1. Speeds in the short cut are 1.0, 1.5 or 2.0 only (even frame cadence); the camera-move stretches stay at 1.0 except the last part of seg2 at 2.0. Edit the numbers, not the takes. 2026-10-28: seg2-veo is cut at 5.75 s because the take itself swaps from the stage-2 framing to the stage-3 framing in a fast ghosted morph at 5.9 to 6.9 s (hard jerk at 6.67 to 6.88 s); that morph is replaced by my own 1.0 s dissolve into seg3.",
+  "web": {
+    "desktop": {"width": 1920, "mp4": {"mb": 2.9}, "webm": {"mb": 2.9}},
+    "mobile": {"width": 1280, "mp4": {"mb": 1.9}, "webm": {"mb": 1.8}}
+  },
+  "poster": {"source": "_source/generated/hero-keyframes/frames-4k/ss01.jpg", "max_kb": 195, "width": 1920, "start": true},
+  "sequence": {"frames": 120, "width": 1280, "max_mb": 5.8, "dir": "public/sequences/hero"},
+  "manifest": "manifest.json",
+  "cuts": [
+    {
+      "id": "full",
+      "suffix": "",
+      "poster": true,
+      "sequence": false,
+      "web": {
+        "desktop": {"width": 1920, "mp4": {"mb": 6.0}, "webm": {"mb": 5.5}},
+        "mobile": {"width": 1280, "mp4": {"mb": 3.5}, "webm": {"mb": 3.2}}
+      },
+      "segments": [
+        {"file": "_source/generated/video/hero/seg1-omni.mp4", "in": 0.0, "out": 8.0, "speed": 1.0, "label": "Roads"},
+        {"file": "_source/generated/video/hero/seg2-veo.mp4", "in": 0.0, "out": 5.75, "speed": 1.0, "xfade": 0.5, "style": "dissolve", "label": "Foundations"},
+        {"file": "_source/generated/video/hero/seg3-omni-aligned-3b.mp4", "in": 0.4, "out": 7.0, "speed": 1.0, "xfade": 1.0, "style": "dissolve", "label": "Structure"},
+        {"file": "_source/generated/video/hero/seg4-veo-aligned-4b.mp4", "in": 0.5, "out": 7.0, "speed": 1.0, "xfade": 0.5, "style": "dissolve", "label": "Finishing"},
+        {"file": "_source/generated/video/hero/seg4b-glide.mp4", "in": 0.0, "out": 1.5, "speed": 1.0, "xfade": 0.25, "style": "dissolve", "label": "Landscape"},
+        {"file": "_source/generated/video/hero/seg5-omni-sa.mp4", "in": 0.0, "out": 8.0, "speed": 1.0, "xfade": 0.25, "style": "dissolve", "label": "Landscape"},
+        {"file": "_source/generated/video/hero/seg5-omni-sb1.mp4", "in": 2.25, "out": 5.5, "speed": 1.0, "xfade": 1.0, "style": "bloom", "label": "Shiv Shiva Township"},
+        {"file": "_source/generated/hero-keyframes/frames-4k/ss01.jpg", "in": 0.0, "out": 3.0, "xfade": 1.2, "style": "dissolve", "label": "Shiv Shiva Township"}
+      ]
+    },
+    {
+      "id": "short",
+      "suffix": "-short",
+      "poster": false,
+      "sequence": true,
+      "segments": [
+        {"file": "_source/generated/video/hero/seg1-omni.mp4", "in": 0.0, "out": 5.2, "speed": 1.0, "label": "Roads"},
+        {"file": "_source/generated/video/hero/seg2-veo.mp4", "in": 0.4, "out": 5.8, "speed": 2.0, "xfade": 0.4, "style": "dissolve", "label": "Foundations"},
+        {"file": "_source/generated/video/hero/seg3-omni-aligned-3b.mp4", "in": 0.5, "out": 6.1, "speed": 1.5, "xfade": 0.8, "style": "dissolve", "label": "Structure"},
+        {"file": "_source/generated/video/hero/seg4-veo-aligned-4b.mp4", "in": 0.8, "out": 6.2, "speed": 1.5, "xfade": 0.4, "style": "dissolve", "label": "Finishing"},
+        {"file": "_source/generated/video/hero/seg4b-glide.mp4", "in": 0.0, "out": 1.5, "speed": 1.0, "xfade": 0.25, "style": "dissolve", "label": "Landscape"},
+        {"file": "_source/generated/video/hero/seg5-omni-sa.mp4", "in": 0.0, "out": 6.0, "speed": 2.0, "xfade": 0.25, "style": "dissolve", "label": "Landscape"},
+        {"file": "_source/generated/video/hero/seg5-omni-sb1.mp4", "in": 2.25, "out": 5.0, "speed": 1.0, "xfade": 0.8, "style": "bloom", "label": "Shiv Shiva Township"},
+        {"file": "_source/generated/hero-keyframes/frames-4k/ss01.jpg", "in": 0.0, "out": 2.2, "xfade": 1.0, "style": "dissolve", "label": "Shiv Shiva Township"}
+      ]
+    }
+  ]
+}

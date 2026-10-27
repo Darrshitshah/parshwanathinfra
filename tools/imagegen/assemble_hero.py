@@ -7,17 +7,23 @@ Run from the project folder (quote the path, it ends with a space):
   python tools/imagegen/assemble_hero.py --selftest
 
 The edit list is JSON (paths relative to the project root):
-  {"name": "hero", "fps": 24, "size": [1920, 1080], "title": "...", "alt": "...", "color_match": true,
+  {"name": "hero", "fps": 24, "size": [3840, 2160], "master": {"crf": 14}, "title": "...", "alt": "...", "color_match": true,
    "web": {"desktop": {"width": 1920, "mp4": {"mb": 3.0}, "webm": {"mb": 3.0}}, "mobile": {"width": 1280, "mp4": {"mb": 2.0}, "webm": {"crf": 36}}},
-   "poster": {"source": "path/to/still.jpg", "max_kb": 195, "width": 1920}, "sequence": {"frames": 120, "width": 1280, "max_mb": 5.8, "dir": "public/sequences/hero"},
+   "poster": {"source": "path/to/still.jpg", "max_kb": 195, "width": 1920, "start": true},
+   "sequence": {"frames": 120, "width": 1280, "max_mb": 5.8, "dir": "public/sequences/hero"},
    "manifest": "manifest.json",
-   "cuts": [{"id": "full", "suffix": "", "poster": true, "sequence": true,
-             "segments": [{"file": "...", "in": 0.0, "out": 8.0, "speed": 1.0, "xfade": 0.5, "style": "dissolve", "label": "Roads"}]}]}
+   "cuts": [{"id": "full", "suffix": "", "poster": true, "sequence": true, "web": {"desktop": {"width": 1920, "mp4": {"mb": 6.0}, "webm": {"mb": 5.5}}},
+             "segments": [{"file": "...", "in": 0.0, "out": 8.0, "speed": 1.0, "xfade": 0.5, "style": "dissolve", "label": "Roads"},
+                          {"file": "path/to/still.jpg", "in": 0.0, "out": 3.0, "xfade": 1.2, "label": "Township"}]}]}
   * xfade is the crossfade INTO that segment from the previous one (ignored on the first); style "bloom" adds a warm golden haze at the
     middle of the dissolve (use it to hide a layout change). A web file takes {"mb": n} (two-pass to that size) or {"crf": n}.
+  * a segment file may be a still (.jpg .png .webp): it is held for out - in seconds. A still is an anchor ("anchor": false to opt out):
+    colour matching never changes it, its neighbour moves the whole way to it, so a film can end on the exact approved render.
   * color_match: per-join exposure and white balance normalisation (a gamma per channel at each clip end, split equally between the
     two clips, never more than +/- 12 %), so the cuts do not jump. Crossfades are blended in linear light.
-Outputs: _source/generated/video/hero/<name><suffix>-master.mp4 (1920x1080 H.264, CRF 14), public/video/hero/<name><suffix>-<variant>.<mp4|webm>,
+  * poster: hero-poster is the named source still, else the last frame (the finished township); "start": true also writes hero-poster-start
+    from the first frame, so a film that starts playing never jumps from its poster. Consecutive segments with one label are one chapter.
+Outputs: _source/generated/video/hero/<name><suffix>-master.mp4 (the edit's size, H.264, CRF 14), public/video/hero/<name><suffix>-<variant>.<mp4|webm>,
   public/video/hero/<name>-poster.webp, public/sequences/hero/frame-NNN.webp + manifest.json, public/video/hero/manifest.json.
 All video is muted (no audio track). Nothing here calls a model.
 """
@@ -56,6 +62,7 @@ DEFAULT_WEB = {
 }
 STEPS = ("master", "web", "poster", "sequence", "manifest")
 IMAGE_EXT = {".jpg", ".jpeg", ".png", ".webp"}
+STILL_MAX_S = 3600.0
 
 
 # ---------------------------------------------------------------- data model
@@ -68,10 +75,15 @@ class Segment:
     xfade: float
     style: str
     label: str
+    anchor: bool = False  # a still that must stay exactly as it is: its neighbours match its colour, never the other way round
 
     @property
     def seconds(self) -> float:
         return (self.t_out - self.t_in) / self.speed
+
+    @property
+    def is_still(self) -> bool:
+        return self.file.suffix.lower() in IMAGE_EXT
 
 
 @dataclass(frozen=True)
@@ -96,6 +108,7 @@ class Edit:
     poster: dict
     sequence: dict
     manifest_name: str = "manifest.json"
+    master_crf: int = 14
 
 
 # ---------------------------------------------------------------- small pure helpers
@@ -124,18 +137,25 @@ def gamma_to(mean: np.ndarray, target: np.ndarray) -> np.ndarray:
     return np.clip(np.log(t) / np.log(m), 1.0 - MAX_GAMMA_ADJUST, 1.0 + MAX_GAMMA_ADJUST)
 
 
-def plan_gammas(stats: Sequence[tuple[np.ndarray, np.ndarray]]) -> list[tuple[np.ndarray, np.ndarray]]:
+def plan_gammas(stats: Sequence[tuple[np.ndarray, np.ndarray]], anchors: Optional[Sequence[bool]] = None) -> list[tuple[np.ndarray, np.ndarray]]:
     """stats[i] = (head mean, tail mean) of segment i. Returns (head gamma, tail gamma) per segment.
-    At each join both clips move to the geometric mean of the two ends, so the correction is shared and nothing drifts along the chain."""
+    At each join both clips move to the geometric mean of the two ends, so the correction is shared and nothing drifts along the chain.
+    An anchored segment (a still) is never touched: its neighbour moves the whole way to it instead."""
+    anchors = list(anchors) if anchors is not None else [False] * len(stats)
     one = np.ones(3)
     out: list[tuple[np.ndarray, np.ndarray]] = []
     for i, (head, tail) in enumerate(stats):
+        if anchors[i]:
+            out.append((one, one))
+            continue
         g_head = one
         g_tail = one
         if i > 0:
-            g_head = gamma_to(head, np.sqrt(stats[i - 1][1] * head))
+            prev_tail = stats[i - 1][1]
+            g_head = gamma_to(head, prev_tail if anchors[i - 1] else np.sqrt(prev_tail * head))
         if i + 1 < len(stats):
-            g_tail = gamma_to(tail, np.sqrt(tail * stats[i + 1][0]))
+            next_head = stats[i + 1][0]
+            g_tail = gamma_to(tail, next_head if anchors[i + 1] else np.sqrt(tail * next_head))
         out.append((g_head, g_tail))
     return out
 
@@ -200,7 +220,8 @@ def source_matrix(path: Path) -> str:
 def read_frames(seg: Segment, size: tuple[int, int], fps: int, matrix: str, flags: str = "lanczos") -> Iterator[np.ndarray]:
     w, h = size
     vf = f"setpts=PTS/{seg.speed:.6f},fps={fps},scale={w}:{h}:flags={flags}:in_color_matrix={matrix},format=rgb24"
-    cmd = [FF, "-loglevel", "error", "-ss", f"{seg.t_in:.3f}", "-t", f"{seg.t_out - seg.t_in:.3f}", "-i", str(seg.file),
+    src_in = ["-loop", "1", "-framerate", str(fps)] if seg.is_still else ["-ss", f"{seg.t_in:.3f}"]  # a still is looped for its length
+    cmd = [FF, "-loglevel", "error", *src_in, "-t", f"{seg.t_out - seg.t_in:.3f}", "-i", str(seg.file),
            "-an", "-vf", vf, "-f", "rawvideo", "-pix_fmt", "rgb24", "-"]
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
     n = w * h * 3
@@ -254,15 +275,17 @@ def load_edit(path: Path) -> Edit:
             f = (ROOT / s["file"]).resolve() if not Path(s["file"]).is_absolute() else Path(s["file"])
             if not f.exists():
                 raise FileNotFoundError(f"segment file missing: {f}")
-            dur = probe(f)["seconds"]
-            t_in, t_out = float(s.get("in", 0.0)), float(s.get("out", dur))
+            still = f.suffix.lower() in IMAGE_EXT
+            dur = STILL_MAX_S if still else probe(f)["seconds"]  # a still can be held for as long as the edit asks
+            t_in, t_out = float(s.get("in", 0.0)), float(s.get("out", 3.0 if still else dur))
             speed = float(s.get("speed", 1.0))
             if not (0 <= t_in < t_out <= dur + 0.05) or not (0.25 <= speed <= 4.0):
                 raise ValueError(f"{c['id']} segment {i} {f.name}: bad trim/speed in={t_in} out={t_out} dur={dur} speed={speed}")
             style = s.get("style", "dissolve")
             if style not in ("dissolve", "bloom"):
                 raise ValueError(f"unknown style {style}")
-            segs.append(Segment(f, t_in, min(t_out, dur), speed, float(s.get("xfade", 0.5)) if i else 0.0, style, s.get("label", f.stem)))
+            segs.append(Segment(f, t_in, min(t_out, dur), speed, float(s.get("xfade", 0.5)) if i else 0.0, style, s.get("label", f.stem),
+                                bool(s.get("anchor", still))))
         for i in range(1, len(segs)):
             need = frames_for(segs[i].xfade, fps) + (frames_for(segs[i + 1].xfade, fps) if i + 1 < len(segs) else 0)
             if frames_for(segs[i].seconds, fps) <= need:
@@ -271,7 +294,8 @@ def load_edit(path: Path) -> Edit:
                         {**DEFAULT_WEB, **raw.get("web", {}), **c.get("web", {})}))
     size = raw.get("size", [1920, 1080])
     return Edit(raw.get("name", "hero"), fps, (int(size[0]), int(size[1])), raw.get("title", ""), raw.get("alt", ""),
-                bool(raw.get("color_match", True)), tuple(cuts), raw.get("poster", {}), raw.get("sequence", {}), raw.get("manifest", "manifest.json"))
+                bool(raw.get("color_match", True)), tuple(cuts), raw.get("poster", {}), raw.get("sequence", {}), raw.get("manifest", "manifest.json"),
+                int(raw.get("master", {}).get("crf", 14)))
 
 
 # ---------------------------------------------------------------- master
@@ -304,10 +328,10 @@ def gamma_at(k: int, total: int, g_head: np.ndarray, g_tail: np.ndarray) -> np.n
 def render_cut(edit: Edit, cut: Cut, dest: Path) -> dict:
     segs = cut.segments
     matrices = [source_matrix(s.file) for s in segs]
-    gam = plan_gammas(collect_stats(segs, matrices)) if edit.color_match else [(np.ones(3), np.ones(3))] * len(segs)
+    gam = plan_gammas(collect_stats(segs, matrices), [sg.anchor for sg in segs]) if edit.color_match else [(np.ones(3), np.ones(3))] * len(segs)
     for i, (g_head, g_tail) in enumerate(gam):
         print(f"  [{cut.id}] seg{i + 1} {segs[i].label}: gamma head {np.round(g_head, 3)} tail {np.round(g_tail, 3)}")
-    writer = Writer(dest, edit.size, edit.fps)
+    writer = Writer(dest, edit.size, edit.fps, edit.master_crf)
     prev_tail: list[np.ndarray] = []
     for i, seg in enumerate(segs):
         n_in = frames_for(seg.xfade, edit.fps) if i else 0
@@ -348,9 +372,16 @@ def x264_args(dest: Path, vf: str, kbps: Optional[int], crf: Optional[int], pass
 MASTER_TMP: list[Path] = [Path()]
 
 
+def web_filter(master: Path, width: int, spec: dict) -> str:
+    """Scale to the web width, after an optional pre-filter from the spec ("pre": e.g. "hqdn3d=1.5:1.2:4:4" takes the generator's grain out
+    before the encode, so the bits go to the picture instead of the noise)."""
+    scale = f"scale={width}:-2:flags=lanczos" if width != probe(master)["width"] else "null"
+    return f"{spec['pre']},{scale}" if spec.get("pre") else scale
+
+
 def encode_mp4(master: Path, dest: Path, width: int, spec: dict, seconds: float) -> int:
     MASTER_TMP[0] = master
-    vf = f"scale={width}:-2:flags=lanczos" if width != probe(master)["width"] else "null"
+    vf = web_filter(master, width, spec)
     with tempfile.TemporaryDirectory() as td:
         log = Path(td) / "x264"
         if "crf" in spec:
@@ -381,7 +412,7 @@ def vp9_args(master: Path, dest: Path, vf: str, kbps: Optional[int], crf: Option
 
 
 def encode_webm(master: Path, dest: Path, width: int, spec: dict, seconds: float) -> int:
-    vf = f"scale={width}:-2:flags=lanczos" if width != probe(master)["width"] else "null"
+    vf = web_filter(master, width, spec)
     with tempfile.TemporaryDirectory() as td:
         log = Path(td) / "vp9"
         if "crf" in spec:
@@ -457,16 +488,24 @@ def under_budget(im: Image.Image, dest: Path, max_bytes: int, fmt: str, start_q:
     return q
 
 
-def poster_image(src: Optional[str], master: Path, width: int, fps: int) -> Image.Image:
-    if not src:
-        return last_frame(master, width, fps)
-    im = Image.open(ROOT / src).convert("RGB")
-    return im.resize((width, round(width * im.height / im.width)), Image.LANCZOS)
+def first_frame(master: Path, width: int) -> Image.Image:
+    raw = subprocess.run([FF, "-loglevel", "error", "-i", str(master), "-frames:v", "1", "-vf", f"scale={width}:-2:flags=lanczos",
+                          "-f", "image2pipe", "-vcodec", "png", "-"], capture_output=True).stdout
+    import io
+    return Image.open(io.BytesIO(raw)).convert("RGB")
 
 
-def poster_info(edit: Edit) -> dict:
-    """Describe the poster files already on disk (WebP, plus the AVIF alternative when present)."""
-    webp, avif = WEB_DIR / f"{edit.name}-poster.webp", WEB_DIR / f"{edit.name}-poster.avif"
+def poster_image(src: Optional[str], master: Path, width: int, fps: int, which: str = "last") -> Image.Image:
+    """The poster still: a named image file, else the first or the last frame of the master."""
+    if src:
+        im = Image.open(ROOT / src).convert("RGB")
+        return im.resize((width, round(width * im.height / im.width)), Image.LANCZOS)
+    return first_frame(master, width) if which == "first" else last_frame(master, width, fps)
+
+
+def poster_files(stem: str) -> dict:
+    """Describe the poster files already on disk for one stem (WebP, plus the AVIF alternative when present)."""
+    webp, avif = WEB_DIR / f"{stem}.webp", WEB_DIR / f"{stem}.avif"
     if not webp.exists():
         return {}
     im = Image.open(webp)
@@ -477,21 +516,40 @@ def poster_info(edit: Edit) -> dict:
     return out
 
 
-def make_poster(edit: Edit, master: Path) -> dict:
+def poster_info(edit: Edit) -> dict:
+    """The finished-township poster, plus the poster of the first frame under "start" when it was built."""
+    out = poster_files(f"{edit.name}-poster")
+    start = poster_files(f"{edit.name}-poster-start")
+    if out and start:
+        out["start"] = start
+    return out
+
+
+def write_poster(edit: Edit, master: Path, stem: str, which: str) -> dict:
     cfg = edit.poster
     max_bytes = int(cfg.get("max_kb", 195) * 1000)
     full_w = int(cfg.get("width", 1920))
-    dest = WEB_DIR / f"{edit.name}-poster.webp"
+    src = cfg.get("source") if which == "last" else None
+    dest = WEB_DIR / f"{stem}.webp"
     for width in (full_w, 1600, 1440):  # the widest size that keeps a decent WebP quality inside the budget
-        im = poster_image(cfg.get("source"), master, width, edit.fps)
+        im = poster_image(src, master, width, edit.fps, which)
         q = under_budget(im, dest, max_bytes, "WEBP", 92)
         if q >= 55:
             break
     print(f"  poster {dest.name}: {im.size}, quality {q}, {dest.stat().st_size / 1000:.0f} KB")
     if cfg.get("avif", True):
         avif = dest.with_suffix(".avif")
-        qa = under_budget(poster_image(cfg.get("source"), master, full_w, edit.fps), avif, max_bytes, "AVIF", 80)
+        qa = under_budget(poster_image(src, master, full_w, edit.fps, which), avif, max_bytes, "AVIF", 80)
         print(f"  poster {avif.name}: {full_w} wide, quality {qa}, {avif.stat().st_size / 1000:.0f} KB")
+    return {"quality": q}
+
+
+def make_poster(edit: Edit, master: Path) -> dict:
+    """hero-poster: the last frame (or the named source still), the finished township, for reduced motion and the end of the film.
+    hero-poster-start (when poster.start is true): the first frame, so a video that starts playing never jumps from its poster."""
+    q = write_poster(edit, master, f"{edit.name}-poster", "last")["quality"]
+    if edit.poster.get("start"):
+        write_poster(edit, master, f"{edit.name}-poster-start", "first")
     return {**poster_info(edit), "quality": q}
 
 
@@ -583,7 +641,8 @@ def make_preview(master: Path, out_dir: Path, name: str, max_bytes: int = 6_000_
     mp4 = out_dir / f"{name}-phone.mp4"
     for crf in (24, 26, 28, 30, 32, 34, 36):
         run([FF, "-y", "-loglevel", "error", "-i", str(master), "-an", "-vf", "scale=720:-2:flags=lanczos", "-c:v", "libx264", "-preset", "slow",
-             "-crf", str(crf), "-pix_fmt", "yuv420p", "-movflags", "+faststart", str(mp4)])
+             "-crf", str(crf), "-pix_fmt", "yuv420p", "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", "-color_range", "tv",
+             "-movflags", "+faststart", str(mp4)])  # tagged, so a phone does not read a 405 px tall file as BT.601
         if mp4.stat().st_size < max_bytes:
             break
     seconds = probe(master)["seconds"]
@@ -608,11 +667,16 @@ def make_preview(master: Path, out_dir: Path, name: str, max_bytes: int = 6_000_
 
 # ---------------------------------------------------------------- manifest and upload
 def chapters(edit: Edit, cut: Cut) -> list[dict]:
+    """One chapter per label: consecutive segments that share a label (a take cut in two pieces, a held still) read as one chapter."""
     out, t = [], 0.0
     for i, seg in enumerate(cut.segments):
         start = t - (seg.xfade if i else 0.0)
-        out.append({"label": seg.label, "start": round(max(0.0, start), 3), "end": round(start + seg.seconds, 3)})
-        t = start + seg.seconds
+        end = start + seg.seconds
+        if out and out[-1]["label"] == seg.label:
+            out[-1]["end"] = round(end, 3)
+        else:
+            out.append({"label": seg.label, "start": round(max(0.0, start), 3), "end": round(end, 3)})
+        t = end
     return out
 
 
@@ -661,6 +725,9 @@ def selftest() -> None:
     assert np.allclose(plan[0][0], 1) and np.allclose(plan[1][1], 1)
     mid = np.sqrt(110.0 * 100.0)  # both ends of the join meet at the geometric mean
     assert abs(255 * (110 / 255) ** plan[0][1][0] - mid) < 0.5 and abs(255 * (100 / 255) ** plan[1][0][0] - mid) < 0.5
+    anch = plan_gammas(stats, [False, True])  # a still after the first clip: the clip moves the whole way, the still never changes
+    assert np.allclose(anch[1][0], 1) and np.allclose(anch[1][1], 1)
+    assert abs(255 * (110 / 255) ** anch[0][1][0] - 100.0) < 0.5
     flat = np.full((4, 4, 3), 120, np.uint8)
     assert apply_gamma(flat, np.ones(3)) is flat and apply_gamma(flat, np.array([0.9, 1.0, 1.1]))[0, 0, 0] > 120
     a, b = np.full((2, 2, 3), 0, np.uint8), np.full((2, 2, 3), 255, np.uint8)
@@ -678,6 +745,20 @@ def selftest() -> None:
         want = sum(frames_for(s.seconds, 24) for s in segs) - 2 * 12
         assert res["frames"] == want and abs(probe(out)["seconds"] - want / 24) < 0.1, (res, want)
         assert probe(out)["width"] == 320 and probe(out)["codec"] == "h264"
+        # a still held at the end: its length counts, it is an anchor, and the last frame is the still itself
+        still = td_p / "end.png"
+        Image.new("RGB", (64, 36), (200, 120, 40)).save(still)
+        segs2 = segs[:2] + (Segment(still, 0.0, 2.0, 1.0, 0.5, "dissolve", "b", True),)
+        cut2 = Cut("t2", "", segs2, False, False, {})
+        out2 = td_p / "m2.mp4"
+        res2 = render_cut(edit, cut2, out2)
+        want2 = sum(frames_for(s.seconds, 24) for s in segs2) - 2 * 12
+        assert res2["frames"] == want2, (res2, want2)
+        px = np.frombuffer(subprocess.run([FF, "-loglevel", "error", "-sseof", "-0.1", "-i", str(out2), "-frames:v", "1", "-f", "rawvideo", "-pix_fmt", "rgb24", "-"],
+                                          capture_output=True).stdout, np.uint8).reshape(180, 320, 3)[90, 160]
+        assert abs(int(px[0]) - 200) < 14 and abs(int(px[2]) - 40) < 14, px  # the held still, within H.264 and BT.709 rounding
+        labelled = tuple(replace(sg, label=lb) for sg, lb in zip(segs2, ("x", "y", "y")))
+        assert [c["label"] for c in chapters(edit, Cut("t3", "", labelled, False, False, {}))] == ["x", "y"]
     print("selftest ok")
 
 
