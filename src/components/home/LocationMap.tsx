@@ -1,17 +1,15 @@
 /**
- * Location map entry point (Home, the project page and /contact). With NEXT_PUBLIC_GOOGLE_MAPS_API_KEY set, the site
- * shows a Google satellite map that loads only when the section nears the viewport (see map/SiteMap). Without a key it
- * renders the static, themed fallback (a schematic of the Vapi-Silvassa Road, labelled "Not to scale", plus the glass
- * card with the address, coordinates and map links), so the page never shows a broken map. Server component: with no
- * key it ships no client JavaScript at all. Owner: pages-lead.
+ * Location map entry point (Home, the project page and /contact). Server-renders the themed schematic of the
+ * Vapi-Silvassa Road (labelled "Not to scale") and the glass card with the address, coordinates and map links, inside
+ * a tiny client shell (map/SiteMap) that swaps in the live street map, MapLibre with OpenFreeMap tiles drawn in our
+ * colours, once the section nears the viewport. No key, no account. Without JavaScript or WebGL, or if the tiles
+ * fail, the schematic stays. Owner: pages-lead.
  */
-import { MapShell } from "@/components/map/MapShell";
 import { SchematicFallback } from "@/components/map/SchematicFallback";
 import { SiteInfoCard } from "@/components/map/SiteInfoCard";
 import { SiteMap } from "@/components/map/SiteMap";
 import { siteMapPlace, type MapPlace } from "@/components/map/place";
 import { homeCopy } from "@/content/copy/home";
-import { getMapId, getMapsApiKey } from "@/lib/google-maps";
 
 interface LocationMapProps {
   place?: MapPlace;
@@ -21,16 +19,27 @@ interface LocationMapProps {
 }
 
 export function LocationMap({ place = siteMapPlace(), className, links = true }: LocationMapProps) {
-  const apiKey = getMapsApiKey();
-  const fallback = <SchematicFallback place={place} />;
-  const card = <SiteInfoCard place={place} links={links} />;
-  if (!apiKey) {
-    return <MapShell className={className} state="fallback" frame={fallback} card={card} caption={homeCopy.location.mapCaption} />;
-  }
-  const { map } = homeCopy.location;
-  const labels = { region: map.regionLabel, controls: map.controlsLabel, zoomIn: map.zoomIn, zoomOut: map.zoomOut, recenter: map.recenter };
-  const captions = { fallback: homeCopy.location.mapCaption, live: homeCopy.location.satelliteCaption };
+  const { location } = homeCopy;
+  const { map } = location;
+  const labels = {
+    region: map.regionLabel,
+    controls: map.controlsLabel,
+    zoomIn: map.zoomIn,
+    zoomOut: map.zoomOut,
+    recenter: map.recenter,
+    gestures: map.gestures,
+  };
   return (
-    <SiteMap apiKey={apiKey} mapId={getMapId()} geo={place.geo} title={place.name} labels={labels} captions={captions} fallback={fallback} card={card} />
+    <SiteMap
+      className={className}
+      geo={place.geo}
+      title={place.name}
+      roadName={place.road}
+      labels={labels}
+      attribution={map.attribution}
+      captions={{ fallback: location.mapCaption, live: location.liveCaption }}
+      fallback={<SchematicFallback place={place} />}
+      card={<SiteInfoCard place={place} links={links} />}
+    />
   );
 }
