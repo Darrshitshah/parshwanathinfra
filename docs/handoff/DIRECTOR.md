@@ -55,3 +55,8 @@ Six agents were wrapped up at once to save their work before the 5-hour limit. E
 2. Commit public/video/hero + public/sequences/hero with it; check the Vercel preview of develop (connector needs team access approval).
 3. Merge develop to main (Darshit approved going live, 2026-10-28) and confirm the production deploy.
 4. Then: film refinement round with Omni/Veo; plan hotspot label overlap at 390 px; BUILD_SPEC/PROGRESS still mention the diorama.
+
+## 2026-10-28 evening (director)
+- LIVE on main (a19db8f, merged from develop): gold theme, logo 05, diorama removed, hero film v1 (37.9 s), themed MapLibre map (no credit pill, no schematic flash), crisp cursor (8e39d08), static share card src/app/opengraph-image.jpg (verified on production: og:image 200, image/jpeg, 148 KB).
+- New hero film v2: takes in _source/generated/video/hero/new/ (A_READY.json, B_READY.json), edit in tools/imagegen/hero_edit.json (full 50.5 s, Darshit chose full length; short 27.2 s for phones). Masters built (hero-master.mp4, hero-short-master.mp4); previews in new/final-preview/. NOT yet in public/: waiting for Darshit's OK. Next: assemble_hero.py --only web,poster,manifest (raise web mb budgets already set), check HeroFilm still reads the manifest, build, push develop, then main.
+- Vercel share URLs rely on VERCEL_PROJECT_PRODUCTION_URL (set automatically) unless NEXT_PUBLIC_SITE_URL is set.
