@@ -3,7 +3,8 @@
  *
  * `html[data-pi-cursor="on"]` is set by Cursor.tsx once the pointer has moved, so the native cursor is only hidden when
  * the custom one is actually on screen. Text fields, selects and [data-cursor="native"] keep the native cursor.
- * No transforms are set here: GSAP owns the transforms of the layers.
+ * GSAP owns the layers' transforms and two custom properties: `--pi-size` (ring, core) and `--pi-disc`. Every part is
+ * drawn at its real size from those, never scaled, so edges stay crisp at any size and device pixel ratio.
  */
 
 html[data-pi-cursor="on"],
@@ -25,6 +26,13 @@ html[data-pi-cursor="on"]
   cursor: auto !important;
 }
 
+.pi-cursor-root {
+  --pi-edge: color-mix(in srgb, var(--paper) 78%, transparent);
+  --pi-hair: 1px;
+}
+
+/* No will-change: a promoted layer is rasterised once and then moved as a bitmap, which is what blurred the old cursor.
+   The layers sit on whole device pixels (cursor-motion.ts) and the parts are real boxes. */
 .pi-cursor {
   position: fixed;
   left: 0;
@@ -33,50 +41,49 @@ html[data-pi-cursor="on"]
   height: 0;
   z-index: var(--z-cursor, 100);
   pointer-events: none;
-  will-change: transform, opacity;
 }
 
-/* The dot is espresso with a champagne halo by day and the reverse at night, so it reads on paper, on the dark
-   colour blocks and over photographs alike. (A white "difference" dot read as navy on champagne.) */
-
-.pi-cursor__shape {
-  position: absolute;
-  left: -7px;
-  top: -7px;
-  width: 14px;
-  height: 14px;
-}
-
+/* Ink line with a champagne edge outside it (reversed at night), so the ring reads on paper, on the dark colour blocks
+   and over photographs and video alike. (A white "difference" ring read as navy on champagne.) */
 .pi-cursor__ring,
-.pi-cursor__fill {
+.pi-cursor__core {
   position: absolute;
-  inset: 0;
+  box-sizing: border-box;
+  width: var(--pi-size);
+  height: var(--pi-size);
+  left: calc(var(--pi-size) / -2);
+  top: calc(var(--pi-size) / -2);
   border-radius: 50%;
 }
 
 .pi-cursor__ring {
-  border: 1.5px solid var(--ink);
-  box-shadow:
-    0 0 0 1.5px color-mix(in srgb, var(--paper) 70%, transparent),
-    inset 0 0 0 1.5px color-mix(in srgb, var(--paper) 70%, transparent);
+  --pi-size: 30px;
+  border: var(--pi-hair) solid var(--ink);
+  box-shadow: 0 0 0 var(--pi-hair) var(--pi-edge);
 }
 
-.pi-cursor__fill {
+.pi-cursor__core {
+  --pi-size: 6px;
   background: var(--ink);
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--paper) 72%, transparent);
+  box-shadow: 0 0 0 1px var(--pi-edge);
 }
 
 .pi-cursor__disc {
+  --pi-disc: 88px;
   position: absolute;
-  left: -44px;
-  top: -44px;
+  box-sizing: border-box;
   display: grid;
   place-items: center;
-  width: 88px;
-  height: 88px;
+  width: var(--pi-disc);
+  height: var(--pi-disc);
+  left: calc(var(--pi-disc) / -2);
+  top: calc(var(--pi-disc) / -2);
   border-radius: 50%;
   background: var(--brick);
   color: var(--on-brick);
+  box-shadow:
+    inset 0 0 0 var(--pi-hair) color-mix(in srgb, var(--on-brick) 24%, transparent),
+    0 0 0 var(--pi-hair) var(--pi-edge);
 }
 
 .pi-cursor__label {
@@ -84,8 +91,12 @@ html[data-pi-cursor="on"]
   font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 0.16em;
+  /* the trailing letter-space would pull the word off centre */
+  margin-right: -0.16em;
   text-transform: uppercase;
   white-space: nowrap;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
 }
 
 @media (forced-colors: active) {

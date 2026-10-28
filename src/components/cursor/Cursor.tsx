@@ -3,111 +3,90 @@
 /**
  * S8 cursor. Owner: motion-lead. Mounted by `MotionRoot` only on a fine pointer, off Tier C, once the tier is known.
  *
- * A small espresso circle with a champagne halo (reversed at night, cursor.css). It grows into a ring over links and
- * buttons, and becomes a labelled disc over anything with `data-cursor-label="View|Drag|Explore"`. Text fields keep the
- * native cursor. Never an arrow-and-glow cursor (Darshit rejected it).
+ * A fine hairline ring with a small solid core (espresso with a champagne edge by day, reversed at night, cursor.css).
+ * The ring trails the pointer a little, the core does not. Over links and buttons the ring springs out to a larger thin
+ * ring and the core fades; over anything with `data-cursor-label="View|Drag|Explore"` a labelled disc takes over. Text
+ * fields keep the native cursor. Never an arrow-and-glow cursor (Darshit rejected it).
  *
  * Data attributes for other leads (see cursor-state.ts):
  *   data-cursor-label="View"     labelled disc over this element (images, plan, galleries)
- *   data-cursor="grow"           ring on a non-interactive element
+ *   data-cursor="grow"           larger ring on a non-interactive element
  *   data-cursor="native"         native cursor over this element and its children (maps, canvases, inputs)
- *   data-cursor="default"        plain small circle even on a link
- * Two layers, because blending only works against the page when the blending element is not inside another
- * stacking context: the dot blends, the disc does not (it keeps the brand colour and readable text).
+ *   data-cursor="default"        plain ring and core even on a link
+ * Nothing is scaled: each part is drawn at its real size (cursor-geometry.ts, cursor-motion.ts), so edges stay sharp at
+ * every size and pixel ratio. Reduced motion: no spring, no lag, the cursor sits on the pointer.
  */
-import { gsap } from "gsap";
 import { useEffect, useRef } from "react";
 import { useDeviceTier } from "@/lib/device-tier-provider";
-import { EASE } from "@/motion/constants";
 import { registerMotion } from "@/motion/setup";
 import "./cursor.css";
+import { geometryFor, motionProfile, type CursorGeometry } from "./cursor-geometry";
+import {
+  createFollowers,
+  initParts,
+  killParts,
+  morph,
+  readParts,
+  setVisible,
+  type MorphKind,
+} from "./cursor-motion";
 import { DEFAULT_STATE, resolveCursorState, sameState, type CursorState } from "./cursor-state";
-
-const DOT_FOLLOW_SECONDS = 0.16;
-const DISC_FOLLOW_SECONDS = 0.38;
-const GROW_SCALE = 2.8;
-const PRESS_FACTOR = 0.82;
-const STATE_SECONDS = 0.4;
 
 export function Cursor() {
   const { ready, finePointer, tier } = useDeviceTier();
   const allowed = ready && finePointer && tier !== "C";
-  const dotRef = useRef<HTMLDivElement>(null);
-  const dotShapeRef = useRef<HTMLSpanElement>(null);
-  const dotFillRef = useRef<HTMLSpanElement>(null);
-  const discRef = useRef<HTMLDivElement>(null);
-  const discShapeRef = useRef<HTMLSpanElement>(null);
-  const labelRef = useRef<HTMLSpanElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!allowed) return;
-    const dot = dotRef.current;
-    const dotShape = dotShapeRef.current;
-    const dotFill = dotFillRef.current;
-    const disc = discRef.current;
-    const discShape = discShapeRef.current;
-    const label = labelRef.current;
-    if (!dot || !dotShape || !dotFill || !disc || !discShape || !label) return;
+    const parts = readParts(rootRef.current);
+    if (!parts) return;
     if (window.matchMedia("(forced-colors: active)").matches) return;
     registerMotion();
 
     const html = document.documentElement;
+    const reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let motion = motionProfile(reducedQuery.matches);
+    let followers = createFollowers(parts, motion);
     let shown = false;
     let pressed = false;
     let state: CursorState = DEFAULT_STATE;
+    let geometry: CursorGeometry = geometryFor(state, pressed);
     let lastX = 0;
     let lastY = 0;
     let frame = 0;
 
-    const context = gsap.context(() => {
-      gsap.set([dot, disc], { x: -100, y: -100, opacity: 0 });
-      gsap.set(discShape, { scale: 0 });
-    });
+    initParts(parts, geometry);
 
-    const dotX = gsap.quickTo(dot, "x", { duration: DOT_FOLLOW_SECONDS, ease: EASE.out });
-    const dotY = gsap.quickTo(dot, "y", { duration: DOT_FOLLOW_SECONDS, ease: EASE.out });
-    const discX = gsap.quickTo(disc, "x", { duration: DISC_FOLLOW_SECONDS, ease: EASE.out });
-    const discY = gsap.quickTo(disc, "y", { duration: DISC_FOLLOW_SECONDS, ease: EASE.out });
-
-    const dotScaleFor = (value: CursorState): number => {
-      const base = value.kind === "grow" ? GROW_SCALE : value.kind === "default" ? 1 : 0;
-      return pressed ? base * PRESS_FACTOR : base;
-    };
-
-    const apply = (next: CursorState, animate = true) => {
+    const apply = (next: CursorState, kind: MorphKind) => {
       state = next;
-      const duration = animate ? STATE_SECONDS : 0;
-      const visible = shown && next.kind !== "native";
-
-      gsap.to([dot, disc], { opacity: visible ? 1 : 0, duration: animate ? 0.2 : 0, ease: "none", overwrite: "auto" });
-      gsap.to(dotShape, { scale: dotScaleFor(next), duration, ease: EASE.out, overwrite: "auto" });
-      gsap.to(dotFill, { opacity: next.kind === "default" ? 1 : 0, duration: animate ? 0.25 : 0, ease: "none", overwrite: "auto" });
-
-      if (next.kind === "label") {
-        label.textContent = next.label;
-        gsap.to(discShape, { scale: pressed ? PRESS_FACTOR : 1, duration, ease: EASE.out, overwrite: "auto" });
-      } else {
-        gsap.to(discShape, { scale: 0, duration: animate ? 0.25 : 0, ease: EASE.out, overwrite: "auto" });
-      }
+      if (next.kind === "label") parts.label.textContent = next.label;
+      const target = geometryFor(next, pressed);
+      morph(parts, geometry, target, motion, shown ? kind : "instant");
+      geometry = target;
+      setVisible(parts, shown && next.kind !== "native", kind !== "instant");
     };
 
     const show = (x: number, y: number) => {
       if (shown) return;
       shown = true;
-      gsap.set([dot, disc], { x, y });
+      followers.jumpTo(x, y);
       html.dataset.piCursor = "on";
-      apply(state, false);
+      apply(state, "instant");
     };
 
     const hide = () => {
       if (!shown) return;
       shown = false;
-      gsap.to([dot, disc], { opacity: 0, duration: 0.2, ease: "none", overwrite: "auto" });
+      setVisible(parts, false, true);
     };
 
     const retarget = (target: EventTarget | null) => {
       const next = resolveCursorState(target instanceof Element ? target : null);
-      if (!sameState(next, state)) apply(next);
+      if (sameState(next, state)) return;
+      // Before the first move nothing is on screen; remember the state and draw it when the cursor appears.
+      if (shown) apply(next, "state");
+      else state = next;
     };
 
     const onMove = (event: PointerEvent) => {
@@ -115,10 +94,7 @@ export function Cursor() {
       lastX = event.clientX;
       lastY = event.clientY;
       if (!shown) show(lastX, lastY);
-      dotX(lastX);
-      dotY(lastY);
-      discX(lastX);
-      discY(lastY);
+      followers.moveTo(lastX, lastY);
     };
 
     const onOver = (event: PointerEvent) => {
@@ -129,12 +105,12 @@ export function Cursor() {
     const onDown = (event: PointerEvent) => {
       if (event.pointerType === "touch" || event.button !== 0) return;
       pressed = true;
-      apply(state);
+      apply(state, "press");
     };
     const onUp = () => {
       if (!pressed) return;
       pressed = false;
-      apply(state);
+      apply(state, "press");
     };
 
     // Content moves under a still pointer while scrolling; re-check what is there once per frame.
@@ -151,6 +127,16 @@ export function Cursor() {
       if (document.hidden) hide();
     };
 
+    // Switching reduced motion on or off mid-session: rebuild the followers and settle the shape at once.
+    const onMotionChange = () => {
+      motion = motionProfile(reducedQuery.matches);
+      followers.stop();
+      followers = createFollowers(parts, motion);
+      followers.jumpTo(lastX, lastY);
+      killParts(parts);
+      apply(state, "instant");
+    };
+
     document.addEventListener("pointermove", onMove, { passive: true });
     document.addEventListener("pointerover", onOver, { passive: true });
     document.addEventListener("pointerdown", onDown, { passive: true });
@@ -159,6 +145,7 @@ export function Cursor() {
     window.addEventListener("scroll", onScroll, { passive: true });
     html.addEventListener("mouseleave", onLeave);
     document.addEventListener("visibilitychange", onVisibility);
+    reducedQuery.addEventListener("change", onMotionChange);
 
     return () => {
       document.removeEventListener("pointermove", onMove);
@@ -169,9 +156,10 @@ export function Cursor() {
       window.removeEventListener("scroll", onScroll);
       html.removeEventListener("mouseleave", onLeave);
       document.removeEventListener("visibilitychange", onVisibility);
+      reducedQuery.removeEventListener("change", onMotionChange);
       if (frame) cancelAnimationFrame(frame);
-      gsap.killTweensOf([dot, disc, dotShape, dotFill, discShape]);
-      context.revert();
+      followers.stop();
+      killParts(parts);
       delete html.dataset.piCursor;
     };
   }, [allowed]);
@@ -179,18 +167,18 @@ export function Cursor() {
   if (!allowed) return null;
 
   return (
-    <>
-      <div ref={dotRef} className="pi-cursor pi-cursor--dot" aria-hidden="true">
-        <span ref={dotShapeRef} className="pi-cursor__shape">
-          <span className="pi-cursor__ring" />
-          <span ref={dotFillRef} className="pi-cursor__fill" />
+    <div ref={rootRef} className="pi-cursor-root" aria-hidden="true">
+      <div className="pi-cursor pi-cursor--ring">
+        <span className="pi-cursor__ring" />
+      </div>
+      <div className="pi-cursor pi-cursor--core">
+        <span className="pi-cursor__core" />
+      </div>
+      <div className="pi-cursor pi-cursor--disc">
+        <span className="pi-cursor__disc">
+          <span className="pi-cursor__label" />
         </span>
       </div>
-      <div ref={discRef} className="pi-cursor pi-cursor--disc" aria-hidden="true">
-        <span ref={discShapeRef} className="pi-cursor__disc">
-          <span ref={labelRef} className="pi-cursor__label" />
-        </span>
-      </div>
-    </>
+    </div>
   );
 }
