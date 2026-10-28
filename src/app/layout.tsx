@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
-import { Instrument_Serif, Inter_Tight, JetBrains_Mono } from "next/font/google";
+import { Pinyon_Script, Zalando_Sans_Expanded } from "next/font/google";
+import localFont from "next/font/local";
 import { DeviceTierProvider } from "@/lib/device-tier-provider";
 import { MotionRoot } from "@/motion/MotionRoot";
 import { shapeFromPlan } from "@/motion/township";
@@ -10,28 +11,31 @@ import "./globals.css";
 
 // Owner: Director. Pages set their own metadata; this is the default and the template.
 
-const display = Instrument_Serif({
-  weight: "400",
-  style: ["normal", "italic"],
-  subsets: ["latin"],
-  // "block", not "swap": the wordmark is never the LCP element, and swapping it caused a 0.19 layout shift (QA 2026-10-12).
+// Display: Playfair (Google Fonts, SIL OFL) cut once at its condensed width (wdth 87.5) and weight 500, optical size left
+// variable so hairlines stay fine at wordmark sizes and sturdy in small headings. One 58 KB file instead of the 183 KB
+// three-axis variable font. "block", not "swap": the wordmark is never the LCP element, and swapping it caused a layout shift.
+const display = localFont({
+  src: "./fonts/playfair-condensed-500.woff2",
+  weight: "500",
+  style: "normal",
   display: "block",
-  variable: "--font-instrument-serif",
+  variable: "--font-playfair",
 });
 
-const sans = Inter_Tight({
+// Script accent: one word per headline. "block" too, so the accent never reflows the line it sits on.
+const script = Pinyon_Script({
   weight: "400",
   subsets: ["latin"],
-  display: "swap",
-  variable: "--font-inter-tight",
+  display: "block",
+  variable: "--font-pinyon",
 });
 
-const mono = JetBrains_Mono({
-  weight: "400",
+// Text and tiny tracked labels: an extended grotesk. Two weights only (400 text, 600 labels and buttons).
+const sans = Zalando_Sans_Expanded({
+  weight: ["400", "600"],
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-jetbrains-mono",
-  preload: false,
+  variable: "--font-zalando",
 });
 
 // Computed on the server so the page curtain is cut from the real boundary without shipping plan.json.
@@ -52,8 +56,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f3efe7" },
-    { media: "(prefers-color-scheme: dark)", color: "#121413" },
+    { media: "(prefers-color-scheme: light)", color: "#f6efe2" },
+    { media: "(prefers-color-scheme: dark)", color: "#120e0a" },
   ],
   colorScheme: "light dark",
   viewportFit: "cover",
@@ -68,7 +72,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en-IN"
       suppressHydrationWarning
-      className={`${display.variable} ${sans.variable} ${mono.variable}`}
+      className={`${display.variable} ${script.variable} ${sans.variable}`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />

@@ -15,7 +15,6 @@ import { en } from "@/content/i18n/en";
 import { getMedia } from "@/content/media";
 import type { Project } from "@/content/schema";
 import { ExplorerSlot } from "@/features/explorer";
-import { Reveal } from "@/motion/Reveal";
 
 const TYPOLOGY_COLOUR: Record<string, string> = {
   flats: "var(--type-flats)",
@@ -41,22 +40,22 @@ export function Homes({ project }: { project: Project }) {
   const towers = getMedia("towers-courtyard");
 
   return (
-    <section id="homes" aria-labelledby="homes-title" className="section-pad border-y border-line bg-paper-sunk">
+    <section id="homes" aria-labelledby="homes-title" className="tone-paper sheet">
       <div className="wrap">
         <Eyebrow index="03">{copy.eyebrow}</Eyebrow>
         <div className="mt-10 grid gap-8 md:mt-14 lg:grid-cols-12 lg:gap-x-(--gutter)">
-          <Reveal kind="split" as="h2" id="homes-title" className="t-display-2 text-ink lg:col-span-6">
-            {copy.heading}
-          </Reveal>
+          <h2 id="homes-title" className="t-display-2 text-ink lg:col-span-6">
+            {rich(copy.heading)}
+          </h2>
           <p className="t-lead m-0 text-ink-muted lg:col-span-5 lg:col-start-8">{rich(copy.body)}</p>
         </div>
 
         <div data-slot="units" data-fallback="static" className="mt-14 md:mt-20">
-          <h3 className="t-mono-sm m-0 mb-4 text-ink-muted">{copy.units.title}</h3>
-          <ul className="m-0 grid list-none gap-px border border-line-strong bg-line-strong p-0 md:grid-cols-3">
+          <h3 className="t-mono-sm m-0 mb-6 text-ink-muted">{copy.units.title}</h3>
+          <ul className="m-0 grid list-none gap-5 p-0 md:grid-cols-3">
             {project.offering.map((item) => (
-              <li key={item.typology} data-unit-type={item.typology} className="bg-paper-raised p-5 md:p-6">
-                <span aria-hidden="true" className="mb-4 block h-1 w-10" style={{ background: TYPOLOGY_COLOUR[item.typology] }} />
+              <li key={item.typology} data-unit-type={item.typology} className="rounded-(--radius-card) bg-paper-raised p-7 md:p-9">
+                <span aria-hidden="true" className="mb-6 block h-1.5 w-14 rounded-full" style={{ background: TYPOLOGY_COLOUR[item.typology] }} />
                 <h4 className="t-display-4 m-0 text-ink">{en.typology[item.typology]}</h4>
                 <dl className="m-0 mt-5 grid gap-4">
                   <div>
@@ -65,7 +64,7 @@ export function Homes({ project }: { project: Project }) {
                   </div>
                   <div>
                     <dt className="titleblock__label">{copy.units.count}</dt>
-                    <dd className="m-0 font-display text-[2.25rem] leading-none text-ink [font-variant-numeric:lining-nums]">
+                    <dd className="m-0 font-display text-[3rem] font-medium leading-none text-ink [font-variant-numeric:lining-nums]">
                       {countFor(project, item.typology).toLocaleString("en-IN")}
                     </dd>
                   </div>
@@ -95,10 +94,10 @@ export function Homes({ project }: { project: Project }) {
                 <h3 className="t-mono-sm m-0 mb-4 text-ink-muted">{copy.explorer.title}</h3>
                 <p className="t-lead m-0 text-ink">{rich(copy.explorer.note)}</p>
                 <p className="t-mono-sm mb-3 mt-8 text-ink-muted">{copy.explorer.legendTitle}</p>
-                <ul className="m-0 grid list-none gap-0 border-t border-line-strong p-0">
+                <ul className="m-0 flex list-none flex-wrap gap-3 p-0">
                   {copy.explorer.legend.map((status) => (
-                    <li key={status.id} className="flex items-center gap-3 border-b border-line py-3 text-ink">
-                      <span aria-hidden="true" className="inline-block size-3 shrink-0" style={{ background: STATUS_COLOUR[status.id] }} />
+                    <li key={status.id} className="flex items-center gap-3 rounded-full bg-paper-raised py-2.5 pl-4 pr-5 text-ink">
+                      <span aria-hidden="true" className="inline-block size-2.5 shrink-0 rounded-full" style={{ background: STATUS_COLOUR[status.id] }} />
                       {rich(status.label)}
                     </li>
                   ))}
@@ -111,7 +110,6 @@ export function Homes({ project }: { project: Project }) {
                   sizes="(min-width: 1408px) 760px, (min-width: 1024px) 56vw, calc(100vw - 2rem)"
                   aspect={null}
                   frameClassName="aspect-[4/3] lg:aspect-[3/2]"
-                  marks
                   caption={copy.explorer.caption}
                 />
               </div>

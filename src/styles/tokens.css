@@ -1,7 +1,16 @@
 /*
- * Design tokens · Look A "Drafting table" (kickoff decision 2026-10-10).
- * Owner: Director. Components use these variables or the Tailwind utilities mapped in @theme below,
- * never raw hex values. Light = day renders; dark = dusk renders where a dusk version exists.
+ * Design tokens · "Residence" layout, palette "Champagne and Espresso" (Darshit, 2026-10-22; values from
+ * docs/handoff/colour-lead/variant-1.css). Earlier palettes: "Drafting table", then ivory/forest/maroon.
+ * Owner: Director (values by design lead). Components use these variables or the Tailwind utilities mapped in @theme
+ * below, never raw hex values. Light = champagne day; dark = espresso night.
+ *
+ * Palette: espresso ink #231a12 on champagne paper #f6efe2, ONE jewel (dark espresso #2f2118) for feature sections,
+ *   ONE calm band (champagne #e7d7b6), gold buttons (#a58039) and a burnished gold-bronze page curtain (#7c5620).
+ *   Dark theme keeps the same roles: near-black brown paper #120e0a with warm gold (#d9b263).
+ *
+ * Colour blocking: a section gets `tone-paper | tone-mist | tone-jewel | tone-ink` (globals.css). A tone re-points
+ * the semantic tokens below (ink, paper, brick ...) for everything inside it, so `text-ink` and `bg-paper-raised`
+ * stay correct on every block without per-component dark-mode code.
  *
  * Theme selection: `data-theme="light|dark"` on <html> (set before paint by the script in layout.tsx);
  * without JavaScript the system preference applies.
@@ -10,42 +19,70 @@
 :root {
   color-scheme: light;
 
-  /* Paper and ink */
-  --paper: #f3efe7;
-  --paper-raised: #faf7f1;
-  --paper-sunk: #e9e3d7;
-  --ink: #1a1c1b;
-  --ink-muted: #5b5e5a;
-  --ink-faint: #8a8b85;
-  --line: rgb(26 28 27 / 0.18);
-  --line-strong: rgb(26 28 27 / 0.42);
-  --grid: rgb(26 28 27 / 0.06);
+  /* Champagne paper, espresso ink */
+  --paper: #f6efe2;
+  --paper-raised: #fcf8f0;
+  --paper-sunk: #ece3d2;
+  --ink: #231a12;
+  --ink-muted: #5e5144;
+  --ink-faint: #6e6153;
+  --line: rgb(35 26 18 / 0.14);
+  --line-strong: rgb(35 26 18 / 0.34);
+  --grid: rgb(35 26 18 / 0.05);
 
-  /* Brand */
-  --clay: #fbf9f4;
-  --brick: #b5412f;
-  --brick-ink: #9c3424;
-  --on-brick: #fbf9f4;
-  --forest: #24402f;
-  --sand: #d8c6a3;
+  /* Colour blocks: whole sections change colour as you scroll. mist = the calm band (champagne), jewel = the
+     feature colour (dark espresso), ink = near-black espresso, for the cinematic and closing sections. */
+  --block-mist: #e7d7b6;
+  --block-jewel: #2f2118;
+  --block-ink: #17110c;
+  --on-mist: #231a12;
+  --on-jewel: #f1dfb9;
+  --on-ink: #f4ecdd;
 
-  /* Typology (tuned from the portfolio: rows orange, flats blue, shops green, mixed = hatch of both) */
-  --type-rowhouses: #c9601f;
-  --type-flats: #2f6db0;
-  --type-shops: #1d8460;
-  --type-mixed: #6a5fa8;
-  --type-office: #1a1c1b;
-  --type-amenity: #24402f;
+  /* Accent: gold on champagne. Names kept from the first theme (brick) so every component keeps working. */
+  --clay: #fcf8f0;
+  --brick: #a58039;
+  --brick-ink: #7a5518;
+  --on-brick: #160f08;
+  --forest: #4d6a48;
+  --sand: #dccaa3;
 
-  /* Availability (S5): every status is TBD for now */
-  --status-available: #1d8460;
-  --status-booked: #b5412f;
-  --status-sold: #5b5e5a;
-  --status-tbd: #8a8b85;
+  /* Page curtain and loader: burnished gold-bronze, soft sheen, dark far corner */
+  --curtain: #7c5620;
+  --curtain-sheen: #a87c35;
+  --curtain-deep: #3a250c;
+  --on-curtain: #f8ecd2;
 
-  /* Surfaces for overlays */
-  --scrim: rgb(26 28 27 / 0.55);
-  --focus: #b5412f;
+  /* Typology: place-rooted (terracotta rows, deep blue flats, marigold shops, rose mixed) */
+  --type-rowhouses: #983a26;
+  --type-flats: #235a85;
+  --type-shops: #a9861f;
+  --type-mixed: #b8507f;
+  --type-office: #231a12;
+  --type-amenity: #4d6a48;
+
+  /* Availability (every status is TBD for now) */
+  --status-available: #3f7a56;
+  --status-booked: #a3433f;
+  --status-sold: #5e5144;
+  --status-tbd: #6e6153;
+
+
+  /* The same typology colours as they read on the dark colour blocks (jewel and forest) */
+  --on-dark-rowhouses: #ec8668;
+  --on-dark-flats: #b0d4f2;
+  --on-dark-shops: #f3d680;
+  --on-dark-mixed: #d36fa9;
+  --on-dark-amenity: #93c49c;
+  --script-night: #e7c57e;
+
+  --scrim: rgb(35 26 18 / 0.5);
+  --focus: #7a5518;
+  --glass: rgb(246 239 226 / 0.72);
+  --glass-edge: rgb(35 26 18 / 0.1);
+
+  /* The raised surface on the calm band (tone-mist): a lighter champagne card on the band. */
+  --mist-raised: #f3e9d6;
 
   /* Motion (CSS side; GSAP eases live in src/motion) */
   --ease-draft: cubic-bezier(0.65, 0, 0.15, 1);
@@ -55,13 +92,19 @@
   --duration-slow: 700ms;
 
   /* Layout */
-  --gutter: clamp(1rem, 0.6rem + 2vw, 2.5rem);
-  --section-space: clamp(5rem, 3rem + 8vw, 11rem);
+  --gutter: clamp(1.25rem, 0.7rem + 2.4vw, 3rem);
+  --section-space: clamp(5.5rem, 3.5rem + 9vw, 12rem);
   --content-max: 88rem;
   --measure: 38rem;
-  --header-h: 4.25rem;
-  --radius-xs: 2px;
-  --radius-sm: 4px;
+  --header-h: 4.75rem;
+  --sheet-r: clamp(1.75rem, 1rem + 3.2vw, 3.5rem);
+
+  /* One shape rule: images sit in arches or large-radius frames, interactive things are pills and circles,
+     fields are soft rounded rectangles. */
+  --radius-xs: 0.5rem;
+  --radius-sm: 0.875rem;
+  --radius-card: 1.75rem;
+  --radius-field: 1.125rem;
   --hairline: 1px;
 
   /* Layers */
@@ -77,68 +120,128 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
-    --paper: #121413;
-    --paper-raised: #1a1d1b;
-    --paper-sunk: #0c0e0d;
-    --ink: #ece6da;
-    --ink-muted: #aaa498;
-    --ink-faint: #7b776f;
-    --line: rgb(236 230 218 / 0.16);
-    --line-strong: rgb(236 230 218 / 0.38);
-    --grid: rgb(236 230 218 / 0.05);
-    --clay: #e8e2d6;
-    --brick: #da5e47;
-    --brick-ink: #e8775f;
-    --on-brick: #121413;
-    --forest: #6fa784;
+    --paper: #120e0a;
+    --paper-raised: #1d1711;
+    --paper-sunk: #0b0806;
+    --ink: #f3e9d6;
+    --ink-muted: #bfb09a;
+    --ink-faint: #9a8b76;
+    --line: rgb(243 233 214 / 0.14);
+    --line-strong: rgb(243 233 214 / 0.34);
+    --grid: rgb(243 233 214 / 0.05);
+
+    /* Colour blocks, night: espresso-black page, deep champagne-brown band, espresso feature, near-black close */
+    --block-mist: #2a231a;
+    --block-jewel: #35261a;
+    --block-ink: #0a0807;
+    --on-mist: #f3e9d6;
+    --on-jewel: #f1dfb9;
+    --on-ink: #f1e8d6;
+
+    /* Accent: warm gold on espresso */
+    --clay: #ebe2d2;
+    --brick: #d9b263;
+    --brick-ink: #ebcf8f;
+    --on-brick: #1a1207;
+    --forest: #93c49c;
     --sand: #cdb88f;
-    --type-rowhouses: #f0843f;
-    --type-flats: #5d9be0;
-    --type-shops: #3fbf8c;
-    --type-mixed: #a497e6;
-    --type-office: #ece6da;
-    --type-amenity: #6fa784;
-    --status-available: #3fbf8c;
-    --status-booked: #da5e47;
-    --status-sold: #aaa498;
-    --status-tbd: #7b776f;
-    --scrim: rgb(0 0 0 / 0.6);
-    --focus: #e8775f;
+
+    /* Page curtain and loader: the gold-bronze, a touch deeper at night */
+    --curtain: #6b4a1a;
+    --curtain-sheen: #a57a33;
+    --curtain-deep: #2e1e0a;
+    --on-curtain: #f6e8c9;
+
+    --type-rowhouses: #ec8668;
+    --type-flats: #b0d4f2;
+    --type-shops: #f3d680;
+    --type-mixed: #d36fa9;
+    --type-office: #f3e9d6;
+    --type-amenity: #93c49c;
+
+    --status-available: #7ccf9c;
+    --status-booked: #e8948a;
+    --status-sold: #bfb09a;
+    --status-tbd: #9a8b76;
+
+    --on-dark-rowhouses: #ec8668;
+    --on-dark-flats: #b0d4f2;
+    --on-dark-shops: #f3d680;
+    --on-dark-mixed: #d36fa9;
+    --on-dark-amenity: #93c49c;
+    --script-night: #ebcf8f;
+
+    --scrim: rgb(11 8 6 / 0.62);
+    --focus: #ebcf8f;
+    --glass: rgb(18 14 10 / 0.64);
+    --glass-edge: rgb(243 233 214 / 0.16);
+
+    --mist-raised: #362d22;
   }
 }
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --paper: #121413;
-  --paper-raised: #1a1d1b;
-  --paper-sunk: #0c0e0d;
-  --ink: #ece6da;
-  --ink-muted: #aaa498;
-  --ink-faint: #7b776f;
-  --line: rgb(236 230 218 / 0.16);
-  --line-strong: rgb(236 230 218 / 0.38);
-  --grid: rgb(236 230 218 / 0.05);
-  --clay: #e8e2d6;
-  --brick: #da5e47;
-  --brick-ink: #e8775f;
-  --on-brick: #121413;
-  --forest: #6fa784;
+  --paper: #120e0a;
+  --paper-raised: #1d1711;
+  --paper-sunk: #0b0806;
+  --ink: #f3e9d6;
+  --ink-muted: #bfb09a;
+  --ink-faint: #9a8b76;
+  --line: rgb(243 233 214 / 0.14);
+  --line-strong: rgb(243 233 214 / 0.34);
+  --grid: rgb(243 233 214 / 0.05);
+
+  /* Colour blocks, night: espresso-black page, deep champagne-brown band, espresso feature, near-black close */
+  --block-mist: #2a231a;
+  --block-jewel: #35261a;
+  --block-ink: #0a0807;
+  --on-mist: #f3e9d6;
+  --on-jewel: #f1dfb9;
+  --on-ink: #f1e8d6;
+
+  /* Accent: warm gold on espresso */
+  --clay: #ebe2d2;
+  --brick: #d9b263;
+  --brick-ink: #ebcf8f;
+  --on-brick: #1a1207;
+  --forest: #93c49c;
   --sand: #cdb88f;
-  --type-rowhouses: #f0843f;
-  --type-flats: #5d9be0;
-  --type-shops: #3fbf8c;
-  --type-mixed: #a497e6;
-  --type-office: #ece6da;
-  --type-amenity: #6fa784;
-  --status-available: #3fbf8c;
-  --status-booked: #da5e47;
-  --status-sold: #aaa498;
-  --status-tbd: #7b776f;
-  --scrim: rgb(0 0 0 / 0.6);
-  --focus: #e8775f;
+
+  /* Page curtain and loader: the gold-bronze, a touch deeper at night */
+  --curtain: #6b4a1a;
+  --curtain-sheen: #a57a33;
+  --curtain-deep: #2e1e0a;
+  --on-curtain: #f6e8c9;
+
+  --type-rowhouses: #ec8668;
+  --type-flats: #b0d4f2;
+  --type-shops: #f3d680;
+  --type-mixed: #d36fa9;
+  --type-office: #f3e9d6;
+  --type-amenity: #93c49c;
+
+  --status-available: #7ccf9c;
+  --status-booked: #e8948a;
+  --status-sold: #bfb09a;
+  --status-tbd: #9a8b76;
+
+  --on-dark-rowhouses: #ec8668;
+  --on-dark-flats: #b0d4f2;
+  --on-dark-shops: #f3d680;
+  --on-dark-mixed: #d36fa9;
+  --on-dark-amenity: #93c49c;
+  --script-night: #ebcf8f;
+
+  --scrim: rgb(11 8 6 / 0.62);
+  --focus: #ebcf8f;
+  --glass: rgb(18 14 10 / 0.64);
+  --glass-edge: rgb(243 233 214 / 0.16);
+
+  --mist-raised: #362d22;
 }
 
-/* Tailwind v4 utilities: bg-paper, text-ink, border-line, text-brick, font-display, ease-draft ... */
+/* Tailwind v4 utilities: bg-paper, text-ink, text-brick, font-display, font-script, ease-draft ... */
 @theme inline {
   --color-paper: var(--paper);
   --color-paper-raised: var(--paper-raised);
@@ -154,6 +257,8 @@
   --color-on-brick: var(--on-brick);
   --color-forest: var(--forest);
   --color-sand: var(--sand);
+  --color-mist: var(--block-mist);
+  --color-jewel: var(--block-jewel);
   --color-rowhouses: var(--type-rowhouses);
   --color-flats: var(--type-flats);
   --color-shops: var(--type-shops);
@@ -162,15 +267,19 @@
   --color-amenity: var(--type-amenity);
   --color-focus: var(--focus);
 
-  --font-display: var(--font-instrument-serif), "Times New Roman", serif;
-  --font-sans: var(--font-inter-tight), system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+  /* Display: condensed high-contrast serif (uppercase). Script: one accent word. Sans: extended grotesk for text and labels. */
+  --font-display: var(--font-playfair), "Didot", "Bodoni 72", "Times New Roman", serif;
+  --font-script: var(--font-pinyon), "Snell Roundhand", cursive;
+  --font-sans: var(--font-zalando), system-ui, sans-serif;
+  /* The old "mono" voice is now the tracked uppercase label voice, set in the sans. */
+  --font-mono: var(--font-zalando), system-ui, sans-serif;
 
   --ease-draft: var(--ease-draft);
   --ease-out: var(--ease-out);
 
   --radius-xs: var(--radius-xs);
   --radius-sm: var(--radius-sm);
+  --radius-card: var(--radius-card);
 }
 
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));

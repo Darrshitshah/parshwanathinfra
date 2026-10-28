@@ -40,3 +40,25 @@ Every choice made without Darshit, and every answer he gives. Format: `date · d
 - 2026-10-12 · Public launch and RERA (Darshit) · go public without a RERA line (Darshit's decision and responsibility, after being told the RERA Act generally bars advertising an unregistered project). `SHOW_RERA` stays false.
 - 2026-10-12 · Hero keyframes (Darshit) · stages 1 to 3 approved; stage 4 must top out at ground + 5 (6 levels); stage 5 must clearly read ground + 5 with roof terrace like SS-01 (current take reads ~3 floors), perfection over a quick patch, unlimited Nano Banana passes; then Veo + Omni A/B video for 1→2, 2→3, 3→4, 4→5 and a 5th segment 5→SS-01.
 - 2026-10-12 · Production branch (Darshit approved public launch) · `main` pushed from `develop` so Vercel publishes at parshwanathinfra.vercel.app; develop stays the working branch.
+- 2026-10-13 · Backup (Darshit) · the look A "Drafting table" theme is saved as branch `backup/look-a-drafting-table` and tag `look-a-drafting-table` (Darshit loves it; reuse elements in a later project). Keep: the red township-boundary page curtain.
+- 2026-10-13 · New theme (Darshit) · "classy and luxurious", a complete visual change that no longer resembles Darshit's portfolio: no drafting lines or grid, depth from backgrounds, imagery and glassmorphism; light glass AND dark glass (auto by system preference, toggle kept); pages, sections, content and layout stay as they are. Built with the installed design skills. Work happens on `develop` (Vercel preview); `main` (live) only after Darshit approves.
+- 2026-10-13 · Loader (Darshit) · short (~1 s) brand intro on every new visit (new browser session), never delaying the hero image; the red boundary curtain stays for page changes, re-coloured to the new theme.
+- 2026-10-17 · Page curtain (Darshit) · slower, so the township boundary is visible: shrink 0.45 s, linger 0.3 s at showcase scale, close 0.25 s; reveal open 0.25 s, linger 0.2 s, grow 0.45 s (round trip about 2 s). Overrides BUILD_SPEC's 900 ms transition cap. Theme v2 layout approved; colours under review (three gold palettes, light and dark).
+
+## 2026-10-22 · Colour theme: palette 1, Champagne and Espresso (Darshit, popup)
+Darshit picked palette 1 of the three gold candidates (docs/handoff/colour-lead/gold-previews-sheet.jpg). Values are in
+docs/handoff/colour-lead/variant-1.css (tokens only, light and dark; curtain becomes burnished gold-bronze #7c5620 / #6b4a1a).
+To apply: move variant-1.css values into src/styles/tokens.css, then the hard-coded colours (viewport themeColor in
+layout.tsx, diorama scene colours and ivory backgrounds, OG card, app icon), then restyle plan.css / explorer.css /
+diorama chrome / lightbox. Ship develop to main only after Darshit sees it.
+
+## 2026-10-23 · Logo: 05 Sheltering Arch (Darshit, popup)
+Darshit picked concept 05 (seven-lobed torana arch on an otla) from brand/logo-concepts/logo-concepts-sheet.png.
+Next: refine it (final polish pass), then derive the site favicon / app icon / header mark, OG card, signboard and
+letterhead from brand/logo-concepts/05-sheltering-arch/. Concepts 01 to 09 stay in the repo as the record.
+
+## 2026-10-28 · Hero film and go-live (Darshit)
+Hero: short cut on phones, full cut on desktop (public/video/hero, manifest.json). Then push the new look (gold theme,
+logo, no diorama) plus the film live. Darshit knows the film is not perfect yet; it gets refined after launch
+(Nano Banana keyframes to video). Genie 4 (Google DeepMind, 2026-10-27) is a research preview for trusted testers
+only, so the refinement uses Omni 1.1 Flash and Veo 3.1 GA on Vertex until Genie 4 reaches the Gemini API.

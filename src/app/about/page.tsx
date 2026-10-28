@@ -32,20 +32,20 @@ export default function AboutPage() {
   return (
     <>
       <JsonLd data={organizationJsonLd()} />
-      <section aria-labelledby="about-title" className="border-b border-line bg-grid">
-        <div className="wrap pb-14 pt-10 md:pb-20 md:pt-16">
+      <section aria-labelledby="about-title" className="tone-paper">
+        <div className="wrap pb-[calc(var(--sheet-r)+4rem)] pt-[calc(var(--header-h)+3rem)] md:pt-[calc(var(--header-h)+5rem)]">
           <Eyebrow index="01">{aboutCopy.eyebrow}</Eyebrow>
-          <h1 id="about-title" className="t-display-2 mt-8 max-w-[18ch] text-ink md:mt-12">
+          <h1 id="about-title" className="t-display-2 mt-10 max-w-[16ch] text-ink md:mt-14 md:text-[clamp(3rem,1.2rem+6vw,7.5rem)]">
             {rich(aboutCopy.intro)}
           </h1>
-          <p className="t-lead mt-8 max-w-[34rem] text-ink-muted">{rich(aboutCopy.body)}</p>
+          <p className="t-lead mt-10 max-w-[34rem] text-ink-muted">{rich(aboutCopy.body)}</p>
         </div>
       </section>
 
-      <section aria-labelledby="about-facts-title" className="section-pad">
-        <div className="wrap grid gap-12 lg:grid-cols-12 lg:gap-x-(--gutter)">
+      <section aria-labelledby="about-facts-title" className="tone-jewel sheet">
+        <div className="wrap grid gap-16 lg:grid-cols-12 lg:items-center lg:gap-x-(--gutter)">
           <div className="lg:col-span-6">
-            <h2 id="about-facts-title" className="t-mono m-0 mb-5 text-ink-muted">
+            <h2 id="about-facts-title" className="t-mono m-0 mb-8 text-ink-muted">
               {facts.eyebrow}
             </h2>
             <FactsBlock
@@ -65,70 +65,66 @@ export default function AboutPage() {
               media={image}
               sizes="(min-width: 1408px) 560px, (min-width: 1024px) 40vw, calc(100vw - 2rem)"
               aspect={null}
-              frameClassName="aspect-[4/3]"
-              marks
+              shape="arch"
+              frameClassName="aspect-[4/5]"
               caption
+              captionClassName="text-ink-muted"
             />
           </div>
         </div>
       </section>
 
-      <section aria-labelledby="timeline-title" className="section-pad border-y border-line bg-paper-sunk">
+      <section aria-labelledby="timeline-title" className="tone-paper sheet">
         <div className="wrap">
           <Eyebrow index="02">{aboutCopy.timeline.eyebrow}</Eyebrow>
           <h2 id="timeline-title" className="t-display-2 mt-10 text-ink md:mt-14">
             {rich(aboutCopy.timeline.heading)}
           </h2>
 
-          <ol className="m-0 mt-12 grid list-none gap-0 p-0 md:mt-16" aria-label={aboutCopy.timeline.eyebrow}>
+          <ol className="m-0 mt-14 grid list-none gap-12 p-0 md:mt-20" aria-label={aboutCopy.timeline.eyebrow}>
             {started !== "TBD" ? (
-              <li className="relative grid gap-3 border-l border-line-strong pb-12 pl-8 md:grid-cols-[12rem_1fr] md:gap-10 md:pl-12" data-milestone={started}>
-                <span aria-hidden="true" className="absolute -left-[7px] top-2 size-3.5 rounded-full border border-ink bg-brick" />
-                <span aria-hidden="true" className="font-display text-[clamp(2.5rem,2rem+2vw,4rem)] leading-none text-ink [font-variant-numeric:lining-nums]">{started}</span>
-                <p className="t-lead m-0 text-ink">{aboutCopy.timeline.milestone(started, shivShiva.name)}</p>
+              <li className="grid items-baseline gap-3 md:grid-cols-[minmax(12rem,20rem)_1fr] md:gap-10" data-milestone={started}>
+                <span aria-hidden="true" className="font-display text-[clamp(4rem,2rem+8vw,9rem)] font-medium leading-[0.85] text-brick-ink [font-variant-numeric:lining-nums]">{started}</span>
+                <p className="t-lead m-0 max-w-[30rem] text-ink">{aboutCopy.timeline.milestone(started, shivShiva.name)}</p>
               </li>
             ) : null}
-            <li className="relative border-l border-dashed border-line-strong pb-2 pl-8 md:pl-12">
-              <span aria-hidden="true" className="absolute -left-[7px] top-2 size-3.5 rounded-full border border-dashed border-line-strong bg-paper" />
+            <li className="md:grid md:grid-cols-[minmax(12rem,20rem)_1fr] md:gap-10">
+              <span aria-hidden="true" className="hidden md:block" />
               <p className="t-small m-0 max-w-[34rem] text-ink-muted">{aboutCopy.timeline.more}</p>
             </li>
           </ol>
         </div>
       </section>
 
-      <section aria-labelledby="reading-title" className="section-pad">
-        <div className="wrap grid gap-12 lg:grid-cols-12 lg:gap-x-(--gutter)">
-          <div className="lg:col-span-5">
-            <Eyebrow index="03">{aboutCopy.reading.eyebrow}</Eyebrow>
-            <h2 id="reading-title" className="t-display-2 mt-10 text-ink md:mt-14">
-              {aboutCopy.reading.heading}
-            </h2>
-          </div>
-          <ul className="m-0 grid list-none gap-0 border-t border-line-strong p-0 lg:col-span-7 lg:col-start-6 lg:mt-24">
+      <section aria-labelledby="reading-title" className="tone-mist sheet">
+        <div className="wrap">
+          <Eyebrow index="03">{aboutCopy.reading.eyebrow}</Eyebrow>
+          <h2 id="reading-title" className="t-display-2 mt-10 max-w-[14ch] text-ink md:mt-14">
+            {rich(aboutCopy.reading.heading)}
+          </h2>
+          <ul className="m-0 mt-14 grid list-none gap-5 p-0 md:mt-20 md:grid-cols-3">
             {aboutCopy.reading.items.map((item) => (
-              <li key={item.title} className="grid gap-2 border-b border-line py-6 md:grid-cols-[11rem_1fr] md:gap-8">
-                <h3 className="t-mono m-0 text-ink">{item.title === "TBD" ? rich("TBD") : item.title}</h3>
-                <p className="m-0 text-ink-muted">{item.text}</p>
+              <li key={item.title} className="rounded-(--radius-card) bg-paper-raised p-7 md:p-9">
+                <h3 className="t-display-4 m-0 text-ink">{item.title === "TBD" ? rich("TBD") : item.title}</h3>
+                <p className="mb-0 mt-4 text-ink-muted">{item.text}</p>
               </li>
             ))}
           </ul>
         </div>
       </section>
 
-      <section aria-labelledby="more-title" className="section-pad border-t border-line pt-0">
+      <section aria-labelledby="more-title" className="tone-ink sheet">
         <div className="wrap">
-          <div className="border border-dashed border-line-strong p-6 md:p-10">
-            <p className="t-mono m-0 text-ink-muted">{aboutCopy.more.eyebrow}</p>
-            <h2 id="more-title" className="t-display-3 mt-3 max-w-[26ch] text-ink">
-              {aboutCopy.more.heading}
-            </h2>
-            <p className="mb-0 mt-4 max-w-[36rem] text-ink-muted">{aboutCopy.more.text}</p>
-            <p className="mt-6">
-              <TextLink href="/contact" arrow="right">
-                {en.nav.contact}
-              </TextLink>
-            </p>
-          </div>
+          <p className="t-mono m-0 text-ink-muted">{aboutCopy.more.eyebrow}</p>
+          <h2 id="more-title" className="t-display-3 mt-6 max-w-[22ch] text-ink">
+            {rich(aboutCopy.more.heading)}
+          </h2>
+          <p className="mb-0 mt-6 max-w-[36rem] text-ink-muted">{aboutCopy.more.text}</p>
+          <p className="mt-10">
+            <TextLink href="/contact" arrow="right">
+              {en.nav.contact}
+            </TextLink>
+          </p>
         </div>
       </section>
     </>

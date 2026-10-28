@@ -18,7 +18,7 @@ import ProjectPage, { generateMetadata, generateStaticParams } from "./projects/
 import ProjectsPage, { metadata as projectsMetadata } from "./projects/page";
 import TermsPage from "./terms/page";
 
-// DioramaMount (client) reads the app router; the tests render the pages without one.
+// Client components may read the app router; the tests render the pages without one.
 vi.mock("next/navigation", () => ({ useRouter: () => ({ push: vi.fn(), replace: vi.fn(), prefetch: vi.fn() }) }));
 
 const DASHES = new RegExp(`[${String.fromCharCode(0x2013)}${String.fromCharCode(0x2014)}]`);
@@ -89,13 +89,12 @@ describe("Home", () => {
   it("has the sections of BUILD_SPEC section 8 in order, each with the slot Phase 2 mounts into", () => {
     const container = renderPage(<Home />);
     const sections = Array.from(container.querySelectorAll("section")).map((section) => section.id);
-    expect(sections).toEqual(["top", "idea", "numbers", "plan", "walk", "amenities", "row-houses", "location", "gallery", "visit"]);
+    expect(sections).toEqual(["top", "idea", "numbers", "plan", "amenities", "row-houses", "location", "gallery", "visit"]);
     const slots = Array.from(container.querySelectorAll("[data-slot]")).map((element) => `${element.id}:${element.getAttribute("data-slot")}`);
     expect(slots).toEqual([
       "top:sky-descent",
       "numbers:dimension-count",
       "plan:living-plan",
-      "walk:diorama",
       "amenities:amenities",
       "row-houses:row-house-street",
       "gallery:gallery",
@@ -127,30 +126,35 @@ describe("Home", () => {
     expect(rows[3]?.querySelectorAll("[data-dim-tick]")).toHaveLength(2);
   });
 
-  it("labels every amenity with its evidence and draws a schematic for the one without a render", () => {
+  it("labels every amenity with its evidence and shows the linear garden as an artist's impression, not a schematic", () => {
     const container = renderPage(<Home />);
     const cards = Array.from(container.querySelectorAll("[data-amenity]"));
     expect(cards).toHaveLength(shivShiva.amenities.length);
     for (const card of cards) expect(card.textContent).toMatch(/As per plan|As shown in renders/);
     const linear = container.querySelector("[data-amenity='linear-garden']");
-    expect(linear?.querySelector("svg")).not.toBeNull();
-    expect(linear?.textContent).toMatch(/Schematic/);
+    expect(linear?.querySelector("svg")).toBeNull();
+    expect(linear?.querySelector("img")?.getAttribute("src")).toContain("linear-garden");
+    expect(linear?.textContent).toMatch(/As per plan/);
+    expect(linear?.textContent).not.toMatch(/Schematic|no render yet/);
   });
 
-  it("marks the row-house street with seven callouts and a matching legend", () => {
+  it("lists the seven row-house features without pins or numbers", () => {
     const container = renderPage(<Home />);
     const street = container.querySelector("#row-houses");
-    expect(street?.querySelectorAll(".callout")).toHaveLength(7);
-    expect(street?.querySelectorAll(".legend li")).toHaveLength(7);
-    expect(street?.querySelector("[data-callouts]")).toHaveAttribute("aria-hidden", "true");
+    expect(street?.querySelectorAll(".callout")).toHaveLength(0);
+    expect(street?.querySelector("[data-callouts]")).toBeNull();
+    expect(street?.querySelectorAll("ul[aria-label] li")).toHaveLength(7);
+    expect(street?.querySelector(".legend__n")).toBeNull();
     for (const feature of [/portal frame/i, /balcony bay/i, /brick pillar/i, /planters/i, /car porch/i, /two storeys/i, /flat roof/i]) {
       expect(street?.textContent).toMatch(feature);
     }
   });
 
-  it("labels the location map as a schematic that is not to scale, with landmarks and distances as TBD", () => {
+  it("shows the labelled schematic in the location map when the browser has no WebGL (jsdom), with landmarks and distances as TBD", () => {
     const container = renderPage(<Home />);
     const location = container.querySelector("#location");
+    const frame = location?.querySelector("[data-site-map]");
+    expect(frame?.getAttribute("data-state")).toBe("fallback");
     expect(location?.textContent).toMatch(/not to scale/i);
     expect(location?.querySelector("svg[role='img']")).not.toBeNull();
     expect(location?.querySelectorAll("[data-tbd]").length).toBeGreaterThanOrEqual(2);

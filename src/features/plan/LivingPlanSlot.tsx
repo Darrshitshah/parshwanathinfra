@@ -9,7 +9,7 @@
  *   </section>
  */
 import { lazy, Suspense, type ReactNode } from "react";
-import { useNearViewport } from "./use-near-viewport";
+import { useNear } from "@/lib/use-near";
 
 const LivingPlan = lazy(() => import("./LivingPlan").then((module) => ({ default: module.LivingPlan })));
 
@@ -22,7 +22,7 @@ interface LivingPlanSlotProps {
 }
 
 export function LivingPlanSlot({ mode = "story", children, rootMargin = "900px 0px" }: LivingPlanSlotProps) {
-  const [hostRef, load] = useNearViewport<HTMLDivElement>(rootMargin);
+  const [hostRef, load] = useNear<HTMLDivElement>(rootMargin);
   return (
     <div ref={hostRef} className="lp-slot" data-loaded={load ? "true" : "false"}>
       {load ? (

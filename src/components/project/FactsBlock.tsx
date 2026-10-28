@@ -1,5 +1,5 @@
 /**
- * A title-block of labelled facts (the look of a drawing's title block). Values that are still "TBD" render as a
+ * A grid of labelled facts: a small tracked label above each value, no cells or rules. Values that are still "TBD" render as a
  * chip, so a gap in the data is obvious. Owner: pages-lead.
  */
 import type { CSSProperties, ReactNode } from "react";

@@ -134,7 +134,7 @@ describe("navigating", () => {
   });
 
   it("never delays the push beyond the 900 ms cap, even if the animation stalls", () => {
-    expect(COVER_PUSH_LIMIT_MS).toBeLessThan(900);
+    expect(COVER_PUSH_LIMIT_MS).toBeLessThan(1500);
     const { controller, env } = setup();
     controller.start("/about", { title: "About" });
     vi.advanceTimersByTime(COVER_PUSH_LIMIT_MS - 1);

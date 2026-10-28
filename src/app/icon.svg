@@ -1,5 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
-  <rect width="32" height="32" rx="6" fill="#f3efe7"/>
-  <circle cx="16" cy="16" r="9" fill="none" stroke="#b5412f" stroke-width="2.25"/>
-  <circle cx="16" cy="16" r="3.4" fill="#b5412f"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" role="img" aria-label="Parshwanath Infra"><title>Parshwanath Infra</title><style>path{fill:#231a12}@media (prefers-color-scheme:dark){path{fill:#d9b263}}</style><path d="M2 6C2 2.69 4.69 0 8 0C11.31 0 14 2.69 14 6V13H12V6C12 5.59 11.72 5.24 11.33 5.13C11.75 4.88 11.89 4.34 11.65 3.92C11.41 3.5 10.87 3.34 10.44 3.58C10.68 3.15 10.53 2.61 10.11 2.37C9.69 2.12 9.15 2.26 8.9 2.68C8.89 2.19 8.49 1.8 8 1.8C7.51 1.8 7.11 2.19 7.1 2.68C6.85 2.26 6.31 2.12 5.89 2.37C5.47 2.61 5.32 3.15 5.56 3.58C5.13 3.34 4.59 3.5 4.35 3.92C4.11 4.34 4.25 4.88 4.67 5.13C4.28 5.24 4 5.59 4 6V13H2ZM1 14H15V16H1Z"/></svg>

@@ -17,7 +17,7 @@ export const projectsIndexCopy = {
 } as const;
 
 export const projectCopy = {
-  eyebrow: "Sheet 02 · Project",
+  eyebrow: "Project",
   breadcrumbLabel: "Breadcrumb",
   breadcrumbProjects: "Projects",
   subnavLabel: "On this page",
@@ -56,7 +56,7 @@ export const projectCopy = {
   },
   homes: {
     eyebrow: "Homes",
-    heading: "Flats, row houses and shops.",
+    heading: "Flats, row houses and *shops*.",
     body: "Three kinds of home and shop share one plan: 1 BHK and 2 BHK flats, 2 BHK and 3 BHK row houses, and shops. Areas, floor plans and availability: TBD.",
     units: {
       title: "Unit types",

@@ -2,9 +2,14 @@
 @import "../styles/tokens.css";
 
 /*
- * Look A "Drafting table". Owner: pages-lead. Tokens live in src/styles/tokens.css (Director); this file holds the
- * base layer, the typographic scale and the small component vocabulary of the site: drawn underlines, the single
- * filled button, TBD chips, drawing marks and on-image callouts. No raw hex values: tokens only.
+ * "Residence" theme. Owner: pages-lead. Tokens live in src/styles/tokens.css; this file holds the base layer, the
+ * typographic scale, the colour-block tones and the small component vocabulary: pill and circle buttons, glass,
+ * arch frames, the round seal, facts, legends and on-image pins. No raw hex values: tokens only.
+ *
+ * Voice: a giant condensed uppercase serif against tiny tracked labels in an extended sans, one script word per
+ * headline, whole sections that change colour as you scroll, arches, circles and a lot of air. Almost no lines.
+ * Shape rule: images sit in arches or large-radius frames, interactive things are pills and circles, fields are
+ * soft rounded rectangles.
  */
 
 @layer base {
@@ -13,7 +18,7 @@
     color: var(--ink);
     -webkit-text-size-adjust: 100%;
     text-rendering: optimizeLegibility;
-    /* Anchored sections clear the sticky header and the project sub-nav. */
+    /* Anchored sections clear the floating header and the project sub-nav. */
     scroll-padding-top: calc(var(--header-h) + 4.5rem);
   }
 
@@ -22,23 +27,19 @@
     background: var(--paper);
     color: var(--ink);
     font-family: var(--font-sans);
-    font-size: 1rem;
-    line-height: 1.6;
-    font-feature-settings: "ss01", "cv11";
+    font-size: 0.9375rem;
+    font-weight: 400;
+    line-height: 1.7;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: clip;
   }
 
-  /*
-   * One weight per text face: Inter Tight and JetBrains Mono each ship a single 400 file (about 40 KB less on the
-   * first paint than the variable files). A bolder request would be faked by the browser, so emphasis comes from
-   * colour, size and case, never weight. Keep font-weight at 400 everywhere.
-   */
+  /* Two weights per text face: 400 for reading, 600 for labels, buttons and emphasis. */
   b,
   strong,
   th {
-    font-weight: 400;
+    font-weight: 600;
   }
 
   :focus-visible {
@@ -56,17 +57,12 @@
   h3,
   h4 {
     text-wrap: balance;
+    font-weight: 400;
   }
 
   p,
   li {
     text-wrap: pretty;
-  }
-
-  .font-mono,
-  code,
-  kbd {
-    font-variant-ligatures: none;
   }
 
   /* Native form controls follow the theme. */
@@ -94,68 +90,169 @@
   padding-block: var(--section-space);
 }
 
-/* Mono annotation: the drawing-label voice. */
+/*
+ * A colour block. `sheet` makes the section slide up over the one before it with a large rounded top edge (the
+ * previous section's own colour shows in the corners), so colour changes read as sheets, not stripes.
+ */
+@utility sheet {
+  position: relative;
+  border-top-left-radius: var(--sheet-r);
+  border-top-right-radius: var(--sheet-r);
+  margin-top: calc(var(--sheet-r) * -1);
+  padding-top: calc(var(--section-space) + var(--sheet-r));
+  padding-bottom: var(--section-space);
+}
+
+/*
+ * Tones re-point the semantic tokens for everything inside the block, so `text-ink`, `bg-paper-raised`, the accent
+ * button and the typology colours stay right on every colour without per-component code.
+ */
+@utility tone-paper {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+@utility tone-mist {
+  --paper: var(--block-mist);
+  /* Its own token: mixing from var(--paper-raised) here would reference itself, and a self-referencing custom
+     property is invalid, which left every raised surface on the band transparent. */
+  --paper-raised: var(--mist-raised);
+  --paper-sunk: color-mix(in srgb, var(--block-mist) 82%, var(--ink));
+  background: var(--paper);
+  color: var(--ink);
+}
+
+@utility tone-jewel {
+  --paper: var(--block-jewel);
+  --paper-raised: color-mix(in srgb, var(--on-jewel) 9%, var(--block-jewel));
+  --paper-sunk: color-mix(in srgb, #000 24%, var(--block-jewel));
+  --ink: var(--on-jewel);
+  --ink-muted: color-mix(in srgb, var(--on-jewel) 76%, var(--block-jewel));
+  --ink-faint: color-mix(in srgb, var(--on-jewel) 60%, var(--block-jewel));
+  --line: color-mix(in srgb, var(--on-jewel) 16%, transparent);
+  --line-strong: color-mix(in srgb, var(--on-jewel) 34%, transparent);
+  --brick: var(--on-jewel);
+  --brick-ink: var(--script-night);
+  --on-brick: var(--block-jewel);
+  --focus: var(--script-night);
+  --type-rowhouses: var(--on-dark-rowhouses);
+  --type-flats: var(--on-dark-flats);
+  --type-shops: var(--on-dark-shops);
+  --type-mixed: var(--on-dark-mixed);
+  --type-amenity: var(--on-dark-amenity);
+  --type-office: var(--on-jewel);
+  background: var(--paper);
+  color: var(--ink);
+}
+
+@utility tone-ink {
+  --paper: var(--block-ink);
+  --paper-raised: color-mix(in srgb, var(--on-ink) 8%, var(--block-ink));
+  --paper-sunk: color-mix(in srgb, #000 28%, var(--block-ink));
+  --ink: var(--on-ink);
+  --ink-muted: color-mix(in srgb, var(--on-ink) 74%, var(--block-ink));
+  --ink-faint: color-mix(in srgb, var(--on-ink) 58%, var(--block-ink));
+  --line: color-mix(in srgb, var(--on-ink) 15%, transparent);
+  --line-strong: color-mix(in srgb, var(--on-ink) 34%, transparent);
+  --brick: var(--on-ink);
+  --brick-ink: var(--script-night);
+  --on-brick: var(--block-ink);
+  --focus: var(--script-night);
+  --type-rowhouses: var(--on-dark-rowhouses);
+  --type-flats: var(--on-dark-flats);
+  --type-shops: var(--on-dark-shops);
+  --type-mixed: var(--on-dark-mixed);
+  --type-amenity: var(--on-dark-amenity);
+  --type-office: var(--on-ink);
+  background: var(--paper);
+  color: var(--ink);
+}
+
+/* Text laid straight over a photograph: ivory, with the accent button turned ivory too. No background of its own. */
+@utility on-photo {
+  --ink: var(--on-jewel);
+  --ink-muted: color-mix(in srgb, var(--on-jewel) 86%, transparent);
+  --brick: var(--on-jewel);
+  --brick-ink: var(--script-night);
+  --on-brick: var(--block-jewel);
+  --focus: var(--script-night);
+  color: var(--ink);
+}
+
+/* Label voice: tiny, extended, bold, tracked, uppercase. */
 @utility t-mono {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: 0.75rem;
+  font-weight: 600;
   line-height: 1.5;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  font-variant-ligatures: none;
 }
 
 @utility t-mono-sm {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: 0.6875rem;
-  line-height: 1.45;
-  letter-spacing: 0.08em;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  font-variant-ligatures: none;
 }
 
-/* Display serif scale: huge against the small mono labels. Instrument Serif has one weight: never bold it. */
+/* Display scale: condensed high-contrast serif, always uppercase, tight. */
 @utility t-display-1 {
   font-family: var(--font-display);
-  font-weight: 400;
-  font-size: clamp(5.5rem, 1.5rem + 24vw, 9rem);
+  font-weight: 500;
+  font-size: clamp(5rem, 1.2rem + 24vw, 9.5rem);
   line-height: 0.86;
-  letter-spacing: -0.03em;
-  /* a long single word wraps inside a narrow column instead of pushing the page sideways (no change for short words) */
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
   overflow-wrap: break-word;
 }
 
 @utility t-display-2 {
   font-family: var(--font-display);
-  font-weight: 400;
-  font-size: clamp(2.875rem, 1.6rem + 5.4vw, 6.75rem);
-  line-height: 0.95;
-  letter-spacing: -0.022em;
+  font-weight: 500;
+  font-size: clamp(2.5rem, 1.35rem + 4.6vw, 5.5rem);
+  line-height: 0.96;
+  letter-spacing: -0.012em;
+  text-transform: uppercase;
 }
 
 @utility t-display-3 {
   font-family: var(--font-display);
-  font-weight: 400;
-  font-size: clamp(2.125rem, 1.5rem + 2.5vw, 3.875rem);
+  font-weight: 500;
+  font-size: clamp(1.875rem, 1.3rem + 2.2vw, 3.5rem);
   line-height: 1.02;
-  letter-spacing: -0.016em;
+  letter-spacing: -0.008em;
+  text-transform: uppercase;
 }
 
 @utility t-display-4 {
   font-family: var(--font-display);
-  font-weight: 400;
-  font-size: clamp(1.625rem, 1.3rem + 1.1vw, 2.375rem);
-  line-height: 1.12;
-  letter-spacing: -0.01em;
+  font-weight: 500;
+  font-size: clamp(1.5rem, 1.25rem + 1vw, 2.125rem);
+  line-height: 1.08;
+  letter-spacing: 0;
+  text-transform: uppercase;
 }
 
 @utility t-lead {
-  font-size: clamp(1.125rem, 1.04rem + 0.38vw, 1.375rem);
-  line-height: 1.5;
+  font-size: clamp(0.9375rem, 0.88rem + 0.28vw, 1.0625rem);
+  line-height: 1.75;
 }
 
 @utility t-small {
-  font-size: 0.875rem;
-  line-height: 1.55;
+  font-size: 0.8125rem;
+  line-height: 1.65;
+}
+
+/* The script accent. In a headline an <em> (from the *starred* markup) becomes the one script word. */
+@utility t-script {
+  font-family: var(--font-script);
+  font-weight: 400;
+  font-style: normal;
+  text-transform: none;
+  letter-spacing: 0;
 }
 
 /* Horizontal scrollers (amenities, gallery): keep the native scrollbar, make it quiet. */
@@ -164,6 +261,51 @@
   overscroll-behavior-x: contain;
   scrollbar-width: thin;
   scrollbar-color: var(--line-strong) transparent;
+}
+
+/* Arch: the top is a half circle. Frames and images set to this carry the Indian-arch motif. */
+@utility arch {
+  border-top-left-radius: 999px;
+  border-top-right-radius: 999px;
+  overflow: hidden;
+}
+
+@utility frame-card {
+  border-radius: var(--radius-card);
+  overflow: hidden;
+}
+
+/*
+ * The one script word. Headings never lay out around it: the em has no line-height of its own, so the line box stays
+ * the uppercase line and the script hangs over the baseline like a signature.
+ */
+h1 em,
+h2 em,
+h3 em,
+.t-display-1 em,
+.t-display-2 em,
+.t-display-3 em,
+.t-display-4 em {
+  display: inline-block;
+  font-family: var(--font-script);
+  font-weight: 400;
+  font-style: normal;
+  text-transform: none;
+  letter-spacing: 0;
+  line-height: 0.5;
+  font-size: 1.32em;
+  padding-inline: 0.04em;
+  color: var(--brick-ink);
+  vertical-align: -0.1em;
+}
+
+/* In running text a starred word is only an accent colour, never script. */
+p em,
+li em,
+address em {
+  font-style: normal;
+  font-weight: 600;
+  color: var(--brick-ink);
 }
 
 /* ------------------------------------------------------------------------------------------------ */
@@ -177,12 +319,14 @@
     left: var(--gutter);
     top: 0.75rem;
     z-index: calc(var(--z-cursor) + 10);
-    padding: 0.75rem 1rem;
+    padding: 0.75rem 1.25rem;
+    border-radius: 999px;
     background: var(--ink);
     color: var(--paper);
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    letter-spacing: 0.08em;
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
     transform: translateY(-300%);
     transition: transform var(--duration-quick) var(--ease-out);
@@ -191,7 +335,30 @@
     transform: translateY(0);
   }
 
-  /* Text link whose underline draws on hover and focus. A faint rule is always there. */
+  /* Glass: only where it helps (the header, the project sub-nav, drawers and cards over imagery). Solid first. */
+  .glass {
+    background: var(--paper-raised);
+    border: 1px solid var(--glass-edge);
+  }
+  @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+    .glass {
+      background: var(--glass);
+      -webkit-backdrop-filter: blur(18px) saturate(1.5);
+      backdrop-filter: blur(18px) saturate(1.5);
+      box-shadow:
+        inset 0 1px 0 color-mix(in srgb, #fff 32%, transparent),
+        0 14px 40px -16px color-mix(in srgb, var(--ink) 34%, transparent);
+    }
+  }
+  @media (prefers-reduced-transparency: reduce) {
+    .glass {
+      background: var(--paper-raised);
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+  }
+
+  /* Text link whose underline draws on hover and focus. A faint underline is always there. */
   .link-draw {
     background-image: linear-gradient(var(--line-strong), var(--line-strong)), linear-gradient(currentColor, currentColor);
     background-size:
@@ -201,7 +368,7 @@
       0 100%,
       0 100%;
     background-repeat: no-repeat;
-    padding-bottom: 0.12em;
+    padding-bottom: 0.18em;
     transition: background-size 520ms var(--ease-draft);
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
@@ -221,13 +388,10 @@
     }
   }
   .link-draw[aria-current="page"] {
-    background-image: linear-gradient(var(--brick), var(--brick)), linear-gradient(var(--brick), var(--brick));
-    background-size:
-      100% 2px,
-      100% 2px;
+    background-image: linear-gradient(var(--brick-ink), var(--brick-ink)), linear-gradient(var(--brick-ink), var(--brick-ink));
   }
 
-  /* Quiet variant for navigation lists: no resting rule, the underline only draws on hover and focus. */
+  /* Quiet variant for navigation lists: no resting underline, it only draws on hover and focus. */
   .link-draw--quiet {
     background-size:
       0% 1px,
@@ -247,37 +411,41 @@
   }
   .link-draw--quiet[aria-current="page"] {
     background-size:
-      100% 2px,
-      100% 2px;
+      100% 1px,
+      100% 1px;
   }
 
-  /* The single filled button: the enquiry call to action. */
+  /* The single filled button: the enquiry call to action. A pill; the large size is a circle. */
   .btn-enquire {
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 0.75rem;
+    gap: 0.6rem;
     min-height: 2.75rem;
-    padding: 0.7rem 1.25rem;
+    padding: 0.7rem 1.4rem;
     background: var(--brick);
     color: var(--on-brick);
-    border: 1px solid var(--brick);
-    border-radius: var(--radius-xs);
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
+    border: 0;
+    border-radius: 999px;
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    font-weight: 600;
     line-height: 1;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
     cursor: pointer;
     transition:
-      background-color var(--duration-quick) linear,
-      border-color var(--duration-quick) linear;
+      background-color var(--duration-base) var(--ease-out),
+      transform var(--duration-quick) var(--ease-out);
   }
   @media (hover: hover) and (pointer: fine) {
     .btn-enquire:hover {
-      background: var(--brick-ink);
-      border-color: var(--brick-ink);
+      background: color-mix(in srgb, var(--brick) 84%, var(--ink));
     }
+  }
+  .btn-enquire:active {
+    transform: scale(0.97);
   }
   .btn-enquire:disabled {
     cursor: progress;
@@ -291,10 +459,25 @@
       transform: translateX(0.25rem);
     }
   }
+  /* The circular call to action: a disc with the label and an arrow, like a seal you press. */
   .btn-enquire--lg {
-    min-height: 3.5rem;
-    padding: 1rem 1.75rem;
-    font-size: 0.8125rem;
+    width: clamp(7rem, 5.6rem + 4vw, 9.75rem);
+    aspect-ratio: 1;
+    min-height: 0;
+    padding: 0;
+    flex-direction: column;
+    gap: 0.7rem;
+    font-size: 0.75rem;
+    text-align: center;
+  }
+  .btn-enquire--lg .btn-enquire__arrow {
+    width: 1.4rem;
+    height: 1.4rem;
+  }
+  /* A form submit button is a wide pill, never a disc. */
+  .btn-enquire--wide {
+    min-height: 3.25rem;
+    padding-inline: 2rem;
   }
 
   /* Outline button: only for secondary and disabled states (never filled). */
@@ -304,15 +487,16 @@
     justify-content: center;
     gap: 0.625rem;
     min-height: 2.75rem;
-    padding: 0.7rem 1.1rem;
+    padding: 0.7rem 1.4rem;
     border: 1px solid var(--line-strong);
-    border-radius: var(--radius-xs);
+    border-radius: 999px;
     background: transparent;
     color: var(--ink);
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    font-weight: 600;
     line-height: 1;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
     cursor: pointer;
     transition:
@@ -329,7 +513,7 @@
   .btn-line[aria-disabled="true"] {
     cursor: not-allowed;
     color: var(--ink-muted);
-    border-style: dashed;
+    opacity: 0.85;
   }
 
   /* Round icon button (theme toggle, close, scroller arrows). */
@@ -345,13 +529,17 @@
     cursor: pointer;
     transition:
       border-color var(--duration-quick) linear,
-      background-color var(--duration-quick) linear;
+      background-color var(--duration-quick) linear,
+      transform var(--duration-quick) var(--ease-out);
   }
   @media (hover: hover) and (pointer: fine) {
     .btn-icon:hover {
       border-color: var(--line-strong);
-      background: var(--paper-raised);
+      background: color-mix(in srgb, var(--ink) 6%, transparent);
     }
+  }
+  .btn-icon:active {
+    transform: scale(0.94);
   }
   .btn-icon--outlined {
     border-color: var(--line-strong);
@@ -365,15 +553,16 @@
   .chip-tbd {
     display: inline-flex;
     align-items: center;
-    padding: 0.05em 0.5em;
-    background: var(--paper-sunk);
+    padding: 0.1em 0.7em;
+    background: color-mix(in srgb, var(--ink) 7%, transparent);
     color: var(--ink-muted);
     border: 1px dashed var(--line-strong);
-    border-radius: var(--radius-xs);
-    font-family: var(--font-mono);
-    font-size: 0.72em;
-    line-height: 1.5;
-    letter-spacing: 0.1em;
+    border-radius: 999px;
+    font-family: var(--font-sans);
+    font-size: 0.68em;
+    font-weight: 600;
+    line-height: 1.6;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     vertical-align: 0.1em;
     white-space: nowrap;
@@ -384,75 +573,81 @@
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    padding: 0.2rem 0.55rem;
-    border: 1px solid var(--line-strong);
-    border-radius: var(--radius-xs);
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
+    padding: 0.3rem 0.8rem;
+    background: color-mix(in srgb, var(--ink) 7%, transparent);
+    border-radius: 999px;
+    font-family: var(--font-sans);
+    font-size: 0.625rem;
+    font-weight: 600;
     line-height: 1.4;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--ink);
   }
 
-  /* "Artist's impression" corner label over an image. */
+  /* "Artist's impression" label over an image: a small glass pill. */
   .tag-impression {
     position: absolute;
-    left: 0.5rem;
-    bottom: 0.5rem;
+    left: 0.75rem;
+    bottom: 0.75rem;
     z-index: 3;
-    max-width: calc(100% - 1rem);
-    padding: 0.2rem 0.5rem;
-    background: color-mix(in srgb, var(--paper) 90%, transparent);
+    max-width: calc(100% - 1.5rem);
+    padding: 0.3rem 0.75rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--paper) 88%, transparent);
     color: var(--ink);
-    border: 1px solid var(--line-strong);
-    font-family: var(--font-mono);
-    font-size: 0.625rem;
-    line-height: 1.4;
-    letter-spacing: 0.08em;
+    font-family: var(--font-sans);
+    font-size: 0.5625rem;
+    font-weight: 600;
+    line-height: 1.5;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     pointer-events: none;
   }
-
-  /* Drawing registration marks around a frame (four corner ticks). */
-  .marks {
-    position: relative;
-  }
-  .marks::before {
-    content: "";
-    position: absolute;
-    inset: -0.65rem;
-    pointer-events: none;
-    --mark: var(--line-strong);
-    --mark-len: 0.875rem;
-    background:
-      linear-gradient(var(--mark), var(--mark)) top left / var(--mark-len) 1px,
-      linear-gradient(var(--mark), var(--mark)) top left / 1px var(--mark-len),
-      linear-gradient(var(--mark), var(--mark)) top right / var(--mark-len) 1px,
-      linear-gradient(var(--mark), var(--mark)) top right / 1px var(--mark-len),
-      linear-gradient(var(--mark), var(--mark)) bottom left / var(--mark-len) 1px,
-      linear-gradient(var(--mark), var(--mark)) bottom left / 1px var(--mark-len),
-      linear-gradient(var(--mark), var(--mark)) bottom right / var(--mark-len) 1px,
-      linear-gradient(var(--mark), var(--mark)) bottom right / 1px var(--mark-len);
-    background-repeat: no-repeat;
+  @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+    .tag-impression {
+      background: color-mix(in srgb, var(--paper) 62%, transparent);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+    }
   }
 
-  /* Faint drafting grid for sheets that should feel like paper on a table. */
-  .bg-grid {
-    background-image:
-      linear-gradient(var(--grid) 1px, transparent 1px),
-      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-    background-size: 4rem 4rem;
-    background-position: -1px -1px;
+  /* The round seal: the lettering turns slowly (transform only). */
+  .seal {
+    display: block;
+    flex: none;
+    color: inherit;
+  }
+  .seal__text {
+    font-family: var(--font-sans);
+    font-size: 15.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .seal__ring {
+    transform-origin: 100px 100px;
+  }
+  .seal__ring--spin {
+    animation: seal-turn 48s linear infinite;
+  }
+  @keyframes seal-turn {
+    to {
+      transform: rotate(360deg);
+    }
   }
 
-  /* Ruler: a hairline with minor and major ticks. Decorative only. */
-  .rule-ticks {
-    height: 0.625rem;
-    background:
-      repeating-linear-gradient(90deg, var(--line-strong) 0 1px, transparent 1px 0.75rem) bottom / 100% 0.3125rem no-repeat,
-      repeating-linear-gradient(90deg, var(--line-strong) 0 1px, transparent 1px 7.5rem) bottom / 100% 0.625rem no-repeat,
-      linear-gradient(var(--line-strong), var(--line-strong)) bottom / 100% 1px no-repeat;
+  /* The logo (components/ui/Logo.tsx): mark and name share one height, --logo-h, so the lockup stays aligned. */
+  .logo {
+    display: inline-flex;
+    flex: none;
+    align-items: flex-start;
+    font-size: var(--logo-h, 2.5rem);
+    line-height: 1;
+  }
+  .logo svg {
+    display: block;
+    flex: none;
   }
 
   /* Theme toggle icons: one is visible, driven by data-theme (system preference when JavaScript is off). */
@@ -475,7 +670,7 @@
   }
 
   /* ---------------------------------------------------------------------------------------------- */
-  /* On-image callouts: a pin, an orthogonal leader and a mono label. Numbered pins below lg.        */
+  /* On-image pins: a numbered round pin, and from lg a soft glass label beside it. No leader lines.  */
   /* ---------------------------------------------------------------------------------------------- */
 
   .callout {
@@ -485,7 +680,6 @@
     z-index: 2;
     width: 0;
     height: 0;
-    --len: 2.75rem;
   }
   .callout__pin {
     position: absolute;
@@ -494,19 +688,19 @@
     z-index: 2;
     display: grid;
     place-items: center;
-    width: 1.375rem;
-    height: 1.375rem;
+    width: 1.625rem;
+    height: 1.625rem;
     transform: translate(-50%, -50%);
     border-radius: 50%;
     background: var(--brick);
     color: var(--on-brick);
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
     font-size: 0.625rem;
-    font-weight: 400;
+    font-weight: 600;
     line-height: 1;
     box-shadow:
-      0 0 0 2px color-mix(in srgb, var(--paper) 88%, transparent),
-      0 1px 6px rgb(0 0 0 / 0.28);
+      0 0 0 4px color-mix(in srgb, var(--brick) 28%, transparent),
+      0 2px 10px color-mix(in srgb, var(--block-ink) 30%, transparent);
   }
   .callout__leader,
   .callout__label {
@@ -515,173 +709,145 @@
 
   @media (min-width: 64rem) {
     .callout__pin {
-      width: 0.6875rem;
-      height: 0.6875rem;
+      width: 0.875rem;
+      height: 0.875rem;
       font-size: 0;
-    }
-    .callout__leader {
-      display: block;
-      position: absolute;
-      background: var(--ink);
-      box-shadow: 0 0 0 1px color-mix(in srgb, var(--paper) 78%, transparent);
     }
     .callout__label {
       display: block;
       position: absolute;
       white-space: nowrap;
-      padding: 0.3rem 0.55rem;
-      background: color-mix(in srgb, var(--paper) 93%, transparent);
+      padding: 0.4rem 0.85rem;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--paper) 78%, transparent);
       color: var(--ink);
-      border: 1px solid var(--line-strong);
-      font-family: var(--font-mono);
-      font-size: 0.6875rem;
+      font-family: var(--font-sans);
+      font-size: 0.625rem;
+      font-weight: 600;
       line-height: 1.3;
-      letter-spacing: 0.07em;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
     }
-    .callout__label b {
-      margin-right: 0.45rem;
-      color: var(--brick-ink);
-      font-weight: 400;
+    @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+      .callout__label {
+        background: color-mix(in srgb, var(--paper) 58%, transparent);
+        -webkit-backdrop-filter: blur(12px);
+        backdrop-filter: blur(12px);
+      }
     }
-    .callout[data-dir="up"] .callout__leader {
-      left: -0.5px;
-      bottom: 0;
-      width: 1px;
-      height: var(--len);
+    .callout__label b {
+      margin-right: 0.55rem;
+      color: var(--brick-ink);
+      font-weight: 600;
     }
     .callout[data-dir="up"] .callout__label {
-      left: -0.5px;
-      bottom: var(--len);
-    }
-    .callout[data-dir="down"] .callout__leader {
-      left: -0.5px;
-      top: 0;
-      width: 1px;
-      height: var(--len);
+      left: 0;
+      bottom: 1.1rem;
+      transform: translateX(-50%);
     }
     .callout[data-dir="down"] .callout__label {
-      left: -0.5px;
-      top: var(--len);
-    }
-    .callout[data-dir="right"] .callout__leader {
       left: 0;
-      top: -0.5px;
-      height: 1px;
-      width: var(--len);
+      top: 1.1rem;
+      transform: translateX(-50%);
     }
     .callout[data-dir="right"] .callout__label {
-      left: var(--len);
+      left: 1.15rem;
       top: 0;
       transform: translateY(-50%);
-    }
-    .callout[data-dir="left"] .callout__leader {
-      right: 0;
-      top: -0.5px;
-      height: 1px;
-      width: var(--len);
     }
     .callout[data-dir="left"] .callout__label {
-      right: var(--len);
+      right: 1.15rem;
       top: 0;
       transform: translateY(-50%);
     }
-  }
-
-  .callout[data-align="end"][data-dir="up"] .callout__label,
-  .callout[data-align="end"][data-dir="down"] .callout__label {
-    left: auto;
-    right: -0.5px;
+    .callout[data-align="end"][data-dir="up"] .callout__label,
+    .callout[data-align="end"][data-dir="down"] .callout__label {
+      left: auto;
+      right: 0;
+      transform: none;
+    }
   }
 
   /* ---------------------------------------------------------------------------------------------- */
-  /* Section annotation: a numbered detail marker, a label, a ruled line and an optional note.       */
+  /* Section label: a tiny index and a tracked label, with an optional note on the right.             */
   /* ---------------------------------------------------------------------------------------------- */
 
   .eyebrow {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
-    column-gap: 0.75rem;
+    align-items: baseline;
+    column-gap: 1rem;
     row-gap: 0.4rem;
     color: var(--ink-muted);
   }
   .eyebrow__marker {
-    display: inline-grid;
-    place-items: center;
     flex: none;
-    width: 1.875rem;
-    height: 1.875rem;
-    border: 1px solid var(--line-strong);
-    border-radius: 50%;
-    color: var(--ink);
-    font-size: 0.6875rem;
-    letter-spacing: 0;
+    color: var(--brick-ink);
+    letter-spacing: 0.1em;
   }
   .eyebrow__label {
     color: var(--ink);
   }
   .eyebrow__rule {
     display: none;
-    flex: 1 1 2rem;
-    height: 1px;
-    background: var(--line);
   }
   .eyebrow__note {
     flex: 1 0 100%;
     color: var(--ink-muted);
+    text-transform: none;
+    letter-spacing: 0.02em;
+    font-weight: 400;
   }
   @media (min-width: 40rem) {
-    .eyebrow__rule {
-      display: block;
-    }
     .eyebrow__note {
       flex: 0 1 auto;
+      margin-left: auto;
       text-align: right;
     }
   }
 
-  /* Legend under a figure: the text equivalent of the on-image callouts. */
+  /* Legend under a figure: the text equivalent of the on-image pins, numbered with the same round badge. */
   .legend {
     display: grid;
-    gap: 0;
-    border-top: 1px solid var(--line-strong);
+    gap: 1.25rem 3rem;
     counter-reset: legend;
   }
   .legend > li {
     display: grid;
-    grid-template-columns: 2.25rem 1fr;
-    gap: 0.5rem;
-    align-items: baseline;
-    padding: 0.8rem 0;
-    border-bottom: 1px solid var(--line);
+    grid-template-columns: 1.75rem 1fr;
+    gap: 1rem;
+    align-items: start;
   }
   .legend__n {
-    color: var(--brick-ink);
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    letter-spacing: 0.08em;
+    display: inline-grid;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 50%;
+    background: var(--brick);
+    color: var(--on-brick);
+    font-family: var(--font-sans);
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0;
   }
 
-  /* Title-block table: drawing-sheet fields (label above, value below) separated by hairlines. */
+  /* Facts: a label above its value, laid out in air. No cells, no rules. */
   .titleblock {
     display: grid;
-    gap: 1px;
-    background: var(--line-strong);
-    border: 1px solid var(--line-strong);
+    gap: 1.75rem 2.5rem;
   }
   .titleblock__cell {
     min-width: 0;
-    padding: 0.85rem 1rem 1rem;
-    background: var(--paper-raised);
   }
   .titleblock__label {
     display: block;
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.45rem;
     color: var(--ink-muted);
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
-    letter-spacing: 0.08em;
+    font-family: var(--font-sans);
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
   }
   .titleblock__value {
@@ -721,20 +887,22 @@
     overflow: hidden;
   }
 
-  /* Form controls: drafted fields with a ruled baseline. */
+  /* Form controls: soft rounded fields on a raised surface. */
   .field-input {
     width: 100%;
-    min-height: 2.875rem;
-    padding: 0.55rem 0.75rem;
-    background: var(--paper);
+    min-height: 3rem;
+    padding: 0.65rem 1rem;
+    background: var(--paper-raised);
     color: var(--ink);
     border: 1px solid var(--line-strong);
-    border-radius: var(--radius-xs);
-    transition: border-color var(--duration-quick) linear;
+    border-radius: var(--radius-field);
+    transition:
+      border-color var(--duration-quick) linear,
+      box-shadow var(--duration-quick) linear;
   }
   .field-input::placeholder {
     color: var(--ink-muted);
-    opacity: 0.8;
+    opacity: 0.9;
   }
   @media (hover: hover) and (pointer: fine) {
     .field-input:hover {
@@ -743,13 +911,15 @@
   }
   .field-input:focus-visible {
     border-color: var(--ink);
+    outline: 2px solid var(--focus);
     outline-offset: 2px;
   }
   .field-input[aria-invalid="true"] {
-    border-color: var(--brick);
+    border-color: var(--brick-ink);
+    box-shadow: 0 0 0 1px var(--brick-ink);
   }
 
-  /* Radio chips: native radios, drawn as drafted tags. */
+  /* Radio chips: native radios, drawn as pills. */
   .radio-chip {
     position: relative;
     display: inline-flex;
@@ -765,10 +935,10 @@
     display: inline-flex;
     align-items: center;
     min-height: 2.75rem; /* 44 px touch target */
-    padding: 0.4rem 0.8rem;
+    padding: 0.4rem 1.1rem;
     border: 1px solid var(--line-strong);
-    border-radius: var(--radius-xs);
-    font-size: 0.875rem;
+    border-radius: 999px;
+    font-size: 0.8125rem;
     line-height: 1.2;
     transition:
       border-color var(--duration-quick) linear,
@@ -789,6 +959,19 @@
     outline: 2px solid var(--focus);
     outline-offset: 3px;
   }
+
+  /* The floating header and project sub-nav: a glass pill, centred under the top edge. */
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
 }
 
 /* ------------------------------------------------------------------------------------------------ */
@@ -804,5 +987,102 @@
     animation-delay: 0ms !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+@layer components {
+  /* Hero: the gradient that holds the ivory wordmark and statement on top of the photograph. */
+  .hero-scrim {
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--block-ink) 62%, transparent) 0%,
+      color-mix(in srgb, var(--block-ink) 28%, transparent) 34%,
+      color-mix(in srgb, var(--block-ink) 22%, transparent) 55%,
+      color-mix(in srgb, var(--block-ink) 34%, transparent) 70%,
+      color-mix(in srgb, var(--block-ink) 78%, transparent) 100%
+    );
+  }
+
+  /* The uppercase wordmark: a soft halo, so it holds over the bright bare-earth frames of the film too. */
+  .hero-wordmark {
+    text-shadow: 0 2px 30px color-mix(in srgb, var(--block-ink) 40%, transparent);
+  }
+
+  /* Hero film: the small pause / play control, a glass pill like the "Artist's impression" label. */
+  .hero-film-toggle {
+    position: relative;
+    padding: 0.3rem 0.75rem;
+    border: 0;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--paper) 62%, transparent);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 0.5625rem;
+    font-weight: 600;
+    line-height: 1.5;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  /* A 44 px touch target around a small pill. */
+  .hero-film-toggle::after {
+    content: "";
+    position: absolute;
+    inset: -0.55rem -0.4rem;
+  }
+  .hero-film-toggle:focus-visible {
+    outline: 2px solid var(--on-jewel);
+    outline-offset: 2px;
+  }
+  /* Over the film both pills are dark glass with ivory type, in light and dark themes alike (the hero is on-photo). */
+  .hero-film-badges .tag-impression,
+  .hero-film-badges .hero-film-toggle {
+    background: color-mix(in srgb, var(--block-ink) 58%, transparent);
+    color: var(--on-jewel);
+  }
+
+  /* The one script word of the wordmark, signed across the foot of the uppercase. */
+  .hero-script {
+    display: block;
+    margin-top: -0.3em;
+    font-family: var(--font-script);
+    font-weight: 400;
+    font-size: clamp(3.75rem, 1.2rem + 13vw, 9.5rem);
+    line-height: 0.8;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--ink);
+    transform: rotate(-5deg) translateX(0.12em);
+    text-shadow: 0 2px 24px color-mix(in srgb, var(--block-ink) 45%, transparent);
+  }
+}
+
+@layer components {
+  /* An oversized uppercase word cut off by the section's bottom edge (the footer). */
+  .crop-word {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(3.25rem, 14.2vw, 24rem);
+    line-height: 0.74;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    text-align: center;
+    white-space: nowrap;
+    color: color-mix(in srgb, var(--ink) 11%, transparent);
+    transform: translateY(24%);
+  }
+}
+
+@layer components {
+  /* The name's script word on ivory (project page): in the accent, left aligned under the uppercase. */
+  .hero-script--plain {
+    color: var(--brick-ink);
+    text-shadow: none;
+    transform: rotate(-4deg) translateX(0.04em);
+    transform-origin: left center;
+    margin-top: -0.2em;
+    font-size: clamp(3.5rem, 1.5rem + 8vw, 8rem);
   }
 }

@@ -1,11 +1,15 @@
 /*
- * S1 boundary loader. Owner: motion-lead.
+ * S1 brand intro. Owner: motion-lead.
  *
  * Visibility rules, in one place:
  *  - no JavaScript: never shown (display none unless html[data-js="1"], which the layout's pre-paint script sets);
  *  - already played this session: never shown (html[data-loader="seen"], set by the same script and by the loader);
- *  - JavaScript never took over (data-state stays "idle"): CSS fades it out after 4 s so the page is never held hostage.
+ *  - reduced motion: never shown (both rules skip review replays, which carry data-replay);
+ *  - JavaScript never took over (data-state stays "idle"): CSS fades it out after 1.5 s so the page is never held hostage.
+ * The overlay is a fixed layer over a hero that is already painting: it adds no layout and delays no image.
  * No transforms are set here: GSAP owns the transforms of the group and the roundabout dot.
+ * Colours come from the design tokens: a deep maroon sheet (--curtain) with the township boundary drawn in ivory
+ * (--on-curtain) and the roundabout as a champagne dot (--script-night).
  */
 
 .pi-loader {
@@ -22,19 +26,25 @@ html[data-js="1"] .pi-loader {
   display: block;
 }
 
-html[data-loader="seen"] .pi-loader,
+html[data-loader="seen"] .pi-loader:not([data-replay]),
 html[data-js="1"] .pi-loader[data-state="done"] {
   display: none;
 }
 
 html[data-js="1"] .pi-loader[data-state="idle"] {
-  animation: pi-loader-failsafe 0.4s ease 4s forwards;
+  animation: pi-loader-failsafe 0.25s ease 1.5s forwards;
 }
 
 @keyframes pi-loader-failsafe {
   to {
     opacity: 0;
     visibility: hidden;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-js="1"] .pi-loader:not([data-replay]) {
+    display: none;
   }
 }
 
@@ -48,36 +58,27 @@ html[data-js="1"] .pi-loader[data-state="idle"] {
 
 .pi-loader__sheet,
 .pi-loader__plug {
-  fill: var(--paper);
+  fill: var(--curtain, var(--paper));
 }
 
 /* the plug is stroked in the same colour so no hairline of page shows along the edge of the window */
 .pi-loader__plug {
-  stroke: var(--paper);
+  stroke: var(--curtain, var(--paper));
   stroke-width: 3px;
-  vector-effect: non-scaling-stroke;
-}
-
-/* faint pencil outline: the ink draws over it, and it is what you see before JavaScript starts */
-.pi-loader__guide {
-  fill: none;
-  stroke: var(--line-strong);
-  stroke-width: 1px;
-  stroke-linejoin: round;
   vector-effect: non-scaling-stroke;
 }
 
 .pi-loader__ink {
   fill: none;
-  stroke: var(--ink);
-  stroke-width: 2px;
+  stroke: var(--on-curtain, var(--ink));
+  stroke-width: 2.5px;
   stroke-linejoin: round;
-  stroke-linecap: butt;
+  stroke-linecap: round;
   vector-effect: non-scaling-stroke;
 }
 
 .pi-loader__dot {
-  fill: var(--brick);
+  fill: var(--script-night, var(--on-curtain));
 }
 
 /* ink and dot start invisible; the loader reveals them as it draws */
@@ -86,19 +87,8 @@ html[data-js="1"] .pi-loader__dot {
   opacity: 0;
 }
 
-.pi-loader__counter {
-  position: absolute;
-  left: var(--gutter, 1.5rem);
-  bottom: var(--gutter, 1.5rem);
-  margin: 0;
-  color: var(--ink);
-  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
-  font-size: 0.75rem;
-  letter-spacing: 0.14em;
-  font-variant-numeric: tabular-nums;
-}
-
-/* reduced motion and Tier C: a static outline, no counting */
-.pi-loader[data-mode="static"] .pi-loader__counter {
-  display: none;
+/* the plain fade (Tier C, late takeover, no runtime): show the finished outline while the layer fades */
+.pi-loader[data-mode="static"] .pi-loader__ink,
+.pi-loader[data-mode="static"] .pi-loader__dot {
+  opacity: 1;
 }

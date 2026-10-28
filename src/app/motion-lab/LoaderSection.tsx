@@ -31,16 +31,15 @@ export function LoaderSection() {
       title="S1 loader · BoundaryLoader"
       note={
         <>
-          The boundary draws as one ink line over a pencil guide, with the roundabout dot and the entry arrow. The counter
-          follows real loading (fonts, the picture below decoding, window load) and the whole thing is capped at{" "}
-          {worstCaseSeconds().toFixed(1)} s. Then the outline becomes a window onto the page and grows to full bleed.
-          Replays here never set the session flag.
+          The red township boundary draws with the roundabout dot and the entry arrow, then becomes a window onto the page
+          and grows to full bleed. It does not wait for any asset: the picture below is already painting underneath. About{" "}
+          {worstCaseSeconds().toFixed(1)} s in total. Replays here never set the session flag.
         </>
       }
     >
       <Row>
         <LabButton onClick={() => start(false)}>Play loader</LabButton>
-        <LabButton onClick={() => start(true)}>Play reduced version</LabButton>
+        <LabButton onClick={() => start(true)}>Play Tier C fade</LabButton>
         <Chip>{finished}</Chip>
       </Row>
       <div className="relative aspect-3/2 max-w-md overflow-hidden bg-paper-sunk">
@@ -51,17 +50,15 @@ export function LoaderSection() {
           sizes="448px"
           className="object-cover"
           loading="eager"
-          data-lab-hero=""
         />
       </div>
-      <p className="font-mono text-xs text-ink-muted">Artist&apos;s impression · this picture is the loader&apos;s hero image</p>
+      <p className="font-mono text-xs text-ink-muted">Artist&apos;s impression · this picture paints under the loader from the first frame</p>
       {run ? (
         <BoundaryLoader
           key={run.id}
           {...shapeFromPlan(plan)}
           persist={false}
           forceStatic={run.forceStatic}
-          heroSelector="[data-lab-hero]"
           onDone={() => {
             setFinished("finished");
             setRun(null);

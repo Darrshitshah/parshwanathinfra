@@ -16,14 +16,14 @@ function sectionId(index: number): string {
 export function LegalPage({ doc }: { doc: LegalDoc }) {
   return (
     <>
-      <section aria-labelledby="legal-title" className="border-b border-line bg-grid">
-        <div className="wrap pb-12 pt-10 md:pb-16 md:pt-16">
+      <section aria-labelledby="legal-title" className="tone-paper">
+        <div className="wrap pb-[calc(var(--sheet-r)+3rem)] pt-[calc(var(--header-h)+3rem)] md:pt-[calc(var(--header-h)+5rem)]">
           <Eyebrow index="01">{en.footer.legalLabel}</Eyebrow>
-          <h1 id="legal-title" className="t-display-1 mt-8 text-[clamp(3.5rem,1rem+20vw,9rem)] text-ink md:mt-12 md:text-[clamp(6rem,11vw,11rem)]">
+          <h1 id="legal-title" className="t-display-1 mt-10 text-[clamp(3rem,0.5rem+16vw,8rem)] text-ink md:mt-14 md:text-[clamp(6rem,11vw,11rem)]">
             {doc.title}
           </h1>
           <p className="t-lead mt-6 max-w-[34rem] text-ink-muted">{doc.intro}</p>
-          <div className="mt-8 max-w-[34rem] border border-dashed border-line-strong bg-paper-raised p-4" data-draft-banner="">
+          <div className="mt-10 max-w-[34rem] rounded-(--radius-card) bg-paper-raised p-6" data-draft-banner="">
             <p className="t-mono m-0 text-ink">{en.legal.draftBanner}</p>
             <p className="t-small mb-0 mt-2 text-ink-muted">{en.legal.draftNote}</p>
             <p className="t-mono-sm mb-0 mt-3 flex flex-wrap items-center gap-2 text-ink-muted">
@@ -34,12 +34,13 @@ export function LegalPage({ doc }: { doc: LegalDoc }) {
         </div>
       </section>
 
-      <div className="wrap section-pad grid gap-12 pt-14 lg:grid-cols-12 lg:gap-x-(--gutter) md:pt-20">
+      <div className="tone-paper sheet">
+      <div className="wrap grid gap-12 lg:grid-cols-12 lg:gap-x-(--gutter)">
         <nav aria-label={doc.title} className="hidden lg:col-span-3 lg:block">
           <ol className="sticky top-[calc(var(--header-h)+2rem)] m-0 grid list-none gap-1 p-0">
             {doc.sections.map((section, index) => (
               <li key={section.heading}>
-                <a href={`#${sectionId(index)}`} className="link-draw link-draw--quiet inline-flex min-h-9 items-baseline gap-3 text-[0.9375rem] text-ink">
+                <a href={`#${sectionId(index)}`} className="link-draw link-draw--quiet inline-flex min-h-9 items-baseline gap-3 text-[0.8125rem] text-ink">
                   <span className="t-mono-sm text-ink-muted">{String(index + 1).padStart(2, "0")}</span>
                   {section.heading}
                 </a>
@@ -54,9 +55,9 @@ export function LegalPage({ doc }: { doc: LegalDoc }) {
               key={section.heading}
               id={sectionId(index)}
               aria-labelledby={`${sectionId(index)}-title`}
-              className="grid gap-4 border-t border-line-strong py-8 first:border-t-0 first:pt-0 md:grid-cols-[3rem_1fr] md:gap-6"
+              className="grid gap-4 py-8 first:pt-0 md:grid-cols-[3rem_1fr] md:gap-6"
             >
-              <span className="t-mono-sm pt-2 text-ink-muted" aria-hidden="true">
+              <span className="font-display text-[1.5rem] font-medium leading-none text-brick-ink [font-variant-numeric:lining-nums]" aria-hidden="true">
                 {String(index + 1).padStart(2, "0")}
               </span>
               <div>
@@ -79,6 +80,7 @@ export function LegalPage({ doc }: { doc: LegalDoc }) {
             </section>
           ))}
         </div>
+      </div>
       </div>
     </>
   );

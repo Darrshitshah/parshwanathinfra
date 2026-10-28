@@ -1,12 +1,16 @@
 /*
  * The building explorer (S5). Owner: plan-lead. Tokens only. Availability colours are the --status-* tokens;
  * while every status is TBD the legend reads "Availability on request" and the bands carry a hatch.
+ * Look: the "Residence" vocabulary. The elevation and the unit plan are drawings and keep their linework; the
+ * furniture around them has no hairline boxes: soft rounded surfaces, pills and one soft shadow.
  */
 
 .ex {
   display: grid;
   gap: 1.25rem;
   color: var(--ink);
+  --ex-fill: color-mix(in srgb, var(--ink) 6%, transparent);
+  --ex-fill-hover: color-mix(in srgb, var(--ink) 11%, transparent);
 }
 .ex-head {
   display: flex;
@@ -19,7 +23,8 @@
 .ex-title {
   margin: 0;
   font-family: var(--font-display);
-  font-weight: 400;
+  font-weight: 500;
+  text-transform: uppercase;
   font-size: clamp(1.75rem, 1.3rem + 1.6vw, 2.75rem);
   line-height: 1;
 }
@@ -27,7 +32,8 @@
   margin: 0;
   font-family: var(--font-mono);
   font-size: 0.75rem;
-  letter-spacing: 0.08em;
+  font-weight: 600;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 .ex-muted {
@@ -121,7 +127,8 @@
 }
 .ex-band:focus-visible .ex-band__bg,
 .ex-band.is-selected .ex-band__bg {
-  stroke: var(--focus);
+  fill: color-mix(in srgb, var(--brick) 16%, var(--paper-raised));
+  stroke: var(--brick-ink);
   stroke-width: 2;
 }
 .ex-band__label {
@@ -144,7 +151,8 @@
   gap: 0.4rem 1rem;
   font-family: var(--font-mono);
   font-size: 0.6875rem;
-  letter-spacing: 0.08em;
+  font-weight: 600;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 .ex-legend__item {
@@ -155,7 +163,8 @@
 .ex-legend__swatch {
   width: 0.9rem;
   height: 0.9rem;
-  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px var(--line);
 }
 .ex-legend__swatch.is-tbd {
   background: repeating-linear-gradient(45deg, var(--status-tbd) 0 2px, transparent 2px 6px);
@@ -168,17 +177,18 @@
 .ex-floor__title {
   margin: 0 0 0.5rem;
   font-family: var(--font-display);
-  font-weight: 400;
+  font-weight: 500;
   font-size: 1.75rem;
+  text-transform: uppercase;
 }
 .ex-floor__sub {
   margin: 1rem 0 0.2rem;
   font-family: var(--font-mono);
   font-size: 0.6875rem;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--ink-muted);
-  font-weight: 400;
+  color: var(--brick-ink);
+  font-weight: 600;
 }
 .ex-units {
   display: grid;
@@ -194,27 +204,33 @@
   width: 100%;
   min-height: 2.75rem;
   align-items: center;
-  padding: 0.4rem 0.8rem;
-  border: 1px solid var(--line-strong);
-  background: transparent;
+  padding: 0.55rem 1.1rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-field);
+  background: var(--ex-fill);
   text-align: left;
   cursor: pointer;
+  transition: background-color var(--duration-quick) linear;
 }
 @media (hover: hover) and (pointer: fine) {
   .ex-unit:hover {
-    border-color: var(--ink);
+    background: var(--ex-fill-hover);
   }
 }
 .ex-unit[aria-pressed="true"] {
   background: var(--ink);
   color: var(--paper);
-  border-color: var(--ink);
 }
 .ex-unit__meta {
   font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  letter-spacing: 0.06em;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
+  color: var(--brick-ink);
+}
+.ex-unit[aria-pressed="true"] .ex-unit__meta {
+  color: inherit;
   opacity: 0.8;
 }
 
@@ -261,13 +277,14 @@
 .ex-plan__title {
   margin: 0;
   font-family: var(--font-display);
-  font-weight: 400;
+  font-weight: 500;
   font-size: 1.5rem;
+  text-transform: uppercase;
 }
 .ex-plan__drawing {
-  padding: 0.75rem;
+  padding: 1rem;
+  border-radius: var(--radius-card);
   background: var(--paper-raised);
-  border: 1px solid var(--line-strong);
   color: var(--ink);
 }
 .ex-plan__drawing svg {
@@ -306,7 +323,8 @@
 .ex-plan__facts dt {
   font-family: var(--font-mono);
   font-size: 0.6875rem;
-  letter-spacing: 0.1em;
+  font-weight: 600;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ink-muted);
 }
@@ -317,9 +335,9 @@
   margin: 0;
   font-family: var(--font-mono);
   font-size: 0.6875rem;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  font-weight: 400;
+  font-weight: 600;
   color: var(--ink-muted);
 }
 .ex-rooms {
@@ -360,19 +378,25 @@
 .ex-picker__label {
   font-family: var(--font-mono);
   font-size: 0.6875rem;
-  letter-spacing: 0.1em;
+  font-weight: 600;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--ink-muted);
 }
 .ex-picker__select {
   max-width: min(22rem, 100%);
-  min-height: 2.75rem;
-  padding: 0 0.8rem;
-  border: 1px solid var(--line-strong);
-  border-radius: var(--radius-xs);
+  min-height: 3rem;
+  padding: 0 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
   background: var(--paper-raised);
   font-family: var(--font-mono);
   font-size: 0.8125rem;
+}
+@media (hover: hover) and (pointer: fine) {
+  .ex-picker__select:hover {
+    border-color: var(--line-strong);
+  }
 }
 
 /* dialog */
@@ -386,7 +410,7 @@
 .ex-dialog__scrim {
   position: absolute;
   inset: 0;
-  background: color-mix(in srgb, var(--ink) 55%, transparent);
+  background: var(--scrim);
 }
 .ex-dialog__panel {
   position: relative;
@@ -403,7 +427,8 @@
     height: auto;
     max-height: calc(100dvh - 3rem);
     padding: 2rem 2rem 2.5rem;
-    border: 1px solid var(--ink);
+    border-radius: var(--radius-card);
+    box-shadow: 0 30px 80px -30px color-mix(in srgb, var(--block-ink) 60%, transparent);
   }
 }
 .ex-dialog__close {
@@ -414,6 +439,7 @@
   width: 2.75rem;
   height: 2.75rem;
   border: 0;
+  border-radius: 50%;
   background: none;
   font-size: 1.9rem;
   line-height: 1;

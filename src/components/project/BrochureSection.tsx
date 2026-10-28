@@ -22,7 +22,7 @@ export function BrochureSection({ project }: { project: Project }) {
   const approvals = project.approvals;
 
   return (
-    <section id="brochure" aria-labelledby="brochure-title" className="section-pad">
+    <section id="brochure" aria-labelledby="brochure-title" className="tone-paper sheet">
       <div className="wrap">
         <Eyebrow index="08">{copy.eyebrow}</Eyebrow>
         <h2 id="brochure-title" className="t-display-2 mt-10 max-w-[18ch] text-ink md:mt-14">
@@ -31,7 +31,7 @@ export function BrochureSection({ project }: { project: Project }) {
 
         <div className="mt-12 grid gap-12 md:mt-16 lg:grid-cols-12 lg:gap-x-(--gutter)">
           <div className="grid content-start gap-10 lg:col-span-5">
-            <div className="border-t border-line-strong pt-4">
+            <div className="rounded-(--radius-card) bg-paper-raised p-7">
               <h3 className="t-mono-sm m-0 text-ink-muted">{copy.brochureTitle}</h3>
               <div className="mt-4">
                 {brochureReady ? (
@@ -45,9 +45,9 @@ export function BrochureSection({ project }: { project: Project }) {
               <p className="t-small mb-0 mt-4 max-w-[26rem] text-ink-muted">{copy.brochureNote}</p>
             </div>
 
-            <div className="border-t border-line-strong pt-4">
+            <div className="rounded-(--radius-card) bg-paper-raised p-7">
               <h3 className="t-mono-sm m-0 text-ink-muted">{copy.priceTitle}</h3>
-              <p className="mb-0 mt-3 font-display text-[clamp(2rem,1.5rem+1.6vw,3rem)] leading-none text-ink">{project.price.display}</p>
+              <p className="mb-0 mt-3 font-display text-[clamp(2rem,1.5rem+1.6vw,3rem)] font-medium uppercase leading-none text-ink">{project.price.display}</p>
               <p className="t-small mb-0 mt-4 max-w-[26rem] text-ink-muted">{project.price.note ?? copy.priceNote}</p>
             </div>
           </div>
@@ -84,7 +84,7 @@ export function BrochureSection({ project }: { project: Project }) {
 
             <div>
               <h3 className="t-mono-sm m-0 mb-4 text-ink-muted">{copy.disclaimersTitle}</h3>
-              <div className="grid gap-3 border-t border-line pt-4">
+              <div className="grid gap-3">
                 {SHOW_RERA ? <p className="t-small m-0 text-ink-muted">{site.disclaimers.rera}</p> : null}
                 <p className="t-small m-0 text-ink-muted">{site.disclaimers.artistImpression}</p>
                 <p className="t-small m-0 text-ink-muted">{site.disclaimers.general}</p>

@@ -3,7 +3,7 @@
 /**
  * Sticky sub-navigation for the project page: Overview, Plan, Homes, Row houses, Amenities, Location, Gallery,
  * Brochure, Enquire. An IntersectionObserver marks the section crossing a thin band near the top of the viewport and
- * a brick underline slides to it (transform only). Without JavaScript it is a plain list of anchor links. On phones
+ * an accent underline slides to it (transform only). Without JavaScript it is a plain list of anchor links. On phones
  * the row scrolls sideways and keeps the current item in view. Owner: pages-lead.
  */
 import { useEffect, useRef, useState } from "react";
@@ -79,10 +79,13 @@ export function SubNav({ items, label }: { items: readonly SubNavItem[]; label: 
     <nav
       aria-label={label}
       data-project-subnav=""
-      className="sticky top-[calc(var(--header-h)+1px)] z-[39] border-b border-line bg-paper"
+      className="pointer-events-none sticky top-[calc(var(--header-h)+0.25rem)] z-[39] -mt-6"
     >
       <div className="wrap">
-        <div ref={scrollerRef} className="relative overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div
+          ref={scrollerRef}
+          className="glass pointer-events-auto relative mx-auto w-fit max-w-full overflow-x-auto rounded-full px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
           <ul className="m-0 flex w-max min-w-full list-none gap-7 p-0 md:gap-9">
             {items.map((item) => {
               const current = item.id === active;
@@ -93,7 +96,7 @@ export function SubNav({ items, label }: { items: readonly SubNavItem[]; label: 
                     data-subnav-id={item.id}
                     aria-current={current ? "location" : undefined}
                     className={cn(
-                      "inline-flex min-h-12 items-center whitespace-nowrap text-[0.9375rem] transition-colors duration-300",
+                      "t-mono-sm inline-flex min-h-12 items-center whitespace-nowrap transition-colors duration-300",
                       current ? "text-ink" : "text-ink-muted hover:text-ink",
                     )}
                   >
@@ -106,7 +109,7 @@ export function SubNav({ items, label }: { items: readonly SubNavItem[]; label: 
           <span
             ref={indicatorRef}
             aria-hidden="true"
-            className="pointer-events-none absolute bottom-0 left-0 block h-0.5 w-px origin-left bg-brick opacity-0 will-change-transform data-ready:transition-transform data-ready:duration-500 data-ready:ease-draft"
+            className="pointer-events-none absolute bottom-1.5 left-0 block h-0.5 w-px origin-left bg-brick opacity-0 will-change-transform data-ready:transition-transform data-ready:duration-500 data-ready:ease-draft"
           />
         </div>
       </div>

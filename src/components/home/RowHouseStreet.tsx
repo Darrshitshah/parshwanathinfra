@@ -1,15 +1,14 @@
 /**
  * The row-house street (S6 mounts at data-slot="row-house-street"): the daytime elevation as a cinematic panorama
- * with seven mono callouts for the features in the image notes (white portal frame, recessed balcony bay, red
- * exposed-brick pillar, planters with creepers, car porch, two storeys, flat roof). Below lg the callouts become
- * numbered pins and the numbered legend carries the words; on phones the image can be dragged sideways so the pins
- * stay a usable size. Used on Home and on the project page (id="row-houses"). Owner: pages-lead.
+ with an unnumbered feature list beneath it (white portal frame, recessed balcony bay, red
+ * exposed-brick pillar, planters with creepers, car porch, two storeys, flat roof). On phones the image can be
+ * dragged sideways so it stays a usable size. Used on Home and on the project page (id="row-houses"). Owner: pages-lead.
  */
-import { CalloutLegend } from "@/components/media/CalloutLegend";
 import { Figure } from "@/components/media/Figure";
+import { cn } from "@/components/ui/cn";
 import { Eyebrow } from "@/components/ui/Section";
-import { withTbd } from "@/components/ui/with-tbd";
-import { rowHouseCallouts } from "@/content/copy/callouts";
+import { rich, withTbd } from "@/components/ui/with-tbd";
+import { rowHouseFeatures } from "@/content/copy/callouts";
 import { homeCopy } from "@/content/copy/home";
 import { getMedia } from "@/content/media";
 import { shivShiva } from "@/content/projects";
@@ -17,28 +16,32 @@ import { shivShiva } from "@/content/projects";
 interface RowHouseStreetProps {
   id?: string;
   index?: string;
+  /** Colour block: the calm mist band (default), the forest block or plain ivory. */
+  tone?: "mist" | "ink" | "paper";
 }
 
-export function RowHouseStreet({ id = "row-houses", index = "06" }: RowHouseStreetProps) {
+const TONE = { mist: "tone-mist", ink: "tone-ink", paper: "tone-paper" } as const;
+
+export function RowHouseStreet({ id = "row-houses", index = "05", tone = "mist" }: RowHouseStreetProps) {
   const street = getMedia("row-houses-day");
   const offering = shivShiva.offering.find((item) => item.typology === "rowhouses");
   const count = shivShiva.counts.rowHouses.toLocaleString("en-IN");
 
   return (
-    <section id={id} data-slot="row-house-street" aria-labelledby={`${id}-title`} className="section-pad">
+    <section id={id} data-slot="row-house-street" aria-labelledby={`${id}-title`} className={cn("sheet", TONE[tone])}>
       <div className="wrap">
         <Eyebrow index={index}>{homeCopy.rowHouses.eyebrow}</Eyebrow>
         <div className="mt-10 grid gap-10 md:mt-14 lg:grid-cols-12 lg:gap-x-(--gutter)">
           <div className="lg:col-span-7">
             <h2 id={`${id}-title`} className="t-display-2 text-ink">
-              {homeCopy.rowHouses.heading}
+              {rich(homeCopy.rowHouses.heading)}
             </h2>
             <p className="t-lead mt-6 max-w-[40rem] text-ink-muted">{homeCopy.rowHouses.body}</p>
           </div>
           <div className="grid content-start gap-6 lg:col-span-4 lg:col-start-9">
-            <dl className="m-0 border-t border-line-strong pt-4">
+            <dl className="m-0">
               <dt className="t-mono-sm text-ink-muted">{offering?.label ?? ""}</dt>
-              <dd className="m-0 font-display text-[clamp(3rem,2rem+3.5vw,5rem)] leading-none text-ink [font-variant-numeric:lining-nums]">
+              <dd className="m-0 mt-2 font-display text-[clamp(4rem,2.4rem+5vw,7rem)] font-medium leading-[0.9] text-ink [font-variant-numeric:lining-nums]">
                 {count}
               </dd>
             </dl>
@@ -53,8 +56,8 @@ export function RowHouseStreet({ id = "row-houses", index = "06" }: RowHouseStre
           <div className="min-w-[46rem] md:min-w-0">
             <Figure
               media={street}
+              shape="bleed"
               sizes="(min-width: 768px) 100vw, 740px"
-              callouts={rowHouseCallouts}
               caption={<span className="wrap block">{homeCopy.rowHouses.caption}</span>}
             />
           </div>
@@ -63,7 +66,14 @@ export function RowHouseStreet({ id = "row-houses", index = "06" }: RowHouseStre
 
       <div className="wrap mt-12 lg:mt-16">
         <p className="t-mono-sm m-0 mb-4 text-ink-muted">{homeCopy.rowHouses.legendTitle}</p>
-        <CalloutLegend items={rowHouseCallouts} label={homeCopy.rowHouses.legendTitle} className="md:grid-cols-2 md:gap-x-10 lg:grid-cols-3" />
+        <ul className="m-0 grid list-none gap-x-10 gap-y-6 p-0 md:grid-cols-2 lg:grid-cols-3" aria-label={homeCopy.rowHouses.legendTitle}>
+          {rowHouseFeatures.map((item) => (
+            <li key={item.id} className="border-t border-current/20 pt-4">
+              <p className="font-display m-0 text-[clamp(1.25rem,1.05rem+0.7vw,1.6rem)] font-medium leading-tight text-ink">{item.label}</p>
+              <p className="t-small m-0 mt-2 text-ink-muted">{item.detail}</p>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );

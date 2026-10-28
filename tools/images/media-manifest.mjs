@@ -229,4 +229,14 @@ export const kept = [
     source: "portfolio logo.png",
     artistImpression: false,
   },
+  {
+    // Generated with Nano Banana 2.1 (tools/imagegen/linear_garden.py, strict edit of SS-30); original in _source/generated/amenities/.
+    id: "linear-garden",
+    file: "linear-garden.webp",
+    kind: "generated",
+    alt: "A linear garden running down the middle of a lane between rows of terraced houses: a clipped lawn with a rectangular fountain, flowering borders, young trees and benches, with a narrow paved road on each side and residents sitting and walking in the golden evening light",
+    caption: "Linear garden with a water feature",
+    source: "Nano Banana 2.1 edit of SS-30 Row House Lane Long View Model (Hiranandani Style v2), artist's impression",
+    artistImpression: true,
+  },
 ];

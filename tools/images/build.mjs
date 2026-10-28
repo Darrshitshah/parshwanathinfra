@@ -133,6 +133,7 @@ for (const k of kept) {
     height: d.height,
     blurDataURL: d.blurDataURL,
     alt: k.alt,
+    caption: k.caption,
     artistImpression: k.artistImpression,
     source: k.source,
   });

@@ -1,15 +1,17 @@
 /**
  * Per-page metadata builder. Owner: pages-lead. A page that sets `openGraph` or `twitter` replaces the root layout's
  * value wholesale, so every page goes through this one function and always carries a complete set: title,
- * description, canonical, Open Graph and a large-image Twitter card. The Open Graph image itself comes from the
- * `opengraph-image` file nearest the route (Home's, or the project's), which Next adds to `openGraph.images`.
+ * description, canonical, Open Graph and a large-image Twitter card. One share card serves the whole site: the static
+ * JPEG `app/opengraph-image.jpg` (built by tools/og/build-og-card.mjs). Home gets it through Next's file convention
+ * (hashed URL, plus og:image:type); every other route names it explicitly below, because a page that sets `openGraph`
+ * replaces the layout's value wholesale and would lose the inherited image.
  */
 import type { Metadata } from "next";
 import { seoCopy } from "@/content/copy/seo";
 import { site } from "@/content/site";
 
-/** The default card, built by app/opengraph-image.tsx. Same size as that file exports. */
-const DEFAULT_IMAGE = { url: "/opengraph-image", width: 1200, height: 630, alt: seoCopy.og.homeAlt } as const;
+/** The share card: the static file app/opengraph-image.jpg, served at this path. Size and type match that file. */
+const DEFAULT_IMAGE = { url: "/opengraph-image.jpg", type: "image/jpeg", width: 1200, height: 630, alt: seoCopy.og.homeAlt } as const;
 
 interface PageMetadataInput {
   title: string;
@@ -19,9 +21,8 @@ interface PageMetadataInput {
   /** True when `title` is already the full title and must not get the " · Parshwanath Infra" suffix. */
   absoluteTitle?: boolean;
   /**
-   * False for routes that own an `opengraph-image` file (Home, the project page): Next attaches that file's image.
-   * True (default) for the rest: a page that sets `openGraph` replaces the layout's wholesale and would lose the
-   * inherited image, so the default card is named explicitly.
+   * False only for Home, which owns the `opengraph-image` and `twitter-image` files: Next attaches those (with a
+   * cache-busting hash) and a second explicit image would duplicate them. True (default) for every other route.
    */
   useDefaultImage?: boolean;
 }

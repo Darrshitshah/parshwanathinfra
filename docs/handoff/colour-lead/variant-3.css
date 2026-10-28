@@ -1,0 +1,156 @@
+/*
+ * Gold preview 3 · Saffron and Kumkum. Colour overrides for src/styles/tokens.css: the same token names and the same three
+ * selectors, so applying it is a tokens-only change (replace the matching colour declarations; layout, motion, radius
+ * and font tokens stay as they are).
+ * Mood: Festive Indian grandeur: malai cream, saffron-gold leaf, kumkum red, like a palace wedding card.
+ * Page curtain and loader: Stays deep red: a warmer kumkum (sindoor) red with a cream-gold title.
+ */
+
+:root {
+  color-scheme: light;
+  --paper: #f9f1e1;
+  --paper-raised: #fffaf0;
+  --paper-sunk: #efe3cc;
+  --ink: #2a150c;
+  --ink-muted: #654b3c;
+  --ink-faint: #735849;
+  --line: rgb(42 21 12 / 0.14);
+  --line-strong: rgb(42 21 12 / 0.34);
+  --grid: rgb(42 21 12 / 0.05);
+  --block-mist: #f0d9ae;
+  --block-jewel: #5c1310;
+  --block-ink: #1c120c;
+  --on-mist: #2a150c;
+  --on-jewel: #f9e3b8;
+  --on-ink: #f8ecd8;
+  --clay: #fffaf0;
+  --brick: #b9831a;
+  --brick-ink: #8a5207;
+  --on-brick: #24120a;
+  --forest: #3d6b45;
+  --sand: #e6cfa2;
+  --curtain: #6e1410;
+  --curtain-sheen: #a3271c;
+  --curtain-deep: #3a0807;
+  --on-curtain: #fbe9c8;
+  --type-rowhouses: #a0331e;
+  --type-flats: #26508a;
+  --type-shops: #ad8a1c;
+  --type-mixed: #b8457f;
+  --type-office: #2a150c;
+  --type-amenity: #3d6b45;
+  --status-available: #2f7a52;
+  --status-booked: #a3301f;
+  --status-sold: #654b3c;
+  --status-tbd: #735849;
+  --on-dark-rowhouses: #f29274;
+  --on-dark-flats: #b3d2f4;
+  --on-dark-shops: #f5d47a;
+  --on-dark-mixed: #e07fb9;
+  --on-dark-amenity: #8fca9a;
+  --script-night: #f2b851;
+  --scrim: rgb(42 21 12 / 0.5);
+  --focus: #8a5207;
+  --glass: rgb(249 241 225 / 0.72);
+  --glass-edge: rgb(42 21 12 / 0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --paper: #0e0b08;
+    --paper-raised: #1a1410;
+    --paper-sunk: #080604;
+    --ink: #f8ecd6;
+    --ink-muted: #c4b098;
+    --ink-faint: #9c8a74;
+    --line: rgb(248 236 214 / 0.14);
+    --line-strong: rgb(248 236 214 / 0.34);
+    --grid: rgb(248 236 214 / 0.05);
+    --block-mist: #111a2c;
+    --block-jewel: #4e100d;
+    --block-ink: #0a0705;
+    --on-mist: #f8ecd6;
+    --on-jewel: #f9e3b8;
+    --on-ink: #f6e8d2;
+    --clay: #efe3cf;
+    --brick: #f0b440;
+    --brick-ink: #f5c25a;
+    --on-brick: #1a0f05;
+    --forest: #8fca9a;
+    --sand: #d8bf8e;
+    --curtain: #5a100c;
+    --curtain-sheen: #8f2018;
+    --curtain-deep: #2a0505;
+    --on-curtain: #f8e3bd;
+    --type-rowhouses: #f29274;
+    --type-flats: #b3d2f4;
+    --type-shops: #f5d47a;
+    --type-mixed: #e07fb9;
+    --type-office: #f8ecd6;
+    --type-amenity: #8fca9a;
+    --status-available: #7fd0a0;
+    --status-booked: #ee8f80;
+    --status-sold: #c4b098;
+    --status-tbd: #9c8a74;
+    --on-dark-rowhouses: #f29274;
+    --on-dark-flats: #b3d2f4;
+    --on-dark-shops: #f5d47a;
+    --on-dark-mixed: #e07fb9;
+    --on-dark-amenity: #8fca9a;
+    --script-night: #f5c25a;
+    --scrim: rgb(8 6 4 / 0.62);
+    --focus: #f5c25a;
+    --glass: rgb(14 11 8 / 0.64);
+    --glass-edge: rgb(248 236 214 / 0.16);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #0e0b08;
+  --paper-raised: #1a1410;
+  --paper-sunk: #080604;
+  --ink: #f8ecd6;
+  --ink-muted: #c4b098;
+  --ink-faint: #9c8a74;
+  --line: rgb(248 236 214 / 0.14);
+  --line-strong: rgb(248 236 214 / 0.34);
+  --grid: rgb(248 236 214 / 0.05);
+  --block-mist: #111a2c;
+  --block-jewel: #4e100d;
+  --block-ink: #0a0705;
+  --on-mist: #f8ecd6;
+  --on-jewel: #f9e3b8;
+  --on-ink: #f6e8d2;
+  --clay: #efe3cf;
+  --brick: #f0b440;
+  --brick-ink: #f5c25a;
+  --on-brick: #1a0f05;
+  --forest: #8fca9a;
+  --sand: #d8bf8e;
+  --curtain: #5a100c;
+  --curtain-sheen: #8f2018;
+  --curtain-deep: #2a0505;
+  --on-curtain: #f8e3bd;
+  --type-rowhouses: #f29274;
+  --type-flats: #b3d2f4;
+  --type-shops: #f5d47a;
+  --type-mixed: #e07fb9;
+  --type-office: #f8ecd6;
+  --type-amenity: #8fca9a;
+  --status-available: #7fd0a0;
+  --status-booked: #ee8f80;
+  --status-sold: #c4b098;
+  --status-tbd: #9c8a74;
+  --on-dark-rowhouses: #f29274;
+  --on-dark-flats: #b3d2f4;
+  --on-dark-shops: #f5d47a;
+  --on-dark-mixed: #e07fb9;
+  --on-dark-amenity: #8fca9a;
+  --script-night: #f5c25a;
+  --scrim: rgb(8 6 4 / 0.62);
+  --focus: #f5c25a;
+  --glass: rgb(14 11 8 / 0.64);
+  --glass-edge: rgb(248 236 214 / 0.16);
+}

@@ -1,7 +1,6 @@
 /**
  * Section helpers. Every section has an id, a heading that labels it, and (where a Phase 2 experience mounts)
- * a data-slot attribute. Eyebrow is the mono drawing annotation: a numbered detail marker, a label, a ruled line
- * and an optional right-hand note.
+ * a data-slot attribute. Eyebrow is the small tracked section label: an index, the label and an optional right-hand note.
  */
 import type { ElementType, ReactNode } from "react";
 import { cn } from "./cn";
@@ -33,7 +32,7 @@ export function Section({ id, slot, labelledBy, className, children, flush = fal
 }
 
 interface EyebrowProps {
-  /** Two-digit detail marker, for example "02". */
+  /** Two-digit section index, for example "02". */
   index?: string;
   children: ReactNode;
   note?: ReactNode;
@@ -49,7 +48,6 @@ export function Eyebrow({ index, children, note, className }: EyebrowProps) {
         </span>
       ) : null}
       <span className="eyebrow__label">{children}</span>
-      <span className="eyebrow__rule" aria-hidden="true" />
       {note ? <span className="eyebrow__note">{note}</span> : null}
     </p>
   );

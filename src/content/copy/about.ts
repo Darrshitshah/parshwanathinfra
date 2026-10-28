@@ -10,7 +10,7 @@ export const aboutCopy = {
   metaDescription:
     "Parshwanath Infra is the developer of Shiv Shiva Township, an integrated, mixed-use township on the Vapi-Silvassa Road.",
   eyebrow: "About",
-  intro: "Parshwanath Infra is the developer of *Shiv Shiva Township*.",
+  intro: "Parshwanath Infra is the developer of Shiv Shiva *Township*.",
   body: "Shiv Shiva is an integrated, mixed-use township on the Vapi-Silvassa Road: flats, row houses and shops in one planned neighbourhood.",
   facts: {
     eyebrow: "The company at a glance",
@@ -30,12 +30,12 @@ export const aboutCopy = {
   },
   more: {
     eyebrow: "Still to come",
-    heading: "The company story, values and leadership.",
+    heading: "The company story, values and *leadership*.",
     text: "These are not published yet. They will appear here once Parshwanath Infra has supplied and confirmed them, rather than being written for the sake of filling the page.",
   },
   reading: {
     eyebrow: "How to read this site",
-    heading: "What the labels mean.",
+    heading: "What the labels *mean*.",
     items: [
       {
         title: "Artist's impression",

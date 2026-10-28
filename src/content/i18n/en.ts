@@ -32,6 +32,8 @@ export const en = {
     tbdTitle: "To be confirmed",
     tbdSpoken: "to be confirmed",
     artistsImpression: "Artist's impression",
+    pauseFilm: "Pause film",
+    playFilm: "Play film",
     asPerPlan: "As per plan",
     indicative: "Indicative",
     availabilityOnRequest: "Availability on request",

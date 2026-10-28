@@ -3,7 +3,7 @@
  *
  * Positions are percentages of the image (x to the right, y down). Where a point exists in the plan content (the main
  * entry, the roundabout) it is derived from src/content/plan, never typed here. The other plan points come from
- * docs/SOURCE_PACK.md section 5 (render grid 2000 x 1342) and are indicative. Row-house features come from the
+ * docs/SOURCE_PACK.md section 5 (render grid 2000 x 1342) and are indicative. Row-house features (a plain list) come from the
  * SS-26 image notes. Callouts are decorative on the image (aria-hidden); the legend list beside each figure is the
  * text equivalent. No em or en dashes.
  */
@@ -105,69 +105,19 @@ export const heroCallouts: readonly CalloutSpec[] = [
   },
 ];
 
-/** Callouts over the row-house elevation (SS-26 by day). Order follows the legend. */
-export const rowHouseCallouts: readonly CalloutSpec[] = [
-  {
-    id: "portal-frame",
-    label: "White portal frame",
-    detail: "A deep white portal frame around one home.",
-    x: 8.6,
-    y: 56.6,
-    dir: "up",
-    len: "7.5rem",
-  },
-  {
-    id: "balcony-bay",
-    label: "Recessed balcony bay",
-    detail: "A recessed open balcony bay on the next home, alternating with the portal frame.",
-    x: 37,
-    y: 47.5,
-    dir: "up",
-    len: "4.75rem",
-  },
-  {
-    id: "brick-pillar",
-    label: "Red exposed-brick pillar",
-    detail: "A red exposed-brick pillar on each pair of homes.",
-    x: 17.3,
-    y: 50.5,
-    dir: "up",
-    len: "2.5rem",
-  },
-  {
-    id: "planters",
-    label: "Planters with creepers",
-    detail: "Planter boxes with creepers under the upper windows.",
-    x: 44.3,
-    y: 57.8,
-    dir: "down",
-    len: "6.5rem",
-  },
-  {
-    id: "car-porch",
-    label: "Car porch",
-    detail: "A car porch on the ground floor of each home.",
-    x: 35,
-    y: 66,
-    dir: "down",
-    len: "3rem",
-  },
-  {
-    id: "two-storeys",
-    label: "Two storeys",
-    detail: "Two storeys: a ground floor and one upper floor, with a roof terrace above.",
-    x: 69.5,
-    y: 59.5,
-    dir: "down",
-    len: "3.5rem",
-  },
-  {
-    id: "flat-roof",
-    label: "Flat roof",
-    detail: "A flat roof with a plain parapet, used as a roof terrace.",
-    x: 70.5,
-    y: 32.2,
-    dir: "up",
-    len: "3.25rem",
-  },
+export interface RowHouseFeature {
+  id: string;
+  label: string;
+  detail: string;
+}
+
+/** The row-house features (SS-26 image notes), shown as an unnumbered list beside the elevation. */
+export const rowHouseFeatures: readonly RowHouseFeature[] = [
+  { id: "portal-frame", label: "White portal frame", detail: "A deep white portal frame around one home." },
+  { id: "balcony-bay", label: "Recessed balcony bay", detail: "A recessed open balcony bay on the next home, alternating with the portal frame." },
+  { id: "brick-pillar", label: "Red exposed-brick pillar", detail: "A red exposed-brick pillar on each pair of homes." },
+  { id: "planters", label: "Planters with creepers", detail: "Planter boxes with creepers under the upper windows." },
+  { id: "car-porch", label: "Car porch", detail: "A car porch on the ground floor of each home." },
+  { id: "two-storeys", label: "Two storeys", detail: "Two storeys: a ground floor and one upper floor, with a roof terrace above." },
+  { id: "flat-roof", label: "Flat roof", detail: "A flat roof with a plain parapet, used as a roof terrace." },
 ];

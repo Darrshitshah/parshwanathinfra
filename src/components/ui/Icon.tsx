@@ -1,5 +1,5 @@
 /**
- * Small drafting-style icon set: 24 px grid, 1.5 px strokes, square caps. Decorative by default (aria-hidden):
+ * Small icon set: 24 px grid, 1.5 px strokes, round caps. Decorative by default (aria-hidden):
  * the control that holds an icon carries the accessible name.
  */
 import type { SVGProps } from "react";
@@ -45,8 +45,8 @@ export function Icon({ name, size = 20, className, ...rest }: IconProps) {
       fill="none"
       stroke="currentColor"
       strokeWidth={1.5}
-      strokeLinecap="square"
-      strokeLinejoin="miter"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       aria-hidden="true"
       focusable="false"
       className={className}

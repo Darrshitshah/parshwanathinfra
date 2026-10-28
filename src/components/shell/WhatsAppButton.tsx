@@ -18,7 +18,7 @@ export function WhatsAppButton({ number = site.contact.whatsapp }: { number?: st
       rel="noopener noreferrer"
       aria-label={`${en.whatsapp.label} (${en.common.opensInNewTab})`}
       data-whatsapp=""
-      className="fixed right-4 z-(--z-whatsapp) inline-flex min-h-12 items-center gap-2.5 border border-line-strong bg-paper px-4 text-ink shadow-[0_2px_14px_rgb(0_0_0/0.12)] transition-colors hover:border-ink"
+      className="glass fixed right-4 z-(--z-whatsapp) inline-flex min-h-12 items-center gap-2.5 rounded-full px-4 text-ink transition-transform active:scale-95"
       style={{ bottom: "max(1rem, env(safe-area-inset-bottom))" }}
     >
       <Icon name="whatsapp" size={22} />

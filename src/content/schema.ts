@@ -270,7 +270,7 @@ export const transformSchema = z.object({
 
 export type PlanTransform = z.infer<typeof transformSchema>;
 
-/** Scroll chapters shared by the Living Plan (S3) and the diorama (S4). */
+/** Scroll chapters of the Living Plan (S3). */
 export const chapterSchema = z.object({
   id: slug,
   index: z.number().int().min(1),
@@ -373,7 +373,7 @@ export const projectSchema = z.object({
       id: slug,
       name: copy,
       description: copy.optional(),
-      mediaId: slug.optional(),
+      mediaId: slug,
       evidence: z.enum(["plan", "render", "plan-and-render"]),
       /** Matching amenity id in plan.json once it exists. */
       planId: slug.optional(),

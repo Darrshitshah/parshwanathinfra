@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
-import { planCallouts, rowHouseCallouts } from "@/content/copy/callouts";
+import { planCallouts } from "@/content/copy/callouts";
 import { getMedia } from "@/content/media";
 import { CalloutLegend } from "./CalloutLegend";
 import { Figure } from "./Figure";
@@ -60,13 +60,13 @@ describe("Figure", () => {
   });
 
   it("hides decorative callouts from assistive technology and numbers them in order", () => {
-    const { container } = render(<Figure media={render1} sizes="100vw" callouts={rowHouseCallouts} />);
+    const { container } = render(<Figure media={render1} sizes="100vw" callouts={planCallouts} />);
     const layer = container.querySelector("[data-callouts]");
     expect(layer).toHaveAttribute("aria-hidden", "true");
     const pins = Array.from(layer?.querySelectorAll(".callout__pin") ?? []).map((pin) => pin.textContent);
-    expect(pins).toEqual(["1", "2", "3", "4", "5", "6", "7"]);
+    expect(pins).toEqual(["1", "2", "3", "4", "5"]);
     const first = layer?.querySelector<HTMLElement>(".callout");
-    expect(first?.style.getPropertyValue("--x")).toBe(`${rowHouseCallouts[0]?.x}%`);
+    expect(first?.style.getPropertyValue("--x")).toBe(`${planCallouts[0]?.x}%`);
   });
 
   it("can show callouts on large screens only", () => {
@@ -77,7 +77,7 @@ describe("Figure", () => {
 
 describe("callout data", () => {
   it("keeps every callout inside the image", () => {
-    for (const item of [...planCallouts, ...rowHouseCallouts]) {
+    for (const item of planCallouts) {
       expect(item.x).toBeGreaterThan(0);
       expect(item.x).toBeLessThan(100);
       expect(item.y).toBeGreaterThan(0);

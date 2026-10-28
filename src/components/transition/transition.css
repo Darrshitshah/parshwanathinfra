@@ -1,7 +1,12 @@
 /*
  * Page-transition curtain. Owner: motion-lead.
  * Hidden until the transition provider plays it (GSAP toggles opacity and visibility).
- * Colours come from the design tokens, so it follows light and dark themes.
+ * Colours come from the design tokens, so it follows light and dark themes:
+ *   --curtain         the deep red of the sheet           (falls back to --brick)
+ *   --curtain-sheen   the lighter red of the soft highlight (falls back to --curtain)
+ *   --curtain-deep    the darker red of the far corner     (falls back to --curtain)
+ *   --on-curtain      the title colour                     (falls back to --on-brick)
+ * The sheet is one diagonal gradient (sheen, base, deep) in the deep maroon: luxurious and quiet, with no lines.
  * No transforms are set here on purpose: GSAP owns the transforms of the title, the rule and the panel, and would
  * otherwise read a CSS transform as an extra offset.
  */
@@ -25,14 +30,34 @@
   height: 100%;
 }
 
-.pi-curtain__sheet {
-  fill: var(--brick);
+.pi-curtain {
+  --pi-curtain-base: var(--curtain, var(--brick));
+  --pi-curtain-sheen: var(--curtain-sheen, var(--pi-curtain-base));
+  --pi-curtain-deep: var(--curtain-deep, var(--pi-curtain-base));
+}
+
+/* the sheet's fill is the gradient set on the path (fill="url(#pi-curtain-sheen)") */
+.pi-curtain__stop--sheen {
+  stop-color: var(--pi-curtain-sheen);
+}
+
+.pi-curtain__stop--base {
+  stop-color: var(--pi-curtain-base);
+}
+
+.pi-curtain__stop--deep {
+  stop-color: var(--pi-curtain-deep);
 }
 
 .pi-curtain__panel {
   position: absolute;
   inset: 0;
-  background: var(--brick);
+  background: linear-gradient(
+    145deg,
+    var(--pi-curtain-sheen) 0%,
+    var(--pi-curtain-base) 45%,
+    var(--pi-curtain-deep) 100%
+  );
 }
 
 .pi-curtain[data-variant="hole"] .pi-curtain__panel,
@@ -48,15 +73,15 @@
   justify-items: center;
   gap: 0.9rem;
   padding-inline: var(--gutter, 1.5rem);
-  color: var(--on-brick);
+  color: var(--on-curtain, var(--on-brick));
   text-align: center;
 }
 
 .pi-curtain__eyebrow {
-  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
-  font-size: 0.75rem;
-  font-weight: 400;
-  letter-spacing: 0.2em;
+  font-family: var(--font-zalando), system-ui, sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   opacity: 0;
 }
@@ -72,7 +97,9 @@
 
 .pi-curtain__label {
   display: block;
-  font-family: var(--font-instrument-serif), "Times New Roman", serif;
+  font-family: var(--font-playfair), "Didot", "Times New Roman", serif;
+  font-weight: 500;
+  text-transform: uppercase;
   font-size: clamp(2.75rem, 9vw, 8rem);
   line-height: 1;
   letter-spacing: -0.01em;
@@ -83,6 +110,8 @@
   width: min(18rem, 50vw);
   height: 1px;
   background: currentColor;
+  /* a whisper, not a drafting line */
+  opacity: 0.4;
 }
 
 /* The panel is promoted to its own layer only while a transition runs (the provider sets html[data-transition]). */

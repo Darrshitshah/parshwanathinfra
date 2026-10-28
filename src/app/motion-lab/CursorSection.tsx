@@ -32,8 +32,8 @@ export function CursorSection() {
       title="S8 cursor · Magnetic · hover parallax"
       note={
         <>
-          A small circle that inverts what it is over, grows into a ring over links and buttons, and becomes a labelled disc
-          over <code>data-cursor-label</code>. Text fields keep the native cursor. It only runs on a fine pointer and off Tier
+          A fine ring with a small core: the ring trails the pointer, springs out over links and buttons, and gives way to a
+          labelled disc over <code>data-cursor-label</code>. Text fields keep the native cursor. It only runs on a fine pointer and off Tier
           C: <strong>{active ? "active here" : "not active here (touch, Tier C or reduced motion)"}</strong>.
         </>
       }
@@ -44,7 +44,7 @@ export function CursorSection() {
         <Card cursor={{ "data-cursor-label": "Explore" }} label='data-cursor-label="Explore"' />
         <Card cursor={{ "data-cursor": "grow" }} label='data-cursor="grow"' />
         <Card cursor={{ "data-cursor": "native" }} label='data-cursor="native"' />
-        <Card cursor={{}} label="plain content: small inverting circle" />
+        <Card cursor={{}} label="plain content: ring and core" />
       </div>
 
       <div className="flex flex-wrap items-center gap-6">

@@ -103,7 +103,7 @@ export function NotConfiguredPanel({ config, onBack }: NotConfiguredPanelProps) 
   const hasDirectContact = config.phones.length > 0 || config.whatsapp !== null;
   return (
     <div role="status" className="grid gap-5" data-enquiry-state="not-configured">
-      <div className="grid gap-3 border border-line-strong bg-paper p-5">
+      <div className="grid gap-3 rounded-(--radius-card) bg-paper-sunk p-6">
         <p className="t-mono text-ink-muted">{en.enquiry.notConfiguredTitle}</p>
         <p className="t-lead text-ink">{hasDirectContact ? en.enquiry.notConfigured : en.enquiry.notConfiguredNoPhone}</p>
       </div>

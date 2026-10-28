@@ -73,7 +73,7 @@ function DrawerPanel({
     <div className="fixed inset-0 z-(--z-drawer)" data-enquiry-drawer="">
       <m.div
         aria-hidden="true"
-        className="absolute inset-0 bg-(--scrim)"
+        className="absolute inset-0 bg-(--scrim) backdrop-blur-[3px]"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -87,10 +87,10 @@ function DrawerPanel({
         aria-labelledby={titleId}
         tabIndex={-1}
         data-lenis-prevent=""
-        className="absolute inset-y-0 right-0 flex w-full max-w-[34rem] flex-col overflow-y-auto overscroll-contain border-l border-line-strong bg-paper-raised outline-none"
+        className="absolute inset-y-0 right-0 flex w-full max-w-[34rem] flex-col overflow-y-auto overscroll-contain bg-paper-raised outline-none sm:rounded-l-[2rem]"
         {...panelMotion}
       >
-        <div className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-line bg-paper-raised px-5 py-2.5 sm:px-8">
+        <div className="sticky top-0 z-10 flex items-center justify-between gap-4 bg-paper-raised px-5 py-3 sm:px-8">
           <p className="t-mono-sm m-0 truncate text-ink-muted">
             {en.enquiry.kicker}
             {projectName ? ` · ${projectName}` : ""}

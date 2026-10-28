@@ -28,7 +28,7 @@ export const metadata: Metadata = pageMetadata({
 
 function DetailRow({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <div className="grid gap-1 border-b border-line py-4 sm:grid-cols-[8rem_1fr] sm:gap-4">
+    <div className="grid gap-1 py-3.5 sm:grid-cols-[8rem_1fr] sm:gap-4">
       <dt className="t-mono-sm text-ink-muted">{label}</dt>
       <dd className="m-0 text-ink">{children}</dd>
     </div>
@@ -43,17 +43,17 @@ export default function ContactPage() {
   return (
     <>
       <JsonLd data={organizationJsonLd()} />
-      <section aria-labelledby="contact-title" className="border-b border-line bg-grid">
-        <div className="wrap pb-14 pt-10 md:pb-20 md:pt-16">
+      <section aria-labelledby="contact-title" className="tone-paper">
+        <div className="wrap pb-[calc(var(--sheet-r)+4rem)] pt-[calc(var(--header-h)+3rem)] md:pt-[calc(var(--header-h)+5rem)]">
           <Eyebrow index="01">{contactCopy.eyebrow}</Eyebrow>
-          <h1 id="contact-title" className="t-display-1 mt-8 text-ink md:mt-12 md:text-[clamp(7rem,13vw,13rem)]">
+          <h1 id="contact-title" className="t-display-1 mt-10 text-ink md:mt-14 md:text-[clamp(7rem,15vw,15rem)]">
             {contactCopy.title}
           </h1>
-          <p className="t-lead mt-6 max-w-[30rem] text-ink-muted">{contactCopy.intro}</p>
+          <p className="t-lead mt-8 max-w-[30rem] text-ink-muted">{contactCopy.intro}</p>
         </div>
       </section>
 
-      <section aria-labelledby="enquiry-title" className="section-pad pt-14 md:pt-20">
+      <section aria-labelledby="enquiry-title" className="tone-mist sheet">
         <div className="wrap grid gap-16 lg:grid-cols-12 lg:gap-x-(--gutter)">
           <div className="lg:col-span-7">
             <Eyebrow index="02">{contactCopy.formEyebrow}</Eyebrow>
@@ -70,7 +70,7 @@ export default function ContactPage() {
               {office.name}
             </h2>
 
-            <dl className="m-0 mt-8 border-t border-line-strong">
+            <dl className="m-0 mt-8">
               <DetailRow label={details.address}>
                 <address className="not-italic">{rich(office.address)}</address>
               </DetailRow>
@@ -103,7 +103,7 @@ export default function ContactPage() {
             <p className="t-small mt-3 max-w-[26rem] text-ink-muted">{contactCopy.directionsNote}</p>
 
             <div className="mt-10">
-              <LocationMap />
+              <LocationMap links={false} />
             </div>
           </aside>
         </div>

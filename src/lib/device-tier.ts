@@ -4,8 +4,8 @@
  *
  * Owner: Director.
  *
- * - Tier A: desktop with WebGL2, or a high-end phone (8 GB class, 8+ cores, 4G). Everything, 3D diorama in WebGL.
- * - Tier B: the mid-range Android audience. Shorter pins, diorama as an image sequence, no Lenis.
+ * - Tier A: desktop with WebGL2, or a high-end phone (8 GB class, 8+ cores, 4G). Everything, full motion.
+ * - Tier B: the mid-range Android audience. Shorter pins, no Lenis.
  * - Tier C: save-data, 2G/3G or prefers-reduced-motion. Static images, fades only, no pinning, no parallax.
  *
  * Server render and first client render use SERVER_DEVICE (Tier C, ready false): the static, no-JS version.
