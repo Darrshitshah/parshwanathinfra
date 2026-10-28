@@ -8,12 +8,17 @@ export const seoCopy = {
   homeTitle: "Parshwanath Infra · Shiv Shiva Township, Vapi-Silvassa Road",
   og: {
     artistImpression: "Artist's impression",
-    homeAlt: "Shiv Shiva Township by Parshwanath Infra: an artist's impression of the township from the air",
-    projectAlt: "Shiv Shiva Township drawn as a plan: the township boundary with the entry roundabout marked",
-    planNote: "Boundary, from the layout plan",
-    flats: "flats",
-    rowHouses: "row houses",
-    shops: "shops",
+    /**
+     * Alt text of the share card. Must equal src/app/opengraph-image.alt.txt and twitter-image.alt.txt (a test checks),
+     * which Next turns into og:image:alt and twitter:image:alt on Home.
+     */
+    homeAlt:
+      "Shiv Shiva Township by Parshwanath Infra: an artist's impression of the township from the air, with the township name over it",
+    /** Strings drawn on the static share card by tools/og/build-og-card.mjs. Both come from existing page copy: the hero eyebrow and the road. */
+    card: {
+      titleLines: ["Shiv Shiva", "Township"],
+      line: "An integrated township · Vapi-Silvassa Road",
+    },
   },
   jsonLd: {
     organizationDescription:

@@ -2,7 +2,11 @@
  * SEO tests: every public route has complete metadata, the JSON-LD parses and carries no placeholder values, the
  * sitemap lists the public routes only, robots keeps the dev-only and API paths out, and the page helpers behave.
  */
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
+import sharp from "sharp";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { seoCopy } from "@/content/copy/seo";
 import { shivShiva } from "@/content/projects";
 import { site } from "@/content/site";
 import { isTbd } from "@/content/schema";
@@ -69,12 +73,16 @@ describe("per-page metadata", () => {
     expect(aboutMetadata.openGraph?.title).toBe(`About · ${site.name}`);
   });
 
-  it("names the default card on pages without an image file, and leaves Home and the project to theirs", async () => {
-    expect(aboutMetadata.openGraph?.images).toEqual([expect.objectContaining({ url: "/opengraph-image", width: 1200, height: 630 })]);
-    expect(aboutMetadata.twitter?.images).toEqual([expect.objectContaining({ url: "/opengraph-image" })]);
-    expect(homeMetadata.openGraph?.images).toBeUndefined();
+  it("names the share card on every page except Home, which gets it from the image files", async () => {
     const project = await projectMetadata({ params: Promise.resolve({ slug: "shiv-shiva" }) });
-    expect(project.openGraph?.images).toBeUndefined();
+    for (const meta of [aboutMetadata, contactMetadata, projectsMetadata, privacyMetadata, termsMetadata, disclaimerMetadata, project]) {
+      expect(meta.openGraph?.images).toEqual([
+        expect.objectContaining({ url: "/opengraph-image.jpg", type: "image/jpeg", width: 1200, height: 630, alt: expect.any(String) }),
+      ]);
+      expect(meta.twitter?.images).toEqual([expect.objectContaining({ url: "/opengraph-image.jpg", alt: expect.any(String) })]);
+    }
+    expect(homeMetadata.openGraph?.images).toBeUndefined();
+    expect(homeMetadata.twitter?.images).toBeUndefined();
   });
 
   it("marks the 404 noindex", () => {
@@ -86,6 +94,32 @@ describe("per-page metadata", () => {
     expect(meta.title).toEqual({ absolute: shivShiva.seo.title });
     expect(meta.description).toBe(shivShiva.seo.description);
     expect(await projectMetadata({ params: Promise.resolve({ slug: "nope" }) })).toEqual({});
+  });
+});
+
+describe("share card", () => {
+  const appDir = join(process.cwd(), "src/app");
+
+  it("is a 1200 x 630 JPEG under 300 KB, and Twitter gets the same bytes", async () => {
+    const og = await readFile(join(appDir, "opengraph-image.jpg"));
+    const twitter = await readFile(join(appDir, "twitter-image.jpg"));
+    expect(og.length).toBeLessThan(300 * 1024);
+    expect(twitter.equals(og)).toBe(true);
+    expect(await sharp(og).metadata()).toMatchObject({ format: "jpeg", width: 1200, height: 630 });
+  });
+
+  it("has alt text files that match the copy and the sub-page alt", async () => {
+    for (const name of ["opengraph-image.alt.txt", "twitter-image.alt.txt"]) {
+      expect(await readFile(join(appDir, name), "utf8")).toBe(seoCopy.og.homeAlt);
+    }
+    expect(aboutMetadata.openGraph?.images).toEqual([expect.objectContaining({ alt: seoCopy.og.homeAlt })]);
+  });
+
+  it("draws only existing copy, with no dashes and no RERA", () => {
+    const drawn = [...seoCopy.og.card.titleLines, seoCopy.og.card.line, seoCopy.og.artistImpression, seoCopy.og.homeAlt];
+    expect(drawn.filter((text) => DASHES.test(text) || /rera/i.test(text))).toEqual([]);
+    expect(seoCopy.og.card.titleLines.join(" ")).toBe(shivShiva.name);
+    expect(seoCopy.og.card.line).toContain(shivShiva.location.road);
   });
 });
 

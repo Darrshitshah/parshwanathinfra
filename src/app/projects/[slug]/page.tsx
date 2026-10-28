@@ -29,7 +29,6 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
     description: project.seo.description,
     path: projectPath(project.slug),
     absoluteTitle: true,
-    useDefaultImage: false,
   });
 }
 
