@@ -1,6 +1,6 @@
 /**
- * Static fallback visual for the location map, used when there is no Google Maps key, while the live map loads, and if
- * it fails: the Vapi-Silvassa Road and the site pin on a faint survey grid, labelled "Not to scale". It shows how the
+ * Static fallback visual for the location map: the server render, the view while the live street map loads, and what
+ * stays if it cannot (no JavaScript, no WebGL, save-data, tile failure): the Vapi-Silvassa Road and the site pin on a faint survey grid, labelled "Not to scale". It shows how the
  * places relate, never how far apart they are; landmarks and distances stay TBD so none are drawn.
  * The drawing is SVG; the labels are HTML placed in percentages so they stay readable at 360 px. Server component.
  * Owner: pages-lead.

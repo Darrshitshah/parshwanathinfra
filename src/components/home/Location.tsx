@@ -1,5 +1,6 @@
 /**
- * Location: the address, the pin, the Google satellite map (a labelled schematic fallback without a key) and the map links.
+ * Location: the address, the pin, the live street map in our colours (a labelled schematic before it loads or if it
+ * cannot) and the map links.
  * Landmarks and distances are TBD chips until confirmed. Used on Home and on the project page (id="location").
  * Owner: pages-lead.
  */
@@ -11,7 +12,6 @@ import { rich, withTbd } from "@/components/ui/with-tbd";
 import { formatCoordinates } from "@/components/ui/map-links";
 import { homeCopy } from "@/content/copy/home";
 import { shivShiva } from "@/content/projects";
-import { getMapsApiKey } from "@/lib/google-maps";
 import { LocationMap } from "./LocationMap";
 
 interface LocationProps {
@@ -43,7 +43,7 @@ export function Location({ id = "location", index = "06", tone = "paper" }: Loca
         </h2>
         <div className="mt-10 grid gap-12 md:mt-14 lg:grid-cols-12 lg:gap-x-(--gutter)">
           <div className="lg:col-span-5">
-            <p className="t-lead m-0 text-ink-muted">{rich(getMapsApiKey() ? homeCopy.location.bodyMap : homeCopy.location.body)}</p>
+            <p className="t-lead m-0 text-ink-muted">{rich(homeCopy.location.body)}</p>
 
             <dl className="m-0 mt-10 grid gap-0">
               <FactRow label={labels.address}>

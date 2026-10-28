@@ -1,7 +1,7 @@
 /**
- * The frame around the location map, shared by the static fallback (server) and the live Google map (client).
- * A rounded sheet holds the map; our glass info card sits over its corner from md up and under it on phones, so it
- * never covers Google's logo and attribution at the bottom of the frame. `data-state` is "fallback" or "live".
+ * The frame around the location map, shared by the schematic (server render and fallback) and the live street map.
+ * A rounded sheet holds the map; our glass info card sits over its bottom-left corner from md up and under it on
+ * phones, clear of the map controls (top-right) and the map credit (bottom-right). `data-state` is "fallback" or "live".
  * Owner: pages-lead.
  */
 import type { ReactNode, Ref } from "react";
