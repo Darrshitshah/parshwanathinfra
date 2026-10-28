@@ -1,15 +1,15 @@
 /**
  * The frame around the location map, shared by the schematic (server render and fallback) and the live street map.
  * A rounded sheet holds the map; our glass info card sits over its bottom-left corner when the frame is wide (a
- * container query, so the narrow column on /contact gets it below like a phone), clear of the map controls (top-right)
- * and the map credit (bottom-right). `data-state` is "fallback" or "live".
+ * container query, so the narrow column on /contact gets it below like a phone), clear of the map controls (top-right).
+ * `data-state` is "loading" (plain frame), "live" or "fallback" (schematic).
  * Owner: pages-lead.
  */
 import type { ReactNode, Ref } from "react";
 import { cn } from "@/components/ui/cn";
 
 interface MapShellProps {
-  state: "fallback" | "live";
+  state: "loading" | "fallback" | "live";
   frame: ReactNode;
   card: ReactNode;
   caption: string;

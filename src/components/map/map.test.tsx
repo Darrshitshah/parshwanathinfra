@@ -1,4 +1,5 @@
 // @vitest-environment jsdom
+import { resetLiveMapCapability } from "./map-support";
 import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { LocationMap } from "@/components/home/LocationMap";
@@ -105,6 +106,7 @@ function stubWebGl(available: boolean) {
 }
 
 beforeEach(() => {
+  resetLiveMapCapability();
   observed = null;
   mapState.instances.length = 0;
   mapState.markers = 0;
@@ -126,11 +128,13 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-describe("LocationMap before it is near the viewport (and as the server renders it)", () => {
-  it("shows the schematic and the card with the name, address, coordinates and both map links from the content", () => {
+describe("LocationMap before it is near the viewport", () => {
+  it("shows a plain frame (never the schematic) and the card with the name, address, coordinates and both map links", () => {
+    stubWebGl(true);
     const { container } = render(<LocationMap />);
     const location = shivShiva.location;
-    expect(frame(container)?.getAttribute("data-state")).toBe("fallback");
+    expect(frame(container)?.getAttribute("data-state")).toBe("loading");
+    expect(container.querySelector("svg[role='img']")).toBeNull();
     expect(frame(container)?.textContent).toContain(shivShiva.name);
     expect(frame(container)?.textContent).toContain(location.address);
     expect(frame(container)?.textContent).toContain(formatCoordinates(location.geo));
@@ -138,7 +142,8 @@ describe("LocationMap before it is near the viewport (and as the server renders 
     expect(screen.getByRole("link", { name: /get directions/i })).toHaveAttribute("href", directionsUrl(location.geo));
   });
 
-  it("labels the schematic as not to scale and creates no map", () => {
+  it("shows the schematic, labelled not to scale, only when the browser cannot draw the live map", () => {
+    stubWebGl(false);
     const { container } = render(<LocationMap />);
     expect(container.textContent).toMatch(/not to scale/i);
     expect(container.querySelector("svg[role='img']")).not.toBeNull();
@@ -179,7 +184,7 @@ describe("LocationMap near the viewport", () => {
     expect(style.sources.openmaptiles.url).toBe("https://tiles.openfreemap.org/planet");
   });
 
-  it("goes live on the first complete render: our controls, the credit and the live caption", async () => {
+  it("goes live on the first complete render: our controls and the live caption, no credit pill on the map", async () => {
     stubWebGl(true);
     const { container } = render(<LocationMap />);
     await scrollIntoRange();
@@ -191,9 +196,8 @@ describe("LocationMap near the viewport", () => {
     expect(screen.getByRole("region", { name: /street map/i })).toBeInTheDocument();
     expect(container.querySelector("svg[role='img']")).toBeNull();
     expect(container.querySelector("figcaption")?.textContent).toBe(homeCopy.location.liveCaption);
-    expect(screen.getByRole("link", { name: /openstreetmap contributors/i })).toHaveAttribute("href", "https://www.openstreetmap.org/copyright");
-    expect(screen.getByRole("link", { name: /openmaptiles/i })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /openfreemap/i })).toBeInTheDocument();
+    expect(container.querySelector("figcaption")?.textContent).toMatch(/openstreetmap/i);
+    expect(screen.queryByRole("link", { name: /openfreemap/i })).toBeNull();
     expect(screen.getByRole("link", { name: /open in google maps/i })).toBeInTheDocument();
 
     fireEvent.click(zoomIn);
@@ -223,6 +227,6 @@ describe("LocationMap near the viewport", () => {
     await screen.findByRole("button", { name: /zoom in/i });
     await act(async () => emit("webglcontextlost"));
     await waitFor(() => expect(frame(container)?.getAttribute("data-state")).toBe("fallback"));
-    expect(screen.queryByRole("link", { name: /openfreemap/i })).toBeNull();
+    expect(container.querySelector("svg[role='img']")).not.toBeNull();
   });
 });

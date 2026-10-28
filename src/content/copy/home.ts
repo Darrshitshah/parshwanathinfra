@@ -67,12 +67,6 @@ export const homeCopy = {
         mac: "Use ⌘ + scroll to zoom the map",
         mobile: "Use two fingers to move the map",
       },
-      /** The credit the map data and tile licences ask for, shown on the live map. */
-      attribution: [
-        { label: "© OpenStreetMap contributors", href: "https://www.openstreetmap.org/copyright" },
-        { label: "OpenMapTiles", href: "https://openmaptiles.org/" },
-        { label: "OpenFreeMap", href: "https://openfreemap.org/" },
-      ],
     },
   },
   gallery: {

@@ -16,3 +16,16 @@ export function canShowLiveMap(win: Window = window): boolean {
     return false;
   }
 }
+
+/** Checked once per page: each check creates a WebGL context, and browsers cap how many may exist. */
+let cached: boolean | undefined;
+
+export function liveMapCapability(): boolean {
+  cached ??= canShowLiveMap();
+  return cached;
+}
+
+/** Tests stub WebGL per case, so they clear the cache between cases. */
+export function resetLiveMapCapability(): void {
+  cached = undefined;
+}

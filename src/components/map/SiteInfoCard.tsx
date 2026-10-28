@@ -1,7 +1,7 @@
 /**
  * Glass info card for the map: the site name, address, pin coordinates and (unless `links` is false) the two map links, all as real text.
- * Under the map in narrow frames, over its bottom-left corner once the frame is 42rem wide (the map credit sits
- * bottom-right, the controls top-right). Server component. Owner: pages-lead.
+ * Under the map in narrow frames, over its bottom-left corner once the frame is 42rem wide (the map controls sit
+ * top-right). Server component. Owner: pages-lead.
  */
 import { TextLink } from "@/components/ui/TextLink";
 import { directionsUrl, formatCoordinates } from "@/components/ui/map-links";

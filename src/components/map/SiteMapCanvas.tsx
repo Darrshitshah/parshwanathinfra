@@ -4,7 +4,7 @@
  * The live street map, imported lazily by SiteMap once the section nears the viewport (MapLibre and its CSS live only
  * in this chunk). OpenFreeMap vector tiles drawn with our own style (map-style.ts) from the site's tokens, re-drawn
  * live when the theme toggles; a gold Shiv Shiva pin; our glass zoom and recenter controls; cooperative gestures so the
- * page always scrolls; and the OpenStreetMap / OpenMapTiles / OpenFreeMap credit in our type. Reports "ready" on the
+ * page always scrolls. The OpenStreetMap credit lives in the caption under the map. Reports "ready" on the
  * first complete render and "failed" on a style or tile error, a lost WebGL context or a timeout, so the schematic
  * fallback can take over. Owner: pages-lead.
  */
@@ -14,7 +14,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import { MAX_ZOOM, MIN_ZOOM, clampOpeningZoom, contextBounds, panBounds, type LngLat } from "./map-camera";
 import { readMapTokens, prefersReducedMotion, watchTheme } from "./map-runtime";
 import { buildMapStyle, paletteFromTokens, type MapTokens } from "./map-style";
-import type { MapAttribution, SiteMapLabels } from "./SiteMap";
+import type { SiteMapLabels } from "./SiteMap";
 import "./site-map.css";
 
 // MapLibre 6 starts its worker from a separate, self-contained file; the bundler emits it as a hashed static asset.
@@ -29,7 +29,6 @@ interface SiteMapCanvasProps {
   title: string;
   roadName: string;
   labels: SiteMapLabels;
-  attribution: readonly MapAttribution[];
   onReady: () => void;
   onFail: () => void;
 }
@@ -92,7 +91,7 @@ function ControlIcon({ name }: { name: keyof typeof CONTROL_PATHS }) {
   );
 }
 
-export function SiteMapCanvas({ geo, title, roadName, labels, attribution, onReady, onFail }: SiteMapCanvasProps) {
+export function SiteMapCanvas({ geo, title, roadName, labels, onReady, onFail }: SiteMapCanvasProps) {
   const hostRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
   const homeZoomRef = useRef<number>(clampOpeningZoom(undefined));
@@ -227,16 +226,6 @@ export function SiteMapCanvas({ geo, title, roadName, labels, attribution, onRea
               <ControlIcon name="recenter" />
             </ControlButton>
           </div>
-          <p className="site-map__credit glass absolute bottom-2 right-2 z-[2] m-0 rounded-full px-2.5 py-1 text-ink-muted" data-map-attribution>
-            {attribution.map((item, index) => (
-              <span key={item.href}>
-                {index > 0 ? <span aria-hidden="true"> · </span> : null}
-                <a href={item.href} target="_blank" rel="noopener noreferrer">
-                  {item.label}
-                </a>
-              </span>
-            ))}
-          </p>
         </>
       ) : null}
     </>

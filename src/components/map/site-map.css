@@ -1,6 +1,6 @@
 /*
  * The live map's own pieces (loaded with the lazy map chunk only): the gold Shiv Shiva pin, the cooperative-gesture
- * hint and the map credit, all in theme tokens. MapLibre's default look is never shown. Owner: pages-lead.
+ * hint, all in theme tokens. MapLibre's default look is never shown. Owner: pages-lead.
  */
 
 /* The pin: a gold dot ringed in paper, a slow gold halo, and the township's name on a glass tag. */
@@ -100,24 +100,4 @@
   .site-map .maplibregl-cooperative-gesture-screen.maplibregl-show {
     transition: none;
   }
-}
-
-/* The credit OpenStreetMap, OpenMapTiles and OpenFreeMap ask for: always visible, small, in our type. */
-.site-map__credit {
-  font-family: var(--font-sans);
-  font-size: 0.625rem;
-  letter-spacing: 0.02em;
-  line-height: 1.4;
-  max-width: calc(100% - 1rem);
-}
-.site-map__credit a {
-  color: inherit;
-  text-decoration: underline;
-  text-decoration-color: color-mix(in srgb, currentColor 35%, transparent);
-  text-underline-offset: 2px;
-}
-.site-map__credit a:hover,
-.site-map__credit a:focus-visible {
-  color: var(--ink);
-  text-decoration-color: currentColor;
 }

@@ -150,7 +150,7 @@ describe("Home", () => {
     }
   });
 
-  it("server-renders the location map as the labelled schematic inside the live-map frame, with landmarks and distances as TBD", () => {
+  it("shows the labelled schematic in the location map when the browser has no WebGL (jsdom), with landmarks and distances as TBD", () => {
     const container = renderPage(<Home />);
     const location = container.querySelector("#location");
     const frame = location?.querySelector("[data-site-map]");

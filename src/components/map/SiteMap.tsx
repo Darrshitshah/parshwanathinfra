@@ -1,17 +1,18 @@
 "use client";
 
 /**
- * Client shell for the live location map. Tiny on purpose: it renders the server-made schematic and info card, watches
+ * Client shell for the live location map. Tiny on purpose: it renders an empty themed frame and the info card, watches
  * the frame with an IntersectionObserver, and only when the section is near the viewport (and the browser has WebGL
  * and is not saving data) imports the map canvas, which carries MapLibre and its CSS. So no route's first-load
  * JavaScript holds map code, and no tile is requested for visitors who never scroll to the location. A load, tile or
- * WebGL failure keeps (or restores) the schematic. Owner: pages-lead.
+ * WebGL failure shows the schematic. The schematic is never shown as a loading placeholder (Darshit, 2026-10-28): while
+ * the map loads, the frame stays plain, so visitors never see the sketch flash before the real map. Owner: pages-lead.
  */
-import { lazy, Suspense, useCallback, useEffect, useMemo, useState, type ComponentProps, type ComponentType, type ReactNode } from "react";
+import { lazy, Suspense, useCallback, useEffect, useState, useSyncExternalStore, type ComponentProps, type ComponentType, type ReactNode } from "react";
 import { useNear } from "@/lib/use-near";
 import { MapShell } from "./MapShell";
 import type { LngLat } from "./map-camera";
-import { canShowLiveMap } from "./map-support";
+import { liveMapCapability } from "./map-support";
 import type { SiteMapCanvas as SiteMapCanvasComponent } from "./SiteMapCanvas";
 
 /** If the map chunk itself cannot be fetched (offline, deploy in between), report a failure instead of throwing. */
@@ -29,6 +30,10 @@ const SiteMapCanvas = lazy<ComponentType<CanvasProps>>(() =>
   ),
 );
 
+/** WebGL and save-data are browser facts: checked once on the client, unknown (null) on the server. */
+const unknownOnServer = () => null;
+const noSubscribe = () => () => {};
+
 /** Start loading while the section is still this far below the fold. */
 const LOAD_MARGIN = "600px 0px";
 
@@ -41,20 +46,14 @@ export interface SiteMapLabels {
   gestures: { windows: string; mac: string; mobile: string };
 }
 
-export interface MapAttribution {
-  label: string;
-  href: string;
-}
-
 interface SiteMapProps {
   geo: LngLat;
   title: string;
   roadName: string;
   /** Text comes from the server so the home copy file is not bundled into the client. */
   labels: SiteMapLabels;
-  attribution: readonly MapAttribution[];
   captions: { fallback: string; live: string };
-  /** Server-rendered schematic, shown until the map is ready and again if it fails. */
+  /** Server-rendered schematic, shown only when the live map cannot run or fails. */
   fallback: ReactNode;
   /** Server-rendered glass info card. */
   card: ReactNode;
@@ -63,34 +62,34 @@ interface SiteMapProps {
 
 type MapStatus = "idle" | "ready" | "failed";
 
-export function SiteMap({ geo, title, roadName, labels, attribution, captions, fallback, card, className }: SiteMapProps) {
+export function SiteMap({ geo, title, roadName, labels, captions, fallback, card, className }: SiteMapProps) {
   const [frameRef, near] = useNear<HTMLDivElement>(LOAD_MARGIN);
   const [status, setStatus] = useState<MapStatus>("idle");
+  const capable = useSyncExternalStore(noSubscribe, liveMapCapability, unknownOnServer);
   const handleReady = useCallback(() => setStatus("ready"), []);
   const handleFail = useCallback(() => setStatus("failed"), []);
-  const live = status === "ready";
 
-  // Checked only once the frame is near, which never happens on the server or in the first client render.
-  const supported = useMemo(() => near && canShowLiveMap(), [near]);
+  const failed = status === "failed" || capable === false;
+  const live = status === "ready" && !failed;
+  const state = failed ? "fallback" : live ? "live" : "loading";
 
   return (
     <MapShell
       className={className}
-      state={live ? "live" : "fallback"}
+      state={state}
       frameRef={frameRef}
       card={card}
-      caption={live ? captions.live : captions.fallback}
+      caption={failed ? captions.fallback : captions.live}
       frame={
         <>
-          {live ? null : fallback}
-          {supported && status !== "failed" ? (
+          {failed ? fallback : null}
+          {near && capable && !failed ? (
             <Suspense fallback={null}>
               <SiteMapCanvas
                 geo={geo}
                 title={title}
                 roadName={roadName}
                 labels={labels}
-                attribution={attribution}
                 onReady={handleReady}
                 onFail={handleFail}
               />

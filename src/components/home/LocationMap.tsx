@@ -36,7 +36,6 @@ export function LocationMap({ place = siteMapPlace(), className, links = true }:
       title={place.name}
       roadName={place.road}
       labels={labels}
-      attribution={map.attribution}
       captions={{ fallback: location.mapCaption, live: location.liveCaption }}
       fallback={<SchematicFallback place={place} />}
       card={<SiteInfoCard place={place} links={links} />}
