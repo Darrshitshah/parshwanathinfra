@@ -150,9 +150,11 @@ describe("Home", () => {
     }
   });
 
-  it("labels the location map as a schematic that is not to scale, with landmarks and distances as TBD", () => {
+  it("server-renders the location map as the labelled schematic inside the live-map frame, with landmarks and distances as TBD", () => {
     const container = renderPage(<Home />);
     const location = container.querySelector("#location");
+    const frame = location?.querySelector("[data-site-map]");
+    expect(frame?.getAttribute("data-state")).toBe("fallback");
     expect(location?.textContent).toMatch(/not to scale/i);
     expect(location?.querySelector("svg[role='img']")).not.toBeNull();
     expect(location?.querySelectorAll("[data-tbd]").length).toBeGreaterThanOrEqual(2);
