@@ -1,40 +1,113 @@
-/* Marker for the live map (a DOM node handed to AdvancedMarkerElement). Theme tokens only. Owner: pages-lead. */
+/*
+ * The live map's own pieces (loaded with the lazy map chunk only): the gold Shiv Shiva pin, the cooperative-gesture
+ * hint and the map credit, all in theme tokens. MapLibre's default look is never shown. Owner: pages-lead.
+ */
+
+/* The pin: a gold dot ringed in paper, a slow gold halo, and the township's name on a glass tag. */
 .site-pin {
   position: relative;
   width: 1.375rem;
   height: 1.375rem;
-  /* Advanced Markers anchor at the bottom centre; centre the dot on the coordinate instead. */
-  transform: translateY(50%);
+  pointer-events: none;
 }
 .site-pin__dot {
   position: absolute;
   inset: 0;
   border-radius: 999px;
-  background: var(--block-jewel);
-  border: 3px solid var(--on-jewel);
-  box-shadow: 0 4px 16px color-mix(in srgb, var(--block-ink) 50%, transparent);
+  background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--brick) 72%, #fff), var(--brick) 58%, var(--brick-ink));
+  border: 3px solid var(--paper-raised);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--brick-ink) 55%, transparent),
+    0 6px 18px -4px color-mix(in srgb, var(--ink) 55%, transparent);
 }
 .site-pin__halo {
   position: absolute;
-  inset: -0.75rem;
+  inset: -0.9rem;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--on-jewel) 34%, transparent);
-  animation: site-pin-pulse 2.6s var(--ease-out) infinite;
+  background: color-mix(in srgb, var(--brick) 30%, transparent);
+  border: 1px solid color-mix(in srgb, var(--brick) 55%, transparent);
+  animation: site-pin-pulse 2.8s var(--ease-out) infinite;
+}
+.site-pin__label {
+  position: absolute;
+  left: calc(100% + 0.75rem);
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  border-radius: 999px;
+  padding: 0.3rem 0.75rem 0.32rem;
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
 }
 @keyframes site-pin-pulse {
   0% {
-    transform: scale(0.55);
-    opacity: 0.9;
+    transform: scale(0.5);
+    opacity: 0.95;
   }
   100% {
-    transform: scale(1.5);
+    transform: scale(1.6);
     opacity: 0;
   }
 }
 @media (prefers-reduced-motion: reduce) {
   .site-pin__halo {
     animation: none;
-    opacity: 0.55;
-    transform: scale(1);
+    opacity: 0.6;
+    transform: scale(0.9);
   }
+}
+
+/* The map canvas takes the frame's colour while tiles arrive, never MapLibre's white. */
+.site-map.maplibregl-map {
+  font: inherit;
+  background: var(--paper-sunk);
+}
+.site-map .maplibregl-canvas:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -4px;
+}
+
+/* "Use Ctrl + scroll to zoom" / "Use two fingers to move the map": a calm paper veil with our label voice. */
+.site-map .maplibregl-cooperative-gesture-screen {
+  background: color-mix(in srgb, var(--paper) 62%, transparent);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  line-height: 1.5;
+  text-align: center;
+  text-transform: uppercase;
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-map .maplibregl-cooperative-gesture-screen,
+  .site-map .maplibregl-cooperative-gesture-screen.maplibregl-show {
+    transition: none;
+  }
+}
+
+/* The credit OpenStreetMap, OpenMapTiles and OpenFreeMap ask for: always visible, small, in our type. */
+.site-map__credit {
+  font-family: var(--font-sans);
+  font-size: 0.625rem;
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+  max-width: calc(100% - 1rem);
+}
+.site-map__credit a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, currentColor 35%, transparent);
+  text-underline-offset: 2px;
+}
+.site-map__credit a:hover,
+.site-map__credit a:focus-visible {
+  color: var(--ink);
+  text-decoration-color: currentColor;
 }

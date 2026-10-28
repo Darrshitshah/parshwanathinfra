@@ -89,6 +89,7 @@ export const privacyDoc: LegalDoc = {
     {
       heading: "Other websites",
       paragraphs: [
+        "When you scroll near the location map, your browser loads map tiles and label fonts from OpenFreeMap (tiles.openfreemap.org). Like any server, it receives technical data such as your IP address and browser type.",
         "Links such as Open in Google Maps lead to services run by other companies. They have their own privacy policies.",
       ],
     },
@@ -197,7 +198,7 @@ export const disclaimerDoc: LegalDoc = {
     {
       heading: "Maps, distances and landmarks",
       paragraphs: [
-        "The location map is indicative and not to scale. Satellite imagery is supplied by Google Maps and may not show the site as it is today. Landmarks and distances: TBD.",
+        "The location map is indicative. The street map uses map data from OpenStreetMap contributors (Open Database License), drawn from OpenMapTiles and OpenFreeMap tiles, and may not show the site or its surroundings as they are today. Where the street map cannot load, a schematic that is not to scale is shown. Landmarks and distances: TBD.",
       ],
     },
     {

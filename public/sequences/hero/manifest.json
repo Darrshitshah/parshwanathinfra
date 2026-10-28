@@ -1,0 +1,15 @@
+{
+  "frames": 120,
+  "pattern": "/sequences/hero/frame-{n:03d}.webp",
+  "first": 1,
+  "width": 1280,
+  "height": 720,
+  "format": "webp",
+  "quality": 57,
+  "preBlur": 1.5,
+  "totalBytes": 5540518,
+  "durationSeconds": 20.79,
+  "fps": 24,
+  "artistImpression": true,
+  "alt": "Aerial film of the Shiv Shiva Township site: bare land, roads laid out, foundations, blocks rising floor by floor, finishing and landscaping, ending on the finished township. Artist's impression."
+}

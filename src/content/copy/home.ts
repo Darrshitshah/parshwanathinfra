@@ -48,20 +48,31 @@ export const homeCopy = {
   location: {
     eyebrow: "Location",
     heading: "On the Vapi-Silvassa *Road*.",
-    body: "The township is on the Vapi-Silvassa Road. The map is a schematic: it shows how the places relate, not how far apart they are.",
+    body: "The township is on the Vapi-Silvassa Road. The map marks the site with a gold pin and shows the road between Vapi and Silvassa. It is indicative.",
     labels: { address: "Address", pin: "Pin", landmarks: "Landmarks", distances: "Distances" },
+    /** Caption under the schematic: the server render, the view while the street map loads, and the fallback. */
     mapCaption: "Schematic map, not to scale",
     mapTitle: "Schematic map of the Vapi-Silvassa Road between Vapi and Silvassa with the Shiv Shiva Township site marked",
-    /** Shown instead of `body` when the live satellite map is configured. */
-    bodyMap: "The township is on the Vapi-Silvassa Road. The satellite view shows the site and what surrounds it.",
-    satelliteCaption: "Satellite view centred on the site pin. Imagery by Google, and it may not be current.",
+    /** Caption under the live street map. */
+    liveCaption: "Indicative location. Map data from OpenStreetMap contributors.",
     map: {
       siteLabel: "Site",
-      regionLabel: "Satellite map of Shiv Shiva Township on the Vapi-Silvassa Road",
+      regionLabel: "Street map of Shiv Shiva Township on the Vapi-Silvassa Road",
       controlsLabel: "Map controls",
       zoomIn: "Zoom in",
       zoomOut: "Zoom out",
       recenter: "Centre on the site",
+      gestures: {
+        windows: "Use Ctrl + scroll to zoom the map",
+        mac: "Use \u2318 + scroll to zoom the map",
+        mobile: "Use two fingers to move the map",
+      },
+      /** The credit the map data and tile licences ask for, shown on the live map. */
+      attribution: [
+        { label: "\u00a9 OpenStreetMap contributors", href: "https://www.openstreetmap.org/copyright" },
+        { label: "OpenMapTiles", href: "https://openmaptiles.org/" },
+        { label: "OpenFreeMap", href: "https://openfreemap.org/" },
+      ],
     },
   },
   gallery: {

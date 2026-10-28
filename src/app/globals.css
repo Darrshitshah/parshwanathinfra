@@ -996,10 +996,51 @@ address em {
     background: linear-gradient(
       180deg,
       color-mix(in srgb, var(--block-ink) 62%, transparent) 0%,
-      color-mix(in srgb, var(--block-ink) 18%, transparent) 34%,
-      color-mix(in srgb, var(--block-ink) 8%, transparent) 52%,
+      color-mix(in srgb, var(--block-ink) 28%, transparent) 34%,
+      color-mix(in srgb, var(--block-ink) 22%, transparent) 55%,
+      color-mix(in srgb, var(--block-ink) 34%, transparent) 70%,
       color-mix(in srgb, var(--block-ink) 78%, transparent) 100%
     );
+  }
+
+  /* The uppercase wordmark: a soft halo, so it holds over the bright bare-earth frames of the film too. */
+  .hero-wordmark {
+    text-shadow: 0 2px 30px color-mix(in srgb, var(--block-ink) 40%, transparent);
+  }
+
+  /* Hero film: the small pause / play control, a glass pill like the "Artist's impression" label. */
+  .hero-film-toggle {
+    position: relative;
+    padding: 0.3rem 0.75rem;
+    border: 0;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--paper) 62%, transparent);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 0.5625rem;
+    font-weight: 600;
+    line-height: 1.5;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  /* A 44 px touch target around a small pill. */
+  .hero-film-toggle::after {
+    content: "";
+    position: absolute;
+    inset: -0.55rem -0.4rem;
+  }
+  .hero-film-toggle:focus-visible {
+    outline: 2px solid var(--on-jewel);
+    outline-offset: 2px;
+  }
+  /* Over the film both pills are dark glass with ivory type, in light and dark themes alike (the hero is on-photo). */
+  .hero-film-badges .tag-impression,
+  .hero-film-badges .hero-film-toggle {
+    background: color-mix(in srgb, var(--block-ink) 58%, transparent);
+    color: var(--on-jewel);
   }
 
   /* The one script word of the wordmark, signed across the foot of the uppercase. */

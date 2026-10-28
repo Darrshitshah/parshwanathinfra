@@ -1,0 +1,198 @@
+{
+  "title": "Shiv Shiva Township: from bare land to finished township",
+  "alt": "Aerial film of the Shiv Shiva Township site: bare land, roads laid out, foundations, blocks rising floor by floor, finishing and landscaping, ending on the finished township. Artist's impression.",
+  "artistImpression": true,
+  "fps": 24,
+  "aspect": "16:9",
+  "muted": true,
+  "poster": {
+    "src": "/video/hero/hero-poster.webp",
+    "width": 1600,
+    "height": 900,
+    "bytes": 190246,
+    "avif": {
+      "src": "/video/hero/hero-poster.avif",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 172579
+    },
+    "start": {
+      "src": "/video/hero/hero-poster-start.webp",
+      "width": 1600,
+      "height": 900,
+      "bytes": 189216,
+      "avif": {
+        "src": "/video/hero/hero-poster-start.avif",
+        "width": 1920,
+        "height": 1080,
+        "bytes": 187612
+      }
+    },
+    "quality": 71
+  },
+  "sequence": "/sequences/hero/manifest.json",
+  "cuts": {
+    "full": {
+      "durationSeconds": 37.92,
+      "chapters": [
+        {
+          "label": "Roads",
+          "start": 0.0,
+          "end": 8.0
+        },
+        {
+          "label": "Foundations",
+          "start": 7.5,
+          "end": 13.25
+        },
+        {
+          "label": "Structure",
+          "start": 12.25,
+          "end": 18.85
+        },
+        {
+          "label": "Finishing",
+          "start": 18.35,
+          "end": 24.85
+        },
+        {
+          "label": "Landscape",
+          "start": 24.6,
+          "end": 33.85
+        },
+        {
+          "label": "Shiv Shiva Township",
+          "start": 32.85,
+          "end": 37.9
+        }
+      ],
+      "files": {
+        "desktop": {
+          "mp4": {
+            "src": "/video/hero/hero-desktop.mp4",
+            "bytes": 5926695,
+            "width": 1920,
+            "height": 1080,
+            "durationSeconds": 37.92,
+            "codec": "h264",
+            "ssim": 0.904979,
+            "vmaf": 74.770412
+          },
+          "webm": {
+            "src": "/video/hero/hero-desktop.webm",
+            "bytes": 5321282,
+            "width": 1920,
+            "height": 1080,
+            "durationSeconds": 37.92,
+            "codec": "vp9",
+            "ssim": 0.900131,
+            "vmaf": 79.124047
+          }
+        },
+        "mobile": {
+          "mp4": {
+            "src": "/video/hero/hero-mobile.mp4",
+            "bytes": 3456375,
+            "width": 1280,
+            "height": 720,
+            "durationSeconds": 37.92,
+            "codec": "h264",
+            "ssim": 0.917223,
+            "vmaf": 79.182139
+          },
+          "webm": {
+            "src": "/video/hero/hero-mobile.webm",
+            "bytes": 3091223,
+            "width": 1280,
+            "height": 720,
+            "durationSeconds": 37.92,
+            "codec": "vp9",
+            "ssim": 0.913684,
+            "vmaf": 82.823817
+          }
+        }
+      }
+    },
+    "short": {
+      "durationSeconds": 20.79,
+      "chapters": [
+        {
+          "label": "Roads",
+          "start": 0.0,
+          "end": 5.2
+        },
+        {
+          "label": "Foundations",
+          "start": 4.8,
+          "end": 7.5
+        },
+        {
+          "label": "Structure",
+          "start": 6.7,
+          "end": 10.433
+        },
+        {
+          "label": "Finishing",
+          "start": 10.033,
+          "end": 13.633
+        },
+        {
+          "label": "Landscape",
+          "start": 13.383,
+          "end": 17.633
+        },
+        {
+          "label": "Shiv Shiva Township",
+          "start": 16.833,
+          "end": 20.783
+        }
+      ],
+      "files": {
+        "desktop": {
+          "mp4": {
+            "src": "/video/hero/hero-short-desktop.mp4",
+            "bytes": 2855065,
+            "width": 1920,
+            "height": 1080,
+            "durationSeconds": 20.79,
+            "codec": "h264",
+            "ssim": 0.862374,
+            "vmaf": 64.409984
+          },
+          "webm": {
+            "src": "/video/hero/hero-short-desktop.webm",
+            "bytes": 2850226,
+            "width": 1920,
+            "height": 1080,
+            "durationSeconds": 20.79,
+            "codec": "vp9",
+            "ssim": 0.879843,
+            "vmaf": 74.131553
+          }
+        },
+        "mobile": {
+          "mp4": {
+            "src": "/video/hero/hero-short-mobile.mp4",
+            "bytes": 1881628,
+            "width": 1280,
+            "height": 720,
+            "durationSeconds": 20.79,
+            "codec": "h264",
+            "ssim": 0.887826,
+            "vmaf": 72.818819
+          },
+          "webm": {
+            "src": "/video/hero/hero-short-mobile.webm",
+            "bytes": 1775896,
+            "width": 1280,
+            "height": 720,
+            "durationSeconds": 20.79,
+            "codec": "vp9",
+            "ssim": 0.897962,
+            "vmaf": 78.86545
+          }
+        }
+      }
+    }
+  }
+}

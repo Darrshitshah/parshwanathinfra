@@ -1,27 +1,24 @@
-# Map handoff: Google satellite view for the location section
+# Map handoff: themed street map (MapLibre + OpenFreeMap, no key)
 
-Status: code done, typecheck + lint + tests green (last run). Not committed. Not yet verified with a real key (none exists).
+Darshit chose (2026-10-28): a real, zoomable street map drawn in the site's colours, with no API key. This replaces the
+Google satellite plan (never had a key). Agent: map2 front-end designer. Not committed (the director commits).
 
-## What changed
-- New `src/lib/google-maps.ts` (+ `.test.ts`): key/Map ID reading, documented bootstrap URL (`loading=async&callback=`), on-demand loader with timeout and retry, `gm_authFailure` hook, `buildMapOptions` (hybrid satellite, `disableDefaultUI`, cooperative gestures, centre = content geo). No npm package added.
-- New `src/components/map/`: `SiteMap.tsx` (client shell, IntersectionObserver via `features/diorama/use-near`, lazy-imports the canvas), `SiteMapCanvas.tsx` (lazy: loads API, Advanced Marker, our glass zoom/recenter controls, reduced-motion aware), `MapShell.tsx`, `SiteInfoCard.tsx` (glass card, name/address/coords/links), `SchematicFallback.tsx` (restyled schematic, "Not to scale"), `place.ts` (reads content), `site-map.css` (themed pin), `map.test.tsx`.
-- `src/components/home/LocationMap.tsx` now the entry: no key = pure server fallback (no map JS, no Google request); key = SiteMap. `Location.tsx`: body copy switches with key, duplicate link row removed (links live in the card). `contact/page.tsx`: `<LocationMap links={false} />` (page already lists links).
-- Copy: `src/content/copy/home.ts` (`bodyMap`, `satelliteCaption`, `map` labels), `src/content/copy/legal.ts` (map wording now "indicative", imagery by Google).
-- `.env.example`: `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`, optional `NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID`.
+## Status (update after each step)
+- [x] Step 0: read the code, baseline build. Home first-load JS before: 204.1 KB gz (11 scripts, sum of gz of every
+  `<script src>` in `.next-map2/server/app/index.html`); contact 228.3 KB. Note: another agent has uncommitted hero
+  edits (globals.css, Hero.tsx, en.ts) in the tree at the same time, so compare script lists, not only totals.
+- [ ] Step 1: style JSON from tokens, canvas, pin, controls, attribution
+- [ ] Step 2: remove the Google path, tests, copy
+- [ ] Step 3: checks, build, size after, screenshots, review sheet
 
-## Checks
-- `npm run typecheck`, eslint on touched dirs, `vitest` for google-maps, map, pages tests: pass. Full `npm test` passed earlier (659) before the last small edits (link row removal, pill change); re-run it.
-- Build (`NEXT_DIST_DIR=.next-map`) passed. Home first-load JS (sum gz of index.html scripts): baseline copy of tree without my change 197.2 KB, with my change 197.5 KB (+0.3 KB, SiteMap shell; map canvas and Google script are lazy). Under the 200 KB budget but not zero growth.
-- Screenshots (no-key fallback, before the last tweak that removed the site name pill and moved the road inward): `/private/tmp/claude-501/-Users-darshit-CLAUDE-the-GOD/5d993e2f-4b5c-4758-9760-bc277ad574b1/scratchpad/map-agent/shots/location-{390,1440}-{light,dark}.png`. Re-shoot with `scratchpad/map-agent/shot.mjs` after `NEXT_DIST_DIR=.next-map npx next dev -p 3112`.
-
-## Darshit: Google Cloud and Vercel steps
-1. Google Cloud project `my-jev-autonomous-agent`: enable billing, then APIs & Services > Library > enable "Maps JavaScript API".
-2. Credentials > Create credentials > API key. Restrict it: Application restrictions = Websites, referrers `https://parshwanathinfra.vercel.app/*` and `http://localhost:*`; API restrictions = Maps JavaScript API only.
-3. Optional but recommended: Google Maps Platform > Map Management > create a Map ID (JavaScript, Raster or Vector); needed for Advanced Markers in production. Without it Google's `DEMO_MAP_ID` is used.
-4. Vercel > Project > Settings > Environment Variables: add `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` (and `NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID`), then redeploy (values are inlined at build). Put the same in `.env.local` for local dev.
-
-## Left to do
-- Test with a real key: marker, controls, cooperative gestures on a phone, light and dark, attribution visible and not covered by our UI.
-- Re-run `npm test`, full build and the screenshots; re-check size number.
-- Risks: each map load is billed (Dynamic Maps SKU) after the free tier, though it loads only near the viewport; Google terms require logo and attribution to stay visible and no filter on imagery (both respected); `useNear` is imported from `features/diorama` (another agent's file).
-- A pages.test assertion still expects "not to scale" and an svg role=img: holds in the no-key state only.
+## Facts found
+- `maplibre-gl@6.13.0` was already in package.json (scaffold) but unused. v6 is ESM only and spawns its worker from a
+  separate file (`maplibre-gl-worker.mjs`, self-contained), so the worker URL has to be set with `setWorkerUrl`.
+- v6 supports the style property `font-faces`: labels can be drawn locally from our own font file (TinySDF), so the map
+  uses Zalando Sans Expanded (the site's sans, OFL) from `public/map/fonts/`, falling back to OpenFreeMap's glyph PBFs
+  for scripts the file does not cover.
+- OpenFreeMap TileJSON `https://tiles.openfreemap.org/planet` (OpenMapTiles schema, maxzoom 14), glyphs
+  `https://tiles.openfreemap.org/fonts/{fontstack}/{range}.pbf`. No sprite is used (no icons).
+- In OSM the Vapi-Silvassa Road near the site is `SH185` (primary, unnamed, about 90 m from the pin); west of Vapi the
+  same ref is "Daman Road". The style emphasises SH185 only inside a box east of Vapi.
+- No CSP or security headers exist anywhere (next.config.ts has none, no middleware/proxy, no vercel.json).
